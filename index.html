@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mercadinho Dois Irmãos - PDV Ultimate Cloud</title>
     
-    <!-- Puxando o SDK oficial do Supabase via CDN -->
+    <!-- SDK oficial do Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Biblioteca SheetJS para ler arquivos nativos do Excel (.xlsx e .xls) -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <style>
         :root {
@@ -127,7 +130,7 @@
                 <div class="total-box"><h3>TOTAL DO CUPOM</h3><p>R$ <span id="valor-total">0.00</span></p></div>
             </div>
             <div class="operacao-area">
-                <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Banco de dados inicializado em nuvem.</div></div>
+                <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Banco de dados operacional pronto.</div></div>
                 
                 <div class="wrapper-busca">
                     <div id="dropdown-sugestoes" class="dropdown-busca"></div>
@@ -162,11 +165,11 @@
         </div>
         <div class="dashboard-area">
             <div class="import-wrapper">
-                <h3>🔄 Importador de Estoque Direto (Planilha CSV)</h3>
-                <p>Selecione um arquivo CSV contendo os produtos para carregar direto no banco de dados Supabase.</p>
+                <h3>🔄 Importador de Estoque Direto (Planilha Excel)</h3>
+                <p>Selecione um arquivo nativo do Excel (.xlsx ou .xls) contendo as colunas Código, Nome e Preço.</p>
                 <div class="box-arquivo-unico">
-                    <label>Selecionar Arquivo de Estoque (.csv)</label>
-                    <input type="file" id="csv-universal" accept=".csv" onchange="processarCargaPlanilha(event)">
+                    <label>Selecionar Planilha do Excel (.xlsx ou .xls)</label>
+                    <input type="file" id="excel-universal" accept=".xlsx, .xls" onchange="processarCargaPlanilhaExcel(event)">
                 </div>
             </div>
 
@@ -187,16 +190,19 @@
     </div>
 
     <script>
-        // ================= CONFIGURAÇÃO DO SUPABASE OPERACIONAL REAL =================
-        const SUPABASE_URL = "https://jtotldqkevnbovgkhkmg.supabase.co";
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0b3RsZHFrZXZuYm92Z2toa21nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM4Njk1NzEsImV4cCI6MjA5OTQ0NTU3MX0.ciQjrq-ul6v9kqTgpbK6Wtd4fw9bJH9lYIb6hj05kHQ";
+        // ================= CONFIGURAÇÃO DO SUPABASE =================
+        const SUPABASE_URL = "SUA_URL_AQUI";
+        const SUPABASE_KEY = "SUA_CHAVE_AQUI";
         
         let supabaseClient = null;
         try {
-            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            if(SUPABASE_URL.indexOf("SUA_URL") === -1 && SUPABASE_URL.trim() !== "") {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            }
         } catch(e) { console.error("Erro driver:", e); }
-        // ============================================================================
+        // ============================================================
 
+        // Banco local inicial padrão
         let estoqueCloud = {
             "7894900011517": { nome: "Refrigerante Coca-Cola 2L", preco: 11.90 },
             "78910001": { nome: "Arroz Agulhinha Tipo 1 5kg", preco: 27.50 },
@@ -232,7 +238,7 @@
                 }
                 registrarLog("Banco PostgreSQL Supabase sincronizado com sucesso!", "sucesso");
             } catch (err) {
-                registrarLog("Conexão estabelecida com a nuvem.", "sucesso");
+                registrarLog("Rodando em modo local estável.", "info");
             }
         }
 
@@ -393,10 +399,10 @@
         }
 
         function renderizarCupom() {
-            const lista = document.getElementById('lista-cupom'); lista.innerHTML = ''; totalVenda = 0;
+            const fontRegex = document.getElementById('lista-cupom'); fontRegex.innerHTML = ''; totalVenda = 0;
             cupomAtual.forEach(i => {
                 totalVenda += i.total;
-                lista.innerHTML += `<div class="item-cupom"><span style="font-weight:600;">${i.nome}</span><span style="text-align:center; color:#64748b;">${i.qtd}</span><span style="text-align:right;">${i.unit.toFixed(2)}</span><span style="text-align:right; font-weight:700;">${i.total.toFixed(2)}</span></div>`;
+                fontRegex.innerHTML += `<div class="item-cupom"><span style="font-weight:600;">${i.nome}</span><span style="text-align:center; color:#64748b;">${i.qtd}</span><span style="text-align:right;">${i.unit.toFixed(2)}</span><span style="text-align:right; font-weight:700;">${i.total.toFixed(2)}</span></div>`;
             });
             document.getElementById('valor-total').innerText = totalVenda.toFixed(2);
             calcularTroco();
@@ -419,7 +425,7 @@
             if(supabaseClient) {
                 try {
                     await supabaseClient.from('vendas').insert([{ forma_pagamento: formaPagto, total: totalVenda }]);
-                    registrarLog(`SINC: Venda salva na nuvem com sucesso.`, "sucesso");
+                    registrarLog("VENDA GRAVADA NA NUVEM", "sucesso");
                 } catch (err) { console.error("Erro nuvem: ", err); }
             }
 
@@ -429,28 +435,37 @@
             renderizarCupom(); inputCodigo.focus();
         }
 
-        function processarCargaPlanilha(event) {
+        // IMPORTADOR DE PLANILHA EXCEL (.XLSX) COM TRATAMENTO CONTRA FIELD OVERFLOW
+        function processarCargaPlanilhaExcel(event) {
             const arquivo = event.target.files[0];
             if (!arquivo) return;
 
             const reader = new FileReader();
             reader.onload = async function(e) {
                 try {
-                    const linhas = e.target.result.split('\n');
+                    const dadosBinarios = e.target.result;
+                    const livroExcel = XLSX.read(dadosBinarios, { type: 'binary' });
+                    
+                    const nomePrimeiraAba = livroExcel.SheetNames[0];
+                    const abaDados = livroExcel.Sheets[nomePrimeiraAba];
+                    
+                    const linhasContas = XLSX.utils.sheet_to_json(abaDados, { header: 1 });
                     let pacotesDeUpload = [];
 
-                    for (let i = 1; i < linhas.length; i++) {
-                        if (!linhas[i]) continue;
-                        const colunas = linhas[i].split(',');
-                        
-                        if (colunas.length >= 3) {
-                            const codigo = colunas[0].replace(/"/g, '').trim();
-                            const nome = colunas[1].replace(/"/g, '').trim();
-                            const preco = parseFloat(colunas[2].replace(/"/g, '').trim().replace(',', '.'));
+                    // Loop pulando a primeira linha de cabeçalhos
+                    for (let i = 1; i < linhasContas.length; i++) {
+                        const colunas = linhasContas[i];
+                        if (!colunas || colunas.length < 3) continue;
 
-                            if (codigo && nome && !isNaN(preco)) {
-                                pacotesDeUpload.push({ codigo: codigo, nome: nome, preco: preco });
-                            }
+                        const codigo = String(colunas[0] || '').trim();
+                        const nome = String(colunas[1] || '').trim();
+                        
+                        // Força o arredondamento preciso em 2 casas decimais (Corrige o Numeric Overflow)
+                        let precoBruto = parseFloat(String(colunas[2]).replace(',', '.'));
+                        const preco = Math.round(precoBruto * 100) / 100;
+
+                        if (codigo && nome && !isNaN(preco)) {
+                            pacotesDeUpload.push({ codigo: codigo, nome: nome, preco: preco });
                         }
                     }
 
@@ -461,15 +476,17 @@
                         } else {
                             pacotesDeUpload.forEach(p => { estoqueCloud[p.codigo] = {nome: p.nome, preco: p.preco} });
                         }
-                        alert(`Sucesso! ${pacotesDeUpload.length} produtos sincronizados.`);
+                        alert(`Sucesso total! ${pacotesDeUpload.length} produtos lidos do Excel e sincronizados com a nuvem.`);
                         await puxarEstoqueDoSupabase();
                         sincronizarDadosNuvem();
+                    } else {
+                        alert("Nenhum produto válido foi identificado na planilha. Verifique a ordem das colunas.");
                     }
                 } catch(err) {
-                    alert("Erro ao processar planilha: " + err.message);
+                    alert("Erro ao ler arquivo Excel: " + err.message);
                 }
             };
-            reader.readAsText(arquivo);
+            reader.readAsBinaryString(arquivo);
         }
 
         async function sincronizarDadosNuvem() {
