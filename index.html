@@ -1,0 +1,85 @@
+// Banco de dados na memória do navegador
+let bancoDeDados = {};
+let tabelaNomesProvisoria = {}; // Guarda os nomes temporariamente até cruzar com os preços
+
+// --- NOVO MOTOR DE IMPORTAÇÃO DUPLA (SICNET CLOUD JOIN) ---
+function importarCSV() {
+    const arquivo = document.getElementById('arquivo-csv').files[0];
+    if (!arquivo) return alert("Por favor, selecione um arquivo .csv do Sicnet!");
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const texto = e.target.result;
+        const linhas = texto.split('\n');
+        
+        // Pega a primeira linha para descobrir qual tabela o usuário subiu
+        const cabecalho = linhas[0].toLowerCase();
+        let registrosProcessados = 0;
+
+        registrarLog(`> Analisando arquivo enviado...`);
+
+        // DETECÇÃO: É a tabela de NOMES? (Possui a coluna 'nome')
+        if (cabecalho.includes('nome')) {
+            registrarLog(`> Identificado: Tabela de Nomes do Sicnet.`);
+            
+            for (let i = 1; i < linhas.length; i++) {
+                if (!linhas[i]) continue;
+                const colunas = linhas[i].split(',');
+                
+                // Formato padrão esperado: "controle","nome",...,"lkpreconome"
+                // Como as colunas variam, buscamos os índices pelo cabeçalho real
+                const idxNome = linhas[0].split(',').findIndex(c => c.replace(/"/g, '').trim().toLowerCase() === 'nome');
+                const idxChave = linhas[0].split(',').findIndex(c => c.replace(/"/g, '').trim().toLowerCase() === 'lkpreconome');
+
+                if (idxNome !== -1 && idxChave !== -1 && colunas[idxNome] && colunas[idxChave]) {
+                    const nomeProd = colunas[idxNome].replace(/"/g, '').trim();
+                    const chaveLigacao = colunas[idxChave].replace(/"/g, '').trim();
+                    
+                    // Salva na tabela temporária usando o lkpreconome como ID
+                    tabelaNomesProvisoria[chaveLigacao] = nomeProd;
+                    registrosProcessados++;
+                }
+            }
+            alert(`Sucesso! Carregados ${registrosProcessados} nomes de produtos na memória. Agora carregue a tabela de preços para concluir o cruzamento.`);
+        } 
+        
+        // DETECÇÃO: É a tabela de PREÇOS? (Possui a coluna 'precovenda')
+        else if (cabecalho.includes('precovenda')) {
+            registrarLog(`> Identificado: Tabela de Preços do Sicnet. Iniciando cruzamento de dados...`);
+            
+            const colsCabecalho = linhas[0].split(',').map(c => c.replace(/"/g, '').trim().toLowerCase());
+            const idxCodigo = colsCabecalho.indexOf('lkest1');
+            const idxChave = colsCabecalho.indexOf('lkpreconome');
+            const idxPreco = colsCabecalho.indexOf('precovenda');
+
+            for (let i = 1; i < linhas.length; i++) {
+                if (!linhas[i]) continue;
+                const colunas = linhas[i].split(',');
+
+                if (idxCodigo !== -1 && idxPreco !== -1 && colunas[idxCodigo] && colunas[idxPreco]) {
+                    const codigoBarras = colunas[idxCodigo].replace(/"/g, '').trim();
+                    const chaveLigacao = colunas[idxChave] ? colunas[idxChave].replace(/"/g, '').trim() : '';
+                    const precoVenda = parseFloat(colunas[idxPreco].replace(/"/g, '').trim().replace(',', '.'));
+
+                    if (codigoBarras && !isNaN(precoVenda)) {
+                        // Busca o nome correspondente que guardamos na tabela provisória
+                        const nomeRelacionado = tabelaNomesProvisoria[chaveLigacao] || `Produto Cód. ${codigoBarras}`;
+                        
+                        // Alimenta o banco de dados oficial do caixa
+                        bancoDeDados[codigoBarras] = {
+                            nome: nomeRelacionado,
+                            preco: precoVenda
+                        };
+                        registrosProcessados++;
+                    }
+                }
+            }
+            alert(`Sensacional! ${registrosProcessados} produtos foram completamente montados (Nome + Preço) e estão prontos para venda no Caixa!`);
+        } else {
+            alert("Arquivo CSV não reconhecido como padrão do Sicnet. Certifique-se de usar TABPRECONOME ou TABPRECOPROD.");
+        }
+
+        atualizarDashboard();
+    };
+    reader.readAsText(arquivo);
+}
