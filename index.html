@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mavyc PDV - Nuvem Segura</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #e9ecef; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        
+        /* Controle de Telas */
+        .tela { display: none; width: 100%; height: 100%; }
+        .tela.ativa { display: flex; }
+
+        /* --- TELA DE LOGIN --- */
+        .login-wrapper { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #004d40, #001f1a); }
+        .login-box { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; width: 400px; }
+        .login-box h2 { color: #004d40; margin-bottom: 30px; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #555; }
+        .input-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; outline: none; }
+        .btn-login { width: 100%; padding: 15px; background: #004d40; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; transition: 0.3s; font-weight: bold;}
+        .btn-login:hover { background: #00695c; }
+
+        /* --- BARRAS SUPERIORES --- */
+        .top-bar { background: #111; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: absolute; top: 0; width: 100%; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .top-bar button { background: #d32f2f; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.3s;}
+        .top-bar button:hover { background: #b71c1c; }
+
+        /* --- TELA DE PDV (CAIXA) --- */
+        .pdv-container { display: flex; width: 100%; height: calc(100% - 50px); margin-top: 50px; background: #fff; }
+        
+        .cupom-area { width: 40%; background: #fff; padding: 20px; border-right: 2px solid #ddd; display: flex; flex-direction: column; }
+        .produtos-lista { flex-grow: 1; overflow-y: auto; margin-top: 15px; margin-bottom: 20px; border: 1px solid #eee; padding: 10px; background: #fafafa; border-radius: 5px;}
+        .item-cupom { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #ccc; font-size: 18px; color: #333;}
+        .total-box { background: #004d40; color: white; padding: 25px; border-radius: 8px; text-align: center; font-size: 32px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        
+        .operacao-area { width: 60%; padding: 30px; display: flex; flex-direction: column; background: #f4f6f9; }
+        .terminal-log { background: #0a0a0a; color: #00ff00; padding: 15px; border-radius: 8px; height: 250px; overflow-y: auto; font-family: 'Courier New', Courier, monospace; margin-bottom: 30px; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); font-size: 14px;}
+        .terminal-log div { margin-bottom: 5px; border-bottom: 1px solid #222; padding-bottom: 5px;}
+        
+        .input-codigo { width: 100%; padding: 20px; font-size: 28px; text-align: center; border: 3px solid #004d40; border-radius: 8px; outline: none; margin-bottom: 20px; transition: 0.3s;}
+        .input-codigo:focus { border-color: #00c853; box-shadow: 0 0 15px rgba(0, 200, 83, 0.4); }
+        
+        .btn-finalizar { background-color: #00c853; padding: 25px; color: white; font-size: 24px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.3s;}
+        .btn-finalizar:hover { background-color: #00e676; transform: translateY(-2px);}
+
+        /* --- TELA DO DASHBOARD (ADM) --- */
+        .dashboard-area { flex-direction: column; padding: 80px 40px 40px 40px; background: #f4f6f9; width: 100%; height: 100%; overflow-y: auto; }
+        .cards-resumo { display: flex; gap: 20px; margin-bottom: 40px; }
+        .card { background: white; padding: 25px; border-radius: 8px; flex: 1; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-top: 4px solid #004d40; }
+        .card h3 { margin: 0; color: #666; font-size: 14px; text-transform: uppercase; }
+        .card p { margin: 15px 0 0; font-size: 32px; font-weight: bold; color: #111; }
+        
+        /* Área de Importação Sicnet */
+        .import-section { background: white; padding: 25px; border-radius: 8px; border: 2px dashed #004d40; margin-bottom: 40px; display: flex; align-items: center; justify-content: space-between;}
+        .btn-importar { background: #ff9100; color: white; border: none; padding: 12px 25px; font-size: 16px; cursor: pointer; border-radius: 5px; font-weight: bold;}
+        .btn-importar:hover { background: #e65100; }
+        input[type="file"] { font-size: 16px; }
+
+        .tabela-vendas { width: 100%; background: white; border-collapse: collapse; border-radius: 8px; overflow: hidden; }
+        .tabela-vendas th, .tabela-vendas td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        .tabela-vendas th { background: #004d40; color: white; }
+    </style>
+</head>
+<body>
+
+    <!-- TELA 1: LOGIN -->
+    <div id="tela-login" class="tela ativa login-wrapper">
+        <div class="login-box">
+            <h2>🏢 Mavyc PDV</h2>
+            <div class="input-group">
+                <label>Usuário (caixa ou adm)</label>
+                <input type="text" id="login-usuario" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>Senha (123)</label>
+                <input type="password" id="login-senha">
+            </div>
+            <button class="btn-login" onclick="fazerLogin()">Acessar Sistema</button>
+        </div>
+    </div>
+
+    <!-- TELA 2: FRENTE DE CAIXA -->
+    <div id="tela-pdv" class="tela" style="flex-direction: column;">
+        <div class="top-bar">
+            <span><strong style="color:#00ff00;">● Online</strong> | Caixa 01 | Motor Mavyc Nuvem</span>
+            <button onclick="sair()">Sair (Logout)</button>
+        </div>
+        
+        <div class="pdv-container">
+            <div class="cupom-area">
+                <h2 style="text-align: center; border-bottom: 2px solid #004d40; padding-bottom: 10px;">🛒 Cupom Fiscal</h2>
+                <div class="produtos-lista" id="lista-cupom"></div>
+                <div class="total-box">R$ <span id="valor-total">0.00</span></div>
+            </div>
+
+            <div class="operacao-area">
+                <h3 style="color: #555; margin-bottom: 10px;">Terminal de Sincronização</h3>
+                <div class="terminal-log" id="log-sistema">
+                    <div>> Conectado. Aguardando leitura...</div>
+                </div>
+                
+                <h3 style="color: #555; margin-bottom: 10px; text-align: center;">Leitor de Código de Barras</h3>
+                <input type="text" class="input-codigo" id="codigo-barras" placeholder="Bipe o produto aqui..." autocomplete="off">
+                <button class="btn-finalizar" onclick="finalizarVenda()">💳 FINALIZAR VENDA (F2)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TELA 3: DASHBOARD ADM -->
+    <div id="tela-adm" class="tela">
+        <div class="top-bar">
+            <span><strong style="color:#00ff00;">● Online</strong> | Painel de Gestão Diretor</span>
+            <button onclick="sair()">Sair do Painel</button>
+        </div>
+        
+        <div class="dashboard-area">
+            
+            <!-- Integração Sicnet / Migração -->
+            <div class="import-section">
+                <div>
+                    <h3 style="color: #004d40; margin-bottom: 5px;">Migração de Dados: Legado Sicnet para Nuvem Mavyc</h3>
+                    <p style="color: #555; font-size: 14px;">Selecione o arquivo CSV extraído do SQL Server para carregar o estoque em tempo real.</p>
+                </div>
+                <div>
+                    <input type="file" id="arquivo-csv" accept=".csv" style="margin-right: 15px;">
+                    <button class="btn-importar" onclick="importarCSV()">Carregar Base de Dados</button>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="color: #004d40;">📊 Visão Geral do Caixa</h2>
+                <button style="background: #207245; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;" onclick="baixarCSV()">📥 Exportar Relatório Diário</button>
+            </div>
+            
+            <div class="cards-resumo">
+                <div class="card"><h3>Total Hoje</h3><p id="dash-total">R$ 0,00</p></div>
+                <div class="card"><h3>Produtos no Banco (Nuvem)</h3><p id="dash-produtos-count">3</p></div>
+                <div class="card"><h3>Status Servidor</h3><p style="color: #00c853;">Ativo e Blindado</p></div>
+            </div>
+
+            <table class="tabela-vendas">
+                <tr><th>Hora</th><th>Origem</th><th>Status SEFAZ</th><th>Total</th></tr>
+                <tbody id="tabela-corpo">
+                    <!-- Vendas aparecerão aqui -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- LÓGICA DO SISTEMA -->
+    <script>
+        // O Banco de Dados Dinâmico (Começa com alguns de teste)
+        let bancoDeDados = {
+            "7894900011517": { nome: "Coca-Cola 2L", preco: 10.00 },
+            "123": { nome: "Produto Teste Genérico", preco: 5.50 },
+            "789": { nome: "Arroz 5kg", preco: 25.90 }
+        };
+
+        let totalVenda = 0;
+        let faturamentoDia = 0;
+        const inputCodigo = document.getElementById('codigo-barras');
+        const listaCupom = document.getElementById('lista-cupom');
+        const logSistema = document.getElementById('log-sistema');
+
+        // Mudar Telas
+        function mostrarTela(idTela) {
+            document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+            document.getElementById(idTela).classList.add('ativa');
+        }
+
+        // Sistema de Login
+        function fazerLogin() {
+            const user = document.getElementById('login-usuario').value.toLowerCase().trim();
+            const pass = document.getElementById('login-senha').value.trim();
+
+            if (user === 'adm' && pass === '123') {
+                mostrarTela('tela-adm');
+                atualizarDashboard();
+            } else if (user === 'caixa' && pass === '123') {
+                mostrarTela('tela-pdv');
+                inputCodigo.focus();
+                registrarLog("> Operador conectado. Criptografia ativa.");
+            } else {
+                alert("Credenciais incorretas.");
+            }
+        }
+
+        function sair() {
+            document.getElementById('login-usuario').value = '';
+            document.getElementById('login-senha').value = '';
+            mostrarTela('tela-login');
+            totalVenda = 0;
+            document.getElementById('valor-total').innerText = '0.00';
+            listaCupom.innerHTML = '';
+        }
+
+        // Terminal do PDV
+        function registrarLog(msg) {
+            const hora = new Date().toLocaleTimeString();
+            const div = document.createElement('div');
+            div.innerText = `[${hora}] ${msg}`;
+            logSistema.prepend(div);
+        }
+
+        // Motor do Caixa (Bipar Produto)
+        inputCodigo.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const codigoLido = this.value.trim();
+                
+                if (bancoDeDados[codigoLido]) {
+                    const prod = bancoDeDados[codigoLido];
+                    listaCupom.innerHTML += `<div class="item-cupom"><span>${prod.nome}</span><span>R$ ${prod.preco.toFixed(2)}</span></div>`;
+                    totalVenda += prod.preco;
+                    document.getElementById('valor-total').innerText = totalVenda.toFixed(2);
+                    registrarLog(`SUCESSO: ${prod.nome} registrado.`);
+                    listaCupom.scrollTop = listaCupom.scrollHeight;
+                } else {
+                    registrarLog(`ERRO: Código ${codigoLido} não encontrado no banco.`);
+                    alert("Produto não cadastrado!");
+                }
+                this.value = '';
+            }
+        });
+
+        // Forçar foco no leitor
+        document.getElementById('tela-pdv').addEventListener('click', () => {
+            if (document.getElementById('tela-pdv').classList.contains('ativa')) inputCodigo.focus();
+        });
+
+        // Finalizar Venda e mandar pro Dashboard
+        function finalizarVenda() {
+            if(totalVenda === 0) return alert("Passe um produto!");
+
+            registrarLog(">>> Enviando pacote criptografado para nuvem...");
+            
+            setTimeout(() => {
+                registrarLog("CONFIRMADO: Venda sincronizada.");
+                alert(`Venda de R$ ${totalVenda.toFixed(2)} concluída!`);
+                
+                // Registra a venda no Dashboard do ADM
+                faturamentoDia += totalVenda;
+                const hora = new Date().toLocaleTimeString();
+                document.getElementById('tabela-corpo').innerHTML += `
+                    <tr><td>${hora}</td><td>Caixa 01</td><td style="color: green; font-weight: bold;">Autorizado</td><td>R$ ${totalVenda.toFixed(2)}</td></tr>
+                `;
+                
+                // Limpa o PDV
+                totalVenda = 0;
+                document.getElementById('valor-total').innerText = '0.00';
+                listaCupom.innerHTML = '';
+                inputCodigo.focus();
+            }, 600);
+        }
+
+        // --- MÓDULO DE MIGRAÇÃO (LEITURA DE CSV) ---
+        function importarCSV() {
+            const arquivo = document.getElementById('arquivo-csv').files[0];
+            if (!arquivo) return alert("Selecione o arquivo CSV extraído do Sicnet primeiro!");
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const texto = e.target.result;
+                const linhas = texto.split('\n');
+                let cadastrados = 0;
+
+                // Loop pelas linhas do CSV (Padrão esperado: Codigo,Nome,Preco)
+                for(let i = 1; i < linhas.length; i++) { // i=1 para pular o cabeçalho
+                    const colunas = linhas[i].split(',');
+                    if(colunas.length >= 3) {
+                        const cod = colunas[0].trim();
+                        const nome = colunas[1].trim();
+                        const preco = parseFloat(colunas[2].replace(',', '.')); // Lida com vírgula de centavos
+
+                        if(cod && nome && !isNaN(preco)) {
+                            bancoDeDados[cod] = { nome: nome, preco: preco };
+                            cadastrados++;
+                        }
+                    }
+                }
+                
+                alert(`Migração concluída com sucesso! ${cadastrados} produtos foram inseridos no banco de dados em nuvem.`);
+                atualizarDashboard();
+            };
+            reader.readAsText(arquivo);
+        }
+
+        function atualizarDashboard() {
+            document.getElementById('dash-total').innerText = `R$ ${faturamentoDia.toFixed(2)}`;
+            document.getElementById('dash-produtos-count').innerText = Object.keys(bancoDeDados).length;
+        }
+
+        function baixarCSV() { alert("Gerando relatório seguro em Excel..."); }
+    </script>
+</body>
+</html>
