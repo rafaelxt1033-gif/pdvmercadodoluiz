@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Mavyc PDV Pro</title>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; display: flex; flex-direction: column; height: 100vh; margin: 0; }
+        header { background: #004d40; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        main { display: flex; flex: 1; padding: 10px; gap: 10px; }
+        .pdv-painel { flex: 2; background: white; padding: 20px; border-radius: 8px; display: flex; flex-direction: column; }
+        .admin-painel { flex: 1; background: #fff; padding: 20px; border-radius: 8px; border-left: 5px solid #ff9100; }
+        input { padding: 15px; font-size: 18px; width: 100%; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 15px; cursor: pointer; background: #004d40; color: white; border: none; border-radius: 4px; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Mavyc PDV - Mercadinho</h1>
+    <div>
+        <button onclick="document.getElementById('admin-sec').style.display='block'">Painel Admin</button>
+    </div>
+</header>
+
+<main>
+    <div class="pdv-painel">
+        <input type="text" id="leitor" placeholder="Passe o leitor de código de barras..." autofocus onkeypress="handleScan(event)">
+        <div id="cupom" style="margin-top: 20px; flex-grow: 1;">
+            <h3>Cupom Atual</h3>
+            <table id="tabela-cupom"><thead><tr><th>Produto</th><th>Preço</th></tr></thead><tbody></tbody></table>
+        </div>
+        <h2 id="total">Total: R$ 0.00</h2>
+        <button onclick="emitirNotaFiscal()" style="background: #d32f2f; width: 100%;">EMITIR NOTA FISCAL (NFC-e)</button>
+    </div>
+
+    <div class="admin-painel" id="admin-sec" style="display:none;">
+        <h2>Importação Sicnet</h2>
+        <label>1. Carregar TABPRECONOME (Nomes):</label>
+        <input type="file" onchange="importarCSV(event, 'nomes')">
+        <label>2. Carregar TABPRECOPROD (Preços):</label>
+        <input type="file" onchange="importarCSV(event, 'precos')">
+        <button onclick="document.getElementById('admin-sec').style.display='none'">Fechar</button>
+    </div>
+</main>
+
+<script>
+    let bancoProdutos = {}; // Estrutura: { "codigo": { nome: "", preco: 0 } }
+    let carrinho = [];
+    let total = 0;
+
+    // Lógica do Leitor (Código de barras age como teclado)
+    function handleScan(e) {
+        if (e.key === 'Enter') {
+            const codigo = document.getElementById('leitor').value.trim();
+            if (bancoProdutos[codigo]) {
+                const prod = bancoProdutos[codigo];
+                carrinho.push(prod);
+                total += prod.preco;
+                atualizarCupom();
+                document.getElementById('leitor').value = '';
+            } else {
+                alert("Produto não cadastrado!");
+            }
+        }
+    }
+
+    function atualizarCupom() {
+        const tbody = document.querySelector("#tabela-cupom tbody");
+        tbody.innerHTML = carrinho.map(i => `<tr><td>${i.nome}</td><td>${i.preco.toFixed(2)}</td></tr>`).join('');
+        document.getElementById('total').innerText = `Total: R$ ${total.toFixed(2)}`;
+    }
+
+    // Importação Inteligente de CSVs separados
+    function importarCSV(event, tipo) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const linhas = e.target.result.split('\n');
+            linhas.forEach(l => {
+                const col = l.split(',');
+                if (col.length < 2) return;
+                const cod = col[0].replace(/"/g, '').trim();
+                const valor = col[1].replace(/"/g, '').trim();
+
+                if(!bancoProdutos[cod]) bancoProdutos[cod] = { nome: "Sem Nome", preco: 0 };
+                
+                if (tipo === 'nomes') bancoProdutos[cod].nome = valor;
+                else bancoProdutos[cod].preco = parseFloat(valor.replace(',', '.'));
+            });
+            alert("Importado: " + tipo);
+        };
+        reader.readAsText(file);
+    }
+
+    function emitirNotaFiscal() {
+        if(carrinho.length === 0) return alert("Carrinho vazio!");
+        alert("Simulação: Enviando dados para API de NFC-e (Focus/WebMania)...\nNota emitida com sucesso!");
+    }
+</script>
+</body>
+</html>
