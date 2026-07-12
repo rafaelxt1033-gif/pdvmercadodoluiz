@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Mercadinho Dois Irmãos - PDV Premium</title>
+    <style>
+        :root { 
+            --primaria: #1e293b; /* Azul Escuro Industrial */
+            --secundaria: #3b82f6; /* Azul Dinâmico */
+            --sucesso: #10b981; /* Verde Caixa */
+            --fundo: #f1f5f9; 
+            --texto: #0f172a;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: var(--fundo); color: var(--texto); height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        
+        /* TELAS */
+        .tela { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+        .tela.ativa { display: flex; }
+
+        /* LOGIN */
+        .login-wrapper { background: linear-gradient(135deg, #0f172a, #1e293b); justify-content: center; align-items: center; }
+        .login-box { background: white; padding: 40px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); text-align: center; }
+        .login-box h2 { color: var(--primaria); margin-bottom: 8px; font-size: 24px; }
+        .login-box p { color: #64748b; font-size: 14px; margin-bottom: 25px; }
+        
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-weight: 600; margin-bottom: 6px; color: #475569; font-size: 14px; }
+        .input-group input { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; }
+        .input-group input:focus { border-color: var(--secundaria); box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+        
+        .btn-universal { width: 100%; padding: 16px; background: var(--primaria); color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-universal:hover { background: #334155; }
+
+        /* PAINEL CAIXA (PDV) */
+        .top-bar { background: #0f172a; color: white; padding: 0 25px; height: 65px; display: flex; justify-content: space-between; align-items: center; position: absolute; top: 0; width: 100%; z-index: 100; }
+        .pdv-container { display: flex; width: 100%; height: 100%; padding-top: 65px; background: white; }
+        
+        /* Cupom */
+        .cupom-area { width: 45%; background: white; padding: 30px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; }
+        .cupom-header { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; font-weight: 600; padding-bottom: 12px; border-bottom: 2px solid var(--primaria); font-size: 14px; color: #64748b; }
+        .produtos-lista { flex-grow: 1; overflow-y: auto; margin-top: 10px; }
+        .item-cupom { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; padding: 14px 0; border-bottom: 1px dashed #e2e8f0; font-size: 16px; }
+        .total-box { background: var(--primaria); color: white; padding: 25px; border-radius: 12px; text-align: center; margin-top: 20px; }
+        .total-box p { font-size: 42px; font-weight: 800; }
+
+        /* Operação */
+        .operacao-area { width: 55%; padding: 30px; display: flex; flex-direction: column; background: #f8fafc; justify-content: space-between; }
+        .terminal-log { background: #020617; color: #38bdf8; padding: 15px; border-radius: 8px; height: 160px; overflow-y: auto; font-family: monospace; font-size: 13px; margin-bottom: 20px; }
+        
+        .input-codigo { width: 100%; padding: 20px; font-size: 36px; text-align: center; border: 3px solid var(--primaria); border-radius: 12px; outline: none; font-weight: bold; background: white; }
+        .input-codigo:focus { border-color: var(--secundaria); }
+
+        .fechamento-painel { background: white; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grupo-pagamento label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 14px; }
+        .grupo-pagamento select, .grupo-pagamento input { width: 100%; padding: 14px; font-size: 18px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; }
+        
+        /* DASHBOARD ADMIN */
+        .dashboard-area { flex-direction: column; padding: 95px 40px 40px 40px; background: #f8fafc; width: 100%; height: 100%; overflow-y: auto; }
+        .import-wrapper { background: white; padding: 30px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 35px; border-left: 6px solid var(--secundaria); }
+        .grid-importadores { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-top: 20px; }
+        .box-arquivo { background: #f1f5f9; border: 2px dashed #cbd5e1; padding: 20px; border-radius: 8px; text-align: center; }
+        
+        .cards-resumo { display: flex; gap: 25px; margin-bottom: 35px; }
+        .card { background: white; padding: 25px; border-radius: 12px; flex: 1; border: 1px solid #e2e8f0; text-align: center; }
+        .card h4 { color: #64748b; font-size: 14px; text-transform: uppercase; margin-bottom: 10px; }
+        .card p { font-size: 36px; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <!-- TELA 1: LOGIN -->
+    <div id="tela-login" class="tela ativa login-wrapper">
+        <div class="login-box">
+            <h2>Mercadinho Dois Irmãos</h2>
+            <p>Painel de Vendas Corporativo</p>
+            <div class="input-group">
+                <label>Operador / Administrador</label>
+                <input type="text" id="login-usuario" placeholder="caixa ou adm" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>Senha</label>
+                <input type="password" id="login-senha" placeholder="***">
+            </div>
+            <button class="btn-universal" onclick="fazerLogin()">Autenticar Estação</button>
+        </div>
+    </div>
+
+    <!-- TELA 2: FRENTE DE CAIXA -->
+    <div id="tela-pdv" class="tela" style="flex-direction: column;">
+        <div class="top-bar">
+            <div><span style="color:#10b981; font-weight:bold;">● CAIXA OPERACIONAL</span> | Mercadinho Dois Irmãos</div>
+            <button onclick="sair()" style="background:#ef4444; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold;">Sair</button>
+        </div>
+        <div class="pdv-container">
+            <div class="cupom-area">
+                <div class="cupom-header"><span>Item</span><span style="text-align:center;">Qtd</span><span style="text-align:right;">Unit</span><span style="text-align:right;">Total</span></div>
+                <div class="produtos-lista" id="lista-cupom"></div>
+                <div class="total-box"><h3>TOTAL DO CUPOM</h3><p>R$ <span id="valor-total">0.00</span></p></div>
+            </div>
+            <div class="operacao-area">
+                <div class="terminal-log" id="log-sistema"><div>[INFO] Aguardando leitura do código de barras...</div></div>
+                <div>
+                    <input type="text" class="input-codigo" id="codigo-barras" placeholder="Bipe o produto..." autocomplete="off">
+                    <p style="text-align:center; font-size:13px; color:#64748b; margin-top:8px;">Multiplicar itens: digite <b>Qtd*Codigo</b> (Ex: 3*123 e dê Enter)</p>
+                </div>
+                <div class="fechamento-painel">
+                    <div class="grupo-pagamento">
+                        <label>Pagamento</label>
+                        <select id="forma-pagamento"><option>Dinheiro</option><option>PIX</option><option>Cartão</option></select>
+                    </div>
+                    <div class="grupo-pagamento">
+                        <label>Valor Recebido</label>
+                        <input type="number" id="valor-pago" placeholder="0.00" oninput="calcularTroco()">
+                    </div>
+                    <div style="grid-column: span 2; text-align:right; font-weight:bold; color:#ef4444;" id="box-troco">Troco: R$ 0.00</div>
+                    <button class="btn-universal" onclick="finalizarVenda()" style="grid-column:span 2; background:var(--sucesso);">CONCLUIR TRANSAÇÃO</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TELA 3: GESTÃO ADM -->
+    <div id="tela-adm" class="tela">
+        <div class="top-bar">
+            <div><b>Mavyc Engine</b> | Retaguarda do Diretor</div>
+            <button onclick="sair()" style="background:#475569; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">Sair</button>
+        </div>
+        <div class="dashboard-area">
+            <div class="import-wrapper">
+                <h3>🔄 Importador de Dados Sicnet Legado</h3>
+                <p>Insira os arquivos gerados no RebaseData para atualizar a nuvem.</p>
+                <div class="grid-importadores">
+                    <div class="box-arquivo"><label>1. Nomes (dbo.TABPRECONOME.csv)</label><input type="file" onchange="processarMigracao(event, 'nomes')"></div>
+                    <div class="box-arquivo"><label>2. Preços (dbo.TABPRECOPROD.csv)</label><input type="file" onchange="processarMigracao(event, 'precos')"></div>
+                </div>
+            </div>
+            <div class="cards-resumo">
+                <div class="card"><h4>Caixa Geral Hoje</h4><p id="dash-total" style="color:var(--sucesso);">R$ 0,00</p></div>
+                <div class="card"><h4>Itens Sincronizados</h4><p id="dash-count">2</p></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let bancoDeDados = {"123": {nome: "Produto Exemplo", preco: 5.00}};
+        let cupomAtual = []; let totalVenda = 0; let faturamentoDia = 0;
+        const inputCodigo = document.getElementById('codigo-barras');
+
+        function mostrarTela(id) {
+            document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+            document.getElementById(id).classList.add('ativa');
+        }
+
+        function fazerLogin() {
+            const u = document.getElementById('login-usuario').value.toLowerCase().trim();
+            const p = document.getElementById('login-senha').value.trim();
+            if (u === 'adm' && p === '123') { mostrarTela('tela-adm'); document.getElementById('dash-count').innerText = Object.keys(bancoDeDados).length; }
+            else if (u === 'caixa' && p === '123') { mostrarTela('tela-pdv'); inputCodigo.focus(); }
+            else alert("Acesso inválido.");
+        }
+
+        function sair() { mostrarTela('tela-login'); }
+
+        function registrarLog(msg) {
+            const div = document.createElement('div');
+            div.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            document.getElementById('log-sistema').prepend(div);
+        }
+
+        inputCodigo.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const entrada = this.value.trim(); this.value = ''; if(!entrada) return;
+                let qtd = 1; let codigo = entrada;
+                if (entrada.includes('*')) { const p = entrada.split('*'); qtd = parseFloat(p[0]); codigo = p[1].trim(); }
+                
+                if (bancoDeDados[codigo]) {
+                    const prod = bancoDeDados[codigo];
+                    cupomAtual.push({ nome: prod.nome, qtd: qtd, unit: prod.preco, total: prod.preco * qtd });
+                    renderizarCupom();
+                } else { registrarLog(`[ERRO] Produto ${codigo} não cadastrado.`); }
+            }
+        });
+
+        function renderizarCupom() {
+            const lista = document.getElementById('lista-cupom'); lista.innerHTML = ''; totalVenda = 0;
+            cupomAtual.forEach(i => {
+                totalVenda += i.total;
+                lista.innerHTML += `<div class="item-cupom"><b>${i.nome}</b><span style="text-align:center;">${i.qtd}</span><span style="text-align:right;">${i.unit.toFixed(2)}</span><span style="text-align:right; font-weight:bold;">${i.total.toFixed(2)}</span></div>`;
+            });
+            document.getElementById('valor-total').innerText = totalVenda.toFixed(2);
+            calcularTroco();
+        }
+
+        function calcularTroco() {
+            const p = parseFloat(document.getElementById('valor-pago').value);
+            const box = document.getElementById('box-troco');
+            if (p >= totalVenda) { box.innerText = `Troco: R$ ${(p - totalVenda).toFixed(2)}`; box.style.color = "#10b981"; }
+            else { box.innerText = `Troco: R$ 0.00`; box.style.color = "#ef4444"; }
+        }
+
+        function finalizarVenda() {
+            if(cupomAtual.length === 0) return;
+            faturamentoDia += totalVenda; cupomAtual = []; document.getElementById('valor-pago').value = '';
+            renderizarCupom(); registrarLog("[OK] Transação concluída com sucesso."); alert("Venda finalizada!");
+        }
+
+        function processarMigracao(event, tipo) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const linhas = e.target.result.split('\n');
+                linhas.forEach(l => {
+                    const col = l.split(','); if(col.length < 2) return;
+                    const cod = col[0].replace(/"/g,'').trim();
+                    const val = col[1].replace(/"/g,'').trim();
+                    if(!bancoDeDados[cod]) bancoDeDados[cod] = { nome: "Produto Importado", preco: 0 };
+                    if(tipo === 'nomes') bancoDeDados[cod].nome = val;
+                    else bancoDeDados[cod].preco = parseFloat(val.replace(',','.'));
+                });
+                alert(`Arquivo de ${tipo} integrado com sucesso!`);
+            };
+            reader.readAsText(event.target.files[0]);
+        }
+
+        document.getElementById('tela-pdv').addEventListener('click', () => { if(document.getElementById('tela-pdv').classList.contains('active')) inputCodigo.focus(); });
+    </script>
+</body>
+</html>
