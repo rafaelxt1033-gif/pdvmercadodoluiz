@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDV Nuvem - Mavyc Digital</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { margin: 0; background-color: #f0f2f5; display: flex; height: 100vh; }
+        .cupom { width: 35%; background: white; padding: 20px; border-right: 2px solid #ddd; display: flex; flex-direction: column; }
+        .produtos-lista { flex-grow: 1; overflow-y: auto; margin-bottom: 20px; }
+        .item-cupom { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #ccc; font-size: 18px;}
+        .total-area { background: #004d40; color: white; padding: 20px; border-radius: 8px; text-align: center; font-size: 28px; font-weight: bold; }
+        .operacao { width: 65%; padding: 30px; display: flex; flex-direction: column; }
+        .leitor-area { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; margin-bottom: 20px; }
+        input[type="text"] { width: 80%; padding: 15px; font-size: 24px; text-align: center; border: 2px solid #004d40; border-radius: 8px; outline: none; }
+        .acoes { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .btn { padding: 20px; font-size: 20px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; transition: 0.3s; }
+        .btn-pagar { background-color: #00c853; }
+        .btn-pagar:hover { background-color: #00e676; }
+        .btn-nfce { background-color: #ff9100; }
+        .btn-nfce:hover { background-color: #ffab40; }
+        .mavyc-logo { text-align: center; margin-top: auto; color: #7f8c8d; font-size: 14px;}
+    </style>
+</head>
+<body>
+
+    <!-- Lado Esquerdo: Cupom -->
+    <div class="cupom">
+        <h2 style="text-align: center; margin-top: 0;">🛒 Caixa Aberto</h2>
+        <div class="produtos-lista" id="lista-cupom">
+            <!-- Itens aparecem aqui -->
+        </div>
+        <div class="total-area">
+            TOTAL: R$ <span id="valor-total">0.00</span>
+        </div>
+    </div>
+
+    <!-- Lado Direito: Operação -->
+    <div class="operacao">
+        <div class="leitor-area">
+            <h3>Passe o Código de Barras</h3>
+            <!-- O leitor de código de barras funciona digitando aqui e apertando Enter rápido -->
+            <input type="text" id="codigo-barras" placeholder="Aguardando leitor..." autofocus autocomplete="off">
+        </div>
+
+        <div class="acoes">
+            <button class="btn btn-pagar" onclick="finalizarVenda()">Finalizar Venda (F2)</button>
+            <button class="btn btn-nfce" onclick="emitirNota()">Emitir NFC-e / SEFAZ</button>
+        </div>
+
+        <div class="mavyc-logo">
+            <p>Desenvolvido por <strong>Mavyc Digital</strong> - Arquitetura em Nuvem</p>
+        </div>
+    </div>
+
+    <script>
+        // Banco de Dados Simulado (Depois substituiremos por Supabase/SQL na Nuvem)
+        const bancoProdutos = {
+            "7891010101010": { nome: "Arroz Branco 5kg", preco: 25.90 },
+            "7892020202020": { nome: "Feijão Carioca 1kg", preco: 8.50 },
+            "7894900011517": { nome: "Refrigerante Coca-Cola 2L", preco: 10.00 }, // Código real da Coca!
+            "123": { nome: "Pão Francês (kg)", preco: 15.00 } // Código de teste rápido
+        };
+
+        let total = 0;
+        const inputCodigo = document.getElementById('codigo-barras');
+
+        // Magia do Leitor de Código de Barras
+        inputCodigo.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const codigo = inputCodigo.value;
+                adicionarProduto(codigo);
+                inputCodigo.value = ''; // Limpa para o próximo bipe
+            }
+        });
+
+        // Garante que o leitor sempre estará focado, mesmo se o usuário clicar fora
+        document.body.addEventListener('click', () => { inputCodigo.focus(); });
+
+        function adicionarProduto(codigo) {
+            const produto = bancoProdutos[codigo];
+            if (produto) {
+                const lista = document.getElementById('lista-cupom');
+                lista.innerHTML += `<div class="item-cupom"><span>${produto.nome}</span><span>R$ ${produto.preco.toFixed(2)}</span></div>`;
+                total += produto.preco;
+                document.getElementById('valor-total').innerText = total.toFixed(2);
+                lista.scrollTop = lista.scrollHeight; // Rola para o final
+            } else {
+                alert("Produto não encontrado no banco de dados da nuvem!");
+            }
+        }
+
+        function finalizarVenda() {
+            if(total === 0) return alert("Passe algum produto primeiro!");
+            alert("Venda de R$ " + total.toFixed(2) + " finalizada com sucesso na nuvem!");
+            document.getElementById('lista-cupom').innerHTML = '';
+            total = 0;
+            document.getElementById('valor-total').innerText = '0.00';
+            inputCodigo.focus();
+        }
+
+        function emitirNota() {
+            if(total === 0) return alert("Passe algum produto para emitir a NFC-e!");
+            alert("Conectando aos servidores da SEFAZ com Certificado A1 em Nuvem...\n(Essa é a integração que faremos no backend real!)");
+        }
+    </script>
+</body>
+</html>
