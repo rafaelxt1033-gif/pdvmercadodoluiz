@@ -52,7 +52,7 @@
         .tabela-dados th, .tabela-dados td { padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: left; }
 
         /* ============================================================== */
-        /* CSS DA IMPRESSORA EPSON (COMUM PARA AS DUAS NOTAS)             */
+        /* CSS DA IMPRESSORA EPSON (LETRAS GROSSAS E NÍTIDAS)             */
         /* ============================================================== */
         @media print {
             body * { visibility: hidden; display: none !important; }
@@ -62,15 +62,20 @@
                 position: absolute; left: 0; top: 0; 
                 width: 100%; max-width: 80mm; 
                 margin: 0; padding: 0 2mm;
-                font-family: 'Courier New', Courier, monospace; 
-                color: black; background: white; 
-                font-size: 11px; 
-                line-height: 1.2; 
+                
+                /* TROCADO PARA ARIAL PARA DEIXAR A LETRA BEM CHEIA */
+                font-family: Arial, Helvetica, sans-serif !important; 
+                color: #000 !important; /* PRETO ABSOLUTO */
+                font-weight: bold !important; /* LETRAS GROSSAS */
+                background: white; 
+                font-size: 12px; /* AUMENTADO O TAMANHO */
+                line-height: 1.25; 
+                text-rendering: optimizeLegibility;
             }
             
             .txt-centro { text-align: center; }
             .txt-direita { text-align: right; }
-            .linha-tracejada { border-top: 1px dashed black; margin: 3px 0; width: 100%; }
+            .linha-tracejada { border-top: 1px dashed #000; margin: 4px 0; width: 100%; }
             .flex-space { display: flex; justify-content: space-between; }
             
             #qrcode-recibo { margin: 8px auto 0 auto; display: flex; justify-content: center; }
@@ -143,9 +148,7 @@
                     </div>
                     <div style="grid-column: span 2; text-align:right; font-weight:bold; font-size:22px; color: var(--erro);" id="box-troco">Troco: R$ 0.00</div>
                     
-                    <!-- BOTÃO 1: CHAMA PDV SIMPLES (FALSE) -->
                     <button class="btn-universal" onclick="finalizarVenda(false)" style="background: var(--sucesso);">FINALIZAR SEM NOTA</button>
-                    <!-- BOTÃO 2: CHAMA NFC-E COMPLETA (TRUE) -->
                     <button class="btn-universal" onclick="finalizarVenda(true)" style="background: var(--fiscal); font-size: 18px;">EMITIR NFC-e (F4)</button>
                 </div>
             </div>
@@ -371,14 +374,11 @@
             else { box.innerText = `Troco: R$ 0.00`; box.style.color = 'var(--erro)'; }
         }
 
-        // ====================================================================
-        // FUNÇÕES DE IMPRESSÃO - AS DUAS OPÇÕES DE NOTA
-        // ====================================================================
         function formatarMoeda(valor) {
             return valor.toFixed(2).replace('.', ',');
         }
 
-        // LAYOUT 1: CUPOM PDV SIMPLES (Botão: Finalizar Sem Nota)
+        // LAYOUT 1: CUPOM PDV SIMPLES 
         function gerarCupomPDV(formaPagto) {
             let containerAntigo = document.getElementById('recibo-impressao');
             if(containerAntigo) containerAntigo.remove();
@@ -389,12 +389,12 @@
 
             let html = `
             <div id="recibo-impressao">
-                <div class="txt-centro" style="font-weight:bold; font-size:14px; margin-bottom:2px;">Mercadinho Dois Irmãos</div>
-                <div class="txt-centro" style="font-size:11px; margin-bottom:8px;">Rua Padre Cicero, 375, Felipe Camarão</div>
-                <div class="txt-centro" style="font-size:11px; margin-bottom:5px;">${dataAtual} - Pedido ${pedidoNumber}</div>
+                <div class="txt-centro" style="font-size:14px; margin-bottom:2px;">MERCADINHO DOIS IRMÃOS</div>
+                <div class="txt-centro" style="margin-bottom:8px;">Rua Padre Cicero, 375, Felipe Camarão</div>
+                <div class="txt-centro" style="margin-bottom:5px;">${dataAtual} - Pedido ${pedidoNumber}</div>
                 
                 <div class="linha-tracejada"></div>
-                <div class="flex-space" style="font-weight:bold;"><span>Qtd Descrição</span><span>Total</span></div>
+                <div class="flex-space"><span>Qtd Descrição</span><span>Total</span></div>
                 <div class="linha-tracejada"></div>
                 
                 <div style="margin-bottom: 5px;">`;
@@ -402,7 +402,7 @@
             cupomAtual.forEach(i => {
                 let und = Number.isInteger(i.qtd) ? 'UN' : 'KG';
                 html += `
-                    <div style="margin-bottom: 2px;">
+                    <div style="margin-bottom: 4px;">
                         <div>${i.qtd} ${und} ${i.nome}</div>
                         <div class="txt-direita">${formatarMoeda(i.total)}</div>
                     </div>`;
@@ -412,18 +412,18 @@
                 </div>
                 <div class="linha-tracejada"></div>
                 
-                <div class="flex-space" style="font-weight:bold; font-size:13px; margin-top:5px;">
+                <div class="flex-space" style="font-size:13px; margin-top:5px;">
                     <span>Total a pagar</span>
                     <span>R$ ${formatarMoeda(totalVenda)}</span>
                 </div>
-                <div class="flex-space" style="font-size:12px; margin-top:2px;">
+                <div class="flex-space" style="margin-top:2px;">
                     <span>${formaPagto}</span>
                     <span>R$ ${formatarMoeda(totalVenda)}</span>
                 </div>
-                <div style="font-size:11px; margin-top:5px;">Vendedor: ${nomeVendedor}</div>
+                <div style="margin-top:5px;">Vendedor: ${nomeVendedor}</div>
                 
-                <div class="txt-centro" style="margin-top:15px; font-size:12px;">Obrigado pela preferência!</div>
-                <div class="txt-centro" style="font-size:11px;">Volte Sempre!</div>
+                <div class="txt-centro" style="margin-top:15px;">Obrigado pela preferência!</div>
+                <div class="txt-centro">Volte Sempre!</div>
             </div>`;
 
             let divElement = document.createElement('div');
@@ -431,7 +431,7 @@
             document.body.appendChild(divElement.firstElementChild);
         }
 
-        // LAYOUT 2: NFC-E OFICIAL DA SEFAZ RN (Botão: Emitir NFC-e F4)
+        // LAYOUT 2: NFC-E OFICIAL DA SEFAZ RN 
         function gerarNFCe(formaPagto) {
             let containerAntigo = document.getElementById('recibo-impressao');
             if(containerAntigo) containerAntigo.remove();
@@ -451,7 +451,7 @@
                 </div>
                 
                 <div class="linha-tracejada"></div>
-                <div style="font-weight:bold;"># Cód Descrição Qtd Un Vl Unit. Vl Total</div>
+                <div># Cód Descrição Qtd Un Vl Unit. Vl Total</div>
                 <div class="linha-tracejada"></div>
                 
                 <div style="margin-bottom: 5px;">`;
@@ -462,10 +462,11 @@
                 let codProduto = i.cod.length > 3 ? i.cod : "0000000000000"; 
                 
                 html += `
-                    <div style="margin-bottom: 2px;">
+                    <div style="margin-bottom: 4px;">
                         <div>${numItem} ${codProduto} ${i.nome.toUpperCase()}</div>
-                        <div class="flex-space">
-                            <span>&nbsp;&nbsp;&nbsp;&nbsp;${i.qtd} ${und} X ${formatarMoeda(i.unit)}</span>
+                        <!-- padding-left impede que a linha quebre e fique embaixo da descrição -->
+                        <div class="flex-space" style="padding-left: 15px;">
+                            <span>${i.qtd} ${und} X ${formatarMoeda(i.unit)}</span>
                             <span>${formatarMoeda(i.total)}</span>
                         </div>
                     </div>`;
@@ -476,7 +477,7 @@
                 <div class="linha-tracejada"></div>
                 
                 <div class="flex-space"><span>QTD. TOTAL DE ITENS</span><span>${qtdItens}</span></div>
-                <div class="flex-space" style="font-weight:bold;"><span>VALOR TOTAL R$</span><span>${formatarMoeda(totalVenda)}</span></div>
+                <div class="flex-space"><span>VALOR TOTAL R$</span><span>${formatarMoeda(totalVenda)}</span></div>
                 <div class="flex-space"><span>FORMA DE PAGAMENTO</span><span>Valor Pago</span></div>
                 <div class="flex-space"><span>${formaPagto}</span><span>${formatarMoeda(totalVenda)}</span></div>
                 
@@ -515,7 +516,7 @@
             
             if(nfce) {
                 gerarNFCe(formaPagto);
-                setTimeout(() => { window.print(); }, 200); // Aguarda QR Code
+                setTimeout(() => { window.print(); }, 200); 
             } else {
                 gerarCupomPDV(formaPagto);
                 setTimeout(() => { window.print(); }, 100); 
@@ -527,5 +528,4 @@
     </script>
 </body>
 </html>
-
 
