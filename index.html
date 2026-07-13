@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mercadinho Dois Irmãos - PDV</title>
-    <!-- Biblioteca Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <!-- Biblioteca QR Code -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
@@ -54,7 +52,7 @@
         .tabela-dados th, .tabela-dados td { padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: left; }
 
         /* ============================================================== */
-        /* CSS DA IMPRESSORA EPSON: LAYOUT OFICIAL NFC-E SEFAZ RN         */
+        /* CSS DA IMPRESSORA EPSON (COMUM PARA AS DUAS NOTAS)             */
         /* ============================================================== */
         @media print {
             body * { visibility: hidden; display: none !important; }
@@ -63,11 +61,11 @@
             #recibo-impressao { 
                 position: absolute; left: 0; top: 0; 
                 width: 100%; max-width: 80mm; 
-                margin: 0; padding: 0 2mm; /* Zero margem externa, mínimo de respiro interno */
+                margin: 0; padding: 0 2mm;
                 font-family: 'Courier New', Courier, monospace; 
                 color: black; background: white; 
-                font-size: 11px; /* Letra padrão de NFC-e */
-                line-height: 1.2; /* Tira o excesso de espaço entre as linhas */
+                font-size: 11px; 
+                line-height: 1.2; 
             }
             
             .txt-centro { text-align: center; }
@@ -145,7 +143,9 @@
                     </div>
                     <div style="grid-column: span 2; text-align:right; font-weight:bold; font-size:22px; color: var(--erro);" id="box-troco">Troco: R$ 0.00</div>
                     
+                    <!-- BOTÃO 1: CHAMA PDV SIMPLES (FALSE) -->
                     <button class="btn-universal" onclick="finalizarVenda(false)" style="background: var(--sucesso);">FINALIZAR SEM NOTA</button>
+                    <!-- BOTÃO 2: CHAMA NFC-E COMPLETA (TRUE) -->
                     <button class="btn-universal" onclick="finalizarVenda(true)" style="background: var(--fiscal); font-size: 18px;">EMITIR NFC-e (F4)</button>
                 </div>
             </div>
@@ -372,20 +372,73 @@
         }
 
         // ====================================================================
-        // GERAÇÃO DO RECIBO IDÊNTICO À NFC-E DO SEFAZ RN (IMAGEM ENVIADA)
+        // FUNÇÕES DE IMPRESSÃO - AS DUAS OPÇÕES DE NOTA
         // ====================================================================
         function formatarMoeda(valor) {
             return valor.toFixed(2).replace('.', ',');
         }
 
-        function gerarReciboParaImpressao(formaPagto) {
+        // LAYOUT 1: CUPOM PDV SIMPLES (Botão: Finalizar Sem Nota)
+        function gerarCupomPDV(formaPagto) {
+            let containerAntigo = document.getElementById('recibo-impressao');
+            if(containerAntigo) containerAntigo.remove();
+
+            let dataAtual = new Date().toLocaleString('pt-BR');
+            let pedidoNumber = Math.floor(Math.random() * 90000) + 10000;
+            let nomeVendedor = document.getElementById('caixa-nome-status').innerText;
+
+            let html = `
+            <div id="recibo-impressao">
+                <div class="txt-centro" style="font-weight:bold; font-size:14px; margin-bottom:2px;">Mercadinho Dois Irmãos</div>
+                <div class="txt-centro" style="font-size:11px; margin-bottom:8px;">Rua Padre Cicero, 375, Felipe Camarão</div>
+                <div class="txt-centro" style="font-size:11px; margin-bottom:5px;">${dataAtual} - Pedido ${pedidoNumber}</div>
+                
+                <div class="linha-tracejada"></div>
+                <div class="flex-space" style="font-weight:bold;"><span>Qtd Descrição</span><span>Total</span></div>
+                <div class="linha-tracejada"></div>
+                
+                <div style="margin-bottom: 5px;">`;
+            
+            cupomAtual.forEach(i => {
+                let und = Number.isInteger(i.qtd) ? 'UN' : 'KG';
+                html += `
+                    <div style="margin-bottom: 2px;">
+                        <div>${i.qtd} ${und} ${i.nome}</div>
+                        <div class="txt-direita">${formatarMoeda(i.total)}</div>
+                    </div>`;
+            });
+
+            html += `
+                </div>
+                <div class="linha-tracejada"></div>
+                
+                <div class="flex-space" style="font-weight:bold; font-size:13px; margin-top:5px;">
+                    <span>Total a pagar</span>
+                    <span>R$ ${formatarMoeda(totalVenda)}</span>
+                </div>
+                <div class="flex-space" style="font-size:12px; margin-top:2px;">
+                    <span>${formaPagto}</span>
+                    <span>R$ ${formatarMoeda(totalVenda)}</span>
+                </div>
+                <div style="font-size:11px; margin-top:5px;">Vendedor: ${nomeVendedor}</div>
+                
+                <div class="txt-centro" style="margin-top:15px; font-size:12px;">Obrigado pela preferência!</div>
+                <div class="txt-centro" style="font-size:11px;">Volte Sempre!</div>
+            </div>`;
+
+            let divElement = document.createElement('div');
+            divElement.innerHTML = html;
+            document.body.appendChild(divElement.firstElementChild);
+        }
+
+        // LAYOUT 2: NFC-E OFICIAL DA SEFAZ RN (Botão: Emitir NFC-e F4)
+        function gerarNFCe(formaPagto) {
             let containerAntigo = document.getElementById('recibo-impressao');
             if(containerAntigo) containerAntigo.remove();
 
             let dataAtual = new Date();
             let dataStr = dataAtual.toLocaleDateString('pt-BR');
             let horaStr = dataAtual.toLocaleTimeString('pt-BR');
-            let numCupom = Math.floor(Math.random() * 9000) + 1000;
             let qtdItens = String(cupomAtual.length).padStart(3, '0');
 
             let html = `
@@ -403,11 +456,10 @@
                 
                 <div style="margin-bottom: 5px;">`;
             
-            // Loop de itens formatação 2 linhas igual foto NFC-e
             cupomAtual.forEach((i, index) => {
                 let numItem = String(index + 1).padStart(3, '0');
                 let und = Number.isInteger(i.qtd) ? 'UN' : 'KG';
-                let codProduto = i.cod.length > 3 ? i.cod : "0000000000000"; // Se não tiver cod de barras, simula um.
+                let codProduto = i.cod.length > 3 ? i.cod : "0000000000000"; 
                 
                 html += `
                     <div style="margin-bottom: 2px;">
@@ -447,7 +499,6 @@
             divElement.innerHTML = html;
             document.body.appendChild(divElement.firstElementChild);
 
-            // Geração do QR Code
             new QRCode(document.getElementById("qrcode-recibo"), {
                 text: "https://www.set.rn.gov.br/nfce/consulta?p=24260744133465000196650010000057021000384190",
                 width: 130,
@@ -462,8 +513,13 @@
             if(cupomAtual.length === 0) return alert("Passe os produtos primeiro!");
             const formaPagto = document.getElementById('forma-pagamento').value;
             
-            gerarReciboParaImpressao(formaPagto);
-            setTimeout(() => { window.print(); }, 200); // Aguarda o QR Code carregar
+            if(nfce) {
+                gerarNFCe(formaPagto);
+                setTimeout(() => { window.print(); }, 200); // Aguarda QR Code
+            } else {
+                gerarCupomPDV(formaPagto);
+                setTimeout(() => { window.print(); }, 100); 
+            }
             
             cupomAtual = []; document.getElementById('valor-pago').value = ''; renderizarCupom();
             document.getElementById('codigo-barras').focus();
