@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercadinho Dois Irmãos - PDV Ultimate Cloud</title>
+    
+    <!-- SDK oficial do Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Biblioteca SheetJS para ler arquivos nativos do Excel (.xlsx e .xls) -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+    <style>
+        :root {
+            --primaria: #0f172a;    
+            --secundaria: #2563eb;  
+            --sucesso: #10b981;     
+            --alerta: #f59e0b;      
+            --erro: #ef4444;        
+            --fundo: #f8fafc;
+            --texto: #1e293b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: var(--fundo); color: var(--texto); height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+
+        .tela { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; flex-direction: column; }
+        .tela.ativa { display: flex; }
+
+        /* TELA DE LOGIN */
+        .login-wrapper { background: linear-gradient(135deg, #020617, #1e293b); justify-content: center; align-items: center; }
+        .login-box { background: white; padding: 40px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); text-align: center; }
+        .login-box h2 { color: var(--primaria); margin-bottom: 5px; font-size: 26px; }
+        .login-box p { color: #64748b; font-size: 14px; margin-bottom: 25px; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-weight: 600; margin-bottom: 6px; color: #475569; font-size: 14px; }
+        .input-group input { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; }
+        .input-group input:focus { border-color: var(--secundaria); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        .btn-universal { width: 100%; padding: 15px; background: var(--primaria); color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-universal:hover { background: #334155; }
+
+        /* BARRA SUPERIOR (TOP BAR) */
+        .top-bar { background: var(--primaria); color: white; padding: 0 25px; height: 65px; display: flex; justify-content: space-between; align-items: center; width: 100%; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .top-bar .status-caixa { background: #334155; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; }
+        .top-bar .btn-sair { background: var(--erro); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+
+        /* CONTAINER PRINCIPAL DO PDV */
+        .pdv-container { display: flex; width: 100%; height: calc(100% - 65px); background: white; }
+        
+        .cupom-area { width: 45%; background: white; padding: 30px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; }
+        .cupom-header { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; font-weight: 600; padding-bottom: 12px; border-bottom: 2px solid var(--primaria); font-size: 14px; color: #64748b; }
+        .produtos-lista { flex-grow: 1; overflow-y: auto; margin-top: 10px; }
+        .item-cupom { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; padding: 14px 0; border-bottom: 1px dashed #e2e8f0; font-size: 16px; align-items: center; }
+        .total-box { background: var(--primaria); color: white; padding: 25px; border-radius: 12px; text-align: center; margin-top: 20px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .total-box h3 { font-size: 14px; opacity: 0.8; font-weight: normal; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .total-box p { font-size: 46px; font-weight: 800; }
+
+        .operacao-area { width: 55%; padding: 30px; display: flex; flex-direction: column; background: #f8fafc; justify-content: space-between; position: relative; }
+        .terminal-log { background: #020617; color: #38bdf8; padding: 15px; border-radius: 8px; height: 140px; overflow-y: auto; font-family: monospace; font-size: 13px; margin-bottom: 20px; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.6); }
+        .terminal-log div { margin-bottom: 4px; }
+        
+        /* CONTAINER DE ENTRADA INTELIGENTE */
+        .wrapper-busca { position: relative; width: 100%; }
+        .input-codigo { width: 100%; padding: 22px; font-size: 38px; text-align: center; border: 3px solid var(--primaria); border-radius: 12px; outline: none; font-weight: bold; background: white; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .input-codigo:focus { border-color: var(--secundaria); box-shadow: 0 0 0 4px rgba(37,99,235,0.15); }
+        
+        /* POPUP DE RESULTADOS DE BUSCA POR TEXTO */
+        .dropdown-busca { display: none; position: absolute; bottom: 100%; left: 0; width: 100%; background: white; border: 2px solid var(--secundaria); border-radius: 10px; max-height: 250px; overflow-y: auto; z-index: 500; box-shadow: 0 -10px 25px rgba(0,0,0,0.15); margin-bottom: 5px; }
+        .opcao-busca { padding: 14px 20px; cursor: pointer; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; font-size: 16px; font-weight: 600; }
+        .opcao-busca:hover, .opcao-busca.selecionada { background: #eff6ff; color: var(--secundaria); }
+        .opcao-busca span.badge-codigo { font-family: monospace; color: #64748b; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+
+        .fechamento-painel { background: white; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-top: 15px; }
+        
+        /* TELA DE DASHBOARD RETAGUARDA (DONO) */
+        .dashboard-area { padding: 30px; background: #f8fafc; width: 100%; height: calc(100% - 65px); overflow-y: auto; }
+        .import-wrapper { background: white; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 30px; border-left: 6px solid var(--secundaria); }
+        .box-arquivo-unico { background: #f1f5f9; border: 2px dashed #cbd5e1; padding: 20px; border-radius: 8px; text-align: center; margin-top: 15px; }
+        .box-arquivo-unico label { display: block; font-weight: 600; margin-bottom: 10px; font-size: 15px; color: var(--primaria); }
+
+        .cards-resumo { display: flex; gap: 20px; margin-bottom: 30px; }
+        .card { background: white; padding: 25px; border-radius: 12px; flex: 1; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
+        .card h4 { color: #64748b; font-size: 13px; text-transform: uppercase; margin-bottom: 8px; }
+        .card p { font-size: 34px; font-weight: 700; }
+
+        .secao-estoque { background: white; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; }
+        .tabela-dados { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .tabela-dados th, .tabela-dados td { padding: 14px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        .tabela-dados th { background: #f1f5f9; color: var(--primaria); font-weight: 600; }
+        .badge-estoque { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; background:#d1fae5; color:#065f46; }
+    </style>
+</head>
+<body>
+
+    <!-- ================= TELA 1: LOGIN LOCAL REAL ================= -->
+    <div id="tela-login" class="tela ativa login-wrapper">
+        <div class="login-box">
+            <h2>Mercadinho Dois Irmãos</h2>
+            <p>Insira suas credenciais corporativas</p>
+            <div class="input-group">
+                <label>Usuário de Acesso</label>
+                <input type="text" id="login-usuario" placeholder="caixa ou eduardo" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>Senha Criptografada</label>
+                <input type="password" id="login-senha" placeholder="••••••••" onkeypress="verificarTeclaLogin(event)">
+            </div>
+            <button class="btn-universal" onclick="fazerLogin()">Autenticar no Servidor</button>
+        </div>
+    </div>
+
+    <!-- ================= TELA 2: FRENTE DE CAIXA ================= -->
+    <div id="tela-pdv" class="tela">
+        <div class="top-bar">
+            <div>
+                <strong>📍 ESTAÇÃO CAIXA 01</strong> | Operador Logado: <span id="caixa-nome-status">Caixa</span>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <button class="btn-universal" id="btn-painel-atalho" onclick="mostrarTela('tela-adm'); sincronizarDadosNuvem();" style="width: auto; padding: 8px 15px; background: var(--alerta); display: none;">Acessar Painel Gerencial</button>
+                <div class="status-caixa" id="caixa-estado-visual" style="background: var(--erro);">CAIXA FECHADO</div>
+                <button class="btn-universal" id="btn-abrir-fechar-caixa" onclick="alternarEstadoCaixa()" style="width: auto; padding: 8px 15px; background: var(--secundaria);">Abrir Caixa</button>
+                <button class="btn-sair" onclick="sair()">Fazer Logout</button>
+            </div>
+        </div>
+        <div class="pdv-container">
+            <div class="cupom-area">
+                <div class="cupom-header"><span>Item</span><span style="text-align:center;">Qtd</span><span style="text-align:right;">Unit</span><span style="text-align:right;">Total</span></div>
+                <div class="produtos-lista" id="lista-cupom"></div>
+                <div class="total-box"><h3>TOTAL DO CUPOM</h3><p>R$ <span id="valor-total">0.00</span></p></div>
+            </div>
+            <div class="operacao-area">
+                <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Banco de dados operacional pronto.</div></div>
+                
+                <div class="wrapper-busca">
+                    <div id="dropdown-sugestoes" class="dropdown-busca"></div>
+                    <input type="text" class="input-codigo" id="codigo-barras" placeholder="Bipe o código ou digite o nome..." autocomplete="off" oninput="filtrarPorNome(this.value)" onkeydown="navegarSugestoes(event)" disabled>
+                    <p style="text-align:center; font-size:13px; color:#64748b; margin-top:10px;">Para multiplicar quantidade digite: <b>Qtd*Item</b> (Ex: 3*7891022640007)</p>
+                </div>
+
+                <div class="fechamento-painel">
+                    <div class="input-group" style="margin: 0;">
+                        <label>Meio de Pagamento</label>
+                        <select id="forma-pagamento" style="width: 100%; padding: 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 16px; outline: none;"><option>Dinheiro</option><option>PIX</option><option>Cartão</option></select>
+                    </div>
+                    <div class="input-group" style="margin: 0;">
+                        <label>Valor Recebido (Dinheiro)</label>
+                        <input type="number" id="valor-pago" placeholder="0.00" oninput="calcularTroco()" disabled>
+                    </div>
+                    <div style="grid-column: span 2; text-align:right; font-weight:bold; font-size:18px; color: var(--erro);" id="box-troco">Troco: R$ 0.00</div>
+                    <button class="btn-universal" id="btn-concluir" onclick="finalizarVenda()" style="grid-column:span 2; background: var(--sucesso);" disabled>CONCLUIR VENDA (F2)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= TELA 3: RETAGUARDA (DASHBOARD DO DONO) ================= -->
+    <div id="tela-adm" class="tela">
+        <div class="top-bar">
+            <div><strong>📊 DASHBOARD DO PROPRIETÁRIO</strong> | Painel de Controle Gerencial</div>
+            <div style="display: flex; gap: 15px;">
+                <button class="btn-universal" onclick="mostrarTela('tela-pdv')" style="width: auto; padding: 8px 15px; background: var(--secundaria);">Voltar ao Caixa</button>
+                <button class="btn-sair" onclick="sair()" style="background: #475569;">Fazer Logout</button>
+            </div>
+        </div>
+        <div class="dashboard-area">
+            <div class="import-wrapper">
+                <h3>🔄 Importador de Estoque Direto (Planilha Excel)</h3>
+                <p>Selecione um arquivo nativo do Excel (.xlsx ou .xls) contendo as colunas de Código, Produto e Valor.</p>
+                <div class="box-arquivo-unico">
+                    <label>Selecionar Planilha do Excel do Mercado (.xlsx ou .xls)</label>
+                    <input type="file" id="excel-universal" accept=".xlsx, .xls" onchange="processarCargaPlanilhaExcel(event)">
+                </div>
+            </div>
+
+            <div class="cards-resumo">
+                <div class="card"><h4>Faturamento Acumulado Cloud</h4><p id="dash-total" style="color:var(--sucesso);">R$ 0,00</p></div>
+                <div class="card"><h4>Produtos Salvos no Postgres</h4><p id="dash-count">3</p></div>
+                <div class="card"><h4>Transações Salvas</h4><p id="dash-vendas-qtd" style="color:var(--secundaria);">0</p></div>
+            </div>
+
+            <div class="secao-estoque">
+                <h3>📦 Relatório Detalhado de Estoque Sincronizado (Supabase)</h3>
+                <table class="tabela-dados">
+                    <thead><tr><th>Código de Barras</th><th>Descrição Comercial</th><th>Preço de Venda</th><th>Status em Nuvem</th></tr></thead>
+                    <tbody id="tabela-estoque-corpo"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================= CONFIGURAÇÃO DO SUPABASE =================
+        const SUPABASE_URL = "SUA_URL_AQUI";
+        const SUPABASE_KEY = "SUA_CHAVE_AQUI";
+        
+        let supabaseClient = null;
+        try {
+            if(SUPABASE_URL.indexOf("SUA_URL") === -1 && SUPABASE_URL.trim() !== "") {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            }
+        } catch(e) { console.error("Erro driver:", e); }
+        // ============================================================
+
+        let estoqueCloud = {
+            "7894900011517": { nome: "Refrigerante Coca-Cola 2L", preco: 11.90 },
+            "78910001": { nome: "Arroz Agulhinha Tipo 1 5kg", preco: 27.50 },
+            "123": { nome: "Produto Padrão Teste Balcão", preco: 4.50 }
+        }; 
+
+        let caixaAberto = false;
+        let cupomAtual = [];
+        let totalVenda = 0;
+        let faturamentoDia = 0;
+        let totalAtendimentos = 0;
+        let listaFiltradaDropdown = [];
+        let indexSugestaoSelecionada = -1;
+
+        const inputCodigo = document.getElementById('codigo-barras');
+        const logSistema = document.getElementById('log-sistema');
+        const dropdownSugestoes = document.getElementById('dropdown-sugestoes');
+
+        window.onload = function() {
+            puxarEstoqueDoSupabase();
+        };
+
+        async function puxarEstoqueDoSupabase() {
+            if (!supabaseClient) return;
+            try {
+                const { data, error } = await supabaseClient.from('estoque').select('*');
+                if (error) throw error;
+                if(data && data.length > 0) {
+                    estoqueCloud = {};
+                    data.forEach(item => {
+                        estoqueCloud[String(item.codigo).trim()] = { nome: item.nome, preco: parseFloat(item.preco) };
+                    });
+                }
+                registrarLog("Banco PostgreSQL Supabase sincronizado com sucesso!", "sucesso");
+            } catch (err) {
+                registrarLog("Rodando em modo local estável.", "info");
+            }
+        }
+
+        function mostrarTela(id) {
+            document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+            const target = document.getElementById(id);
+            if (target) target.classList.add('ativa');
+        }
+
+        function verificarTeclaLogin(e) {
+            if (e.key === 'Enter') fazerLogin();
+        }
+
+        function fazerLogin() {
+            const usuario = document.getElementById('login-usuario').value.toLowerCase().trim();
+            const senha = document.getElementById('login-senha').value.trim();
+
+            if (usuario === 'eduardo' && senha === 'kd041022') {
+                document.getElementById('caixa-nome-status').innerText = "Eduardo (Proprietário)";
+                document.getElementById('btn-painel-atalho').style.display = 'block'; 
+                mostrarTela('tela-pdv'); 
+                if (caixaAberto) inputCodigo.focus();
+                puxarEstoqueDoSupabase();
+            } else if (usuario === 'caixa' && senha === '123') {
+                document.getElementById('caixa-nome-status').innerText = "Operador Padrão";
+                document.getElementById('btn-painel-atalho').style.display = 'none'; 
+                mostrarTela('tela-pdv');
+                if (caixaAberto) inputCodigo.focus();
+                puxarEstoqueDoSupabase();
+            } else {
+                alert("Acesso Negado! Verifique o usuário e senha.");
+            }
+        }
+
+        function sair() {
+            document.getElementById('login-usuario').value = '';
+            document.getElementById('login-senha').value = '';
+            document.getElementById('btn-painel-atalho').style.display = 'none';
+            mostrarTela('tela-login');
+            cupomAtual = [];
+            renderizarCupom();
+            fecharDropdown();
+        }
+
+        function registrarLog(msg, tipo = 'info') {
+            if(!logSistema) return;
+            const div = document.createElement('div');
+            let col = '#38bdf8';
+            if (tipo === 'erro') col = '#ef4444';
+            if (tipo === 'sucesso') col = '#10b981';
+            div.innerHTML = `<span style="color: #64748b;">[${new Date().toLocaleTimeString()}]</span> <span style="color: ${col};">${msg}</span>`;
+            logSistema.prepend(div);
+        }
+
+        function alternarEstadoCaixa() {
+            const btn = document.getElementById('btn-abrir-fechar-caixa');
+            const visual = document.getElementById('caixa-estado-visual');
+            const valPago = document.getElementById('valor-pago');
+            const btnConcluir = document.getElementById('btn-concluir');
+
+            if (!caixaAberto) {
+                caixaAberto = true;
+                btn.innerText = "Fechar Caixa";
+                btn.style.background = "var(--erro)";
+                visual.innerText = "CAIXA ABERTO";
+                visual.style.background = "var(--sucesso)";
+                inputCodigo.removeAttribute('disabled');
+                valPago.removeAttribute('disabled');
+                btnConcluir.removeAttribute('disabled');
+                puxarEstoqueDoSupabase();
+                registrarLog("CAIXA ABERTO. Pronto para registrar vendas.", "sucesso");
+                inputCodigo.focus();
+            } else {
+                if (cupomAtual.length > 0) return alert("Feche a venda atual antes de fechar o caixa!");
+                caixaAberto = false;
+                btn.innerText = "Abrir Caixa";
+                btn.style.background = "var(--secundaria)";
+                visual.innerText = "CAIXA FECHADO";
+                visual.style.background = "var(--erro)";
+                inputCodigo.setAttribute('disabled', 'true');
+                valPago.setAttribute('disabled', 'true');
+                btnConcluir.setAttribute('disabled', 'true');
+                fecharDropdown();
+                registrarLog("CAIXA FECHADO.", "erro");
+            }
+        }
+
+        function filtrarPorNome(valor) {
+            if (!caixaAberto || !valor.trim()) { fecharDropdown(); return; }
+            let textoBusca = valor.trim().toLowerCase();
+            if (textoBusca.includes('*')) { textoBusca = textoBusca.split('*')[1] || ''; }
+            if (!textoBusca || !isNaN(textoBusca)) { fecharDropdown(); return; }
+
+            listaFiltradaDropdown = [];
+            Object.keys(estoqueCloud).forEach(codigo => {
+                const produto = estoqueCloud[codigo];
+                if (produto.nome.toLowerCase().includes(textoBusca)) {
+                    listaFiltradaDropdown.push({ codigo: codigo, ...produto });
+                }
+            });
+
+            if (listaFiltradaDropdown.length > 0) { indexSugestaoSelecionada = 0; renderizarDropdown(); } 
+            else { fecharDropdown(); }
+        }
+
+        function renderizarDropdown() {
+            dropdownSugestoes.innerHTML = '';
+            dropdownSugestoes.style.display = 'block';
+            listaFiltradaDropdown.forEach((item, index) => {
+                const classeSel = index === indexSugestaoSelecionada ? 'opcao-busca selecionada' : 'opcao-busca';
+                dropdownSugestoes.innerHTML += `
+                    <div class="${classeSel}" onclick="adicionarItemPeloDropdown('${item.codigo}')">
+                        <span>📦 ${item.nome} - <b style="color:var(--sucesso)">R$ ${item.preco.toFixed(2)}</b></span>
+                        <span class="badge-codigo">${item.codigo}</span>
+                    </div>`;
+            });
+        }
+
+        function fecharDropdown() { dropdownSugestoes.style.display = 'none'; listaFiltradaDropdown = []; indexSugestaoSelecionada = -1; }
+
+        function adicionarItemPeloDropdown(codigo) {
+            const entradaOriginal = inputCodigo.value.trim();
+            let qtd = 1;
+            if (entradaOriginal.includes('*')) qtd = parseFloat(entradaOriginal.split('*')[0]) || 1;
+            
+            const codigoFormatado = String(codigo).trim();
+            if (estoqueCloud[codigoFormatado]) {
+                const produto = estoqueCloud[codigoFormatado];
+                cupomAtual.push({ nome: produto.nome, qtd: qtd, unit: produto.preco, total: produto.preco * qtd });
+                renderizarCupom();
+                registrarLog(`ADICIONADO: ${qtd}x ${produto.nome}`, "info");
+            }
+            inputCodigo.value = ''; fecharDropdown(); inputCodigo.focus();
+        }
+
+        // CORREÇÃO E BLINDAGEM DO LEITOR (CAPTURA SÓ APÓS O ENTER DO BIPADOR)
+        function navegarSugestoes(e) {
+            if (dropdownSugestoes.style.display === 'block') {
+                if (e.key === 'ArrowDown') { e.preventDefault(); indexSugestaoSelecionada = (indexSugestaoSelecionada + 1) % listaFiltradaDropdown.length; renderizarDropdown(); } 
+                else if (e.key === 'ArrowUp') { e.preventDefault(); indexSugestaoSelecionada = (indexSugestaoSelecionada - 1 + listaFiltradaDropdown.length) % listaFiltradaDropdown.length; renderizarDropdown(); } 
+                else if (e.key === 'Escape') { fecharDropdown(); } 
+                else if (e.key === 'Enter' && indexSugestaoSelecionada >= 0) { e.preventDefault(); adicionarItemPeloDropdown(listaFiltradaDropdown[indexSugestaoSelecionada].codigo); return; }
+            }
+
+            if (e.key === 'Enter' && dropdownSugestoes.style.display !== 'block') {
+                e.preventDefault();
+                const entrada = inputCodigo.value.trim(); 
+                inputCodigo.value = ''; // Limpa o campo só após capturar a entrada inteira do leitor
+                
+                if (!entrada || !caixaAberto) return;
+                
+                let qtd = 1; 
+                let codigo = entrada;
+                if (entrada.includes('*')) { const partes = entrada.split('*'); qtd = parseFloat(partes[0]) || 1; codigo = partes[1].trim(); }
+
+                const codigoFormatado = String(codigo).trim();
+
+                if (estoqueCloud[codigoFormatado]) {
+                    const produto = estoqueCloud[codigoFormatado];
+                    cupomAtual.push({ nome: produto.nome, qtd: qtd, unit: produto.preco, total: produto.preco * qtd });
+                    renderizarCupom();
+                    registrarLog(`BIPADO: ${qtd}x ${produto.nome}`, "info");
+                } else {
+                    registrarLog(`ERRO: Código [${codigoFormatado}] não localizado no banco.`, "erro");
+                    alert("Produto não cadastrado ou código inválido!");
+                }
+            }
+        }
+
+        function renderizarCupom() {
+            const list = document.getElementById('lista-cupom'); list.innerHTML = ''; totalVenda = 0;
+            cupomAtual.forEach(i => {
+                totalVenda += i.total;
+                list.innerHTML += `<div class="item-cupom"><span style="font-weight:600;">${i.nome}</span><span style="text-align:center; color:#64748b;">${i.qtd}</span><span style="text-align:right;">${i.unit.toFixed(2)}</span><span style="text-align:right; font-weight:700;">${i.total.toFixed(2)}</span></div>`;
+            });
+            document.getElementById('valor-total').innerText = totalVenda.toFixed(2);
+            calcularTroco();
+        }
+
+        function calcularTroco() {
+            const pago = parseFloat(document.getElementById('valor-pago').value);
+            const box = document.getElementById('box-troco');
+            if (pago >= totalVenda && totalVenda > 0) { box.innerText = `Troco: R$ ${(pago - totalVenda).toFixed(2)}`; box.style.color = "var(--sucesso)"; } 
+            else { box.innerText = `Troco: R$ 0.00`; box.style.color = "var(--erro)"; }
+        }
+
+        async function finalizarVenda() {
+            if (cupomAtual.length === 0) return alert("Cupom vazio!");
+            const formaPagto = document.getElementById('forma-pagamento').value;
+            
+            faturamentoDia += totalVenda;
+            totalAtendimentos++;
+
+            if(supabaseClient) {
+                try {
+                    await supabaseClient.from('vendas').insert([{ forma_pagamento: formaPagto, total: totalVenda }]);
+                    registrarLog("VENDA GRAVADA NA NUVEM", "sucesso");
+                } catch (err) { console.error("Erro nuvem: ", err); }
+            }
+
+            registrarLog(`VENDA CONCLUÍDA: R$ ${totalVenda.toFixed(2)} via ${formaPagto}`, "sucesso");
+            alert("Venda concluída com sucesso!");
+            cupomAtual = []; document.getElementById('valor-pago').value = '';
+            renderizarCupom(); inputCodigo.focus();
+        }
+
+        // IMPORTADOR INTELIGENTE QUE MAPEA CABEÇALHOS DO SEU LUIZ E TRATA CÓDIGOS DE BARRAS COMO TEXTO
+        function processarCargaPlanilhaExcel(event) {
+            const arquivo = event.target.files[0];
+            if (!arquivo) return;
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const dadosBinarios = e.target.result;
+                    // Força a leitura do código de barras mantendo o formato string original (Evita sumir com zeros à esquerda)
+                    const livroExcel = XLSX.read(dadosBinarios, { type: 'binary', cellText: true, cellNF: false });
+                    
+                    const nomePrimeiraAba = livroExcel.SheetNames[0];
+                    const abaDados = livroExcel.Sheets[nomePrimeiraAba];
+                    
+                    // Converte os dados em JSON tratando tudo como string crua
+                    const linhasContas = XLSX.utils.sheet_to_json(abaDados, { raw: false });
+                    let pacotesDeUpload = [];
+
+                    for (let i = 0; i < linhasContas.length; i++) {
+                        const linha = linhasContas[i];
+                        
+                        // Mapeamento pelos cabeçalhos exatos da planilha do mercado: "Codigo", "Produto", "Valor"
+                        const codigo = String(linha["Codigo"] || '').trim();
+                        const nome = String(linha["Produto"] || '').trim();
+                        
+                        // Captura o preço e remove qualquer formatação incorreta de moeda brasileira
+                        let precoTexto = String(linha["Valor"] || '0').replace('R$', '').replace('.', '').replace(',', '.').trim();
+                        let precoBruto = parseFloat(precoTexto);
+                        const preco = Math.round(precoBruto * 100) / 100;
+
+                        if (codigo && nome && !isNaN(preco)) {
+                            pacotesDeUpload.push({ codigo: codigo, nome: nome, preco: preco });
+                        }
+                    }
+
+                    if(pacotesDeUpload.length > 0) {
+                        if(supabaseClient) {
+                            const { error } = await supabaseClient.from('estoque').upsert(pacotesDeUpload, { onConflict: 'codigo' });
+                            if (error) throw error;
+                        } else {
+                            pacotesDeUpload.forEach(p => { estoqueCloud[p.codigo] = {nome: p.nome, preco: p.preco} });
+                        }
+                        alert(`Sucesso total! ${pacotesDeUpload.length} produtos sincronizados com valores corrigidos.`);
+                        await puxarEstoqueDoSupabase();
+                        sincronizarDadosNuvem();
+                    } else {
+                        alert("Não encontramos produtos válidos. Certifique-se de que as colunas se chamam exatamente: Codigo, Produto e Valor.");
+                    }
+                } catch(err) {
+                    alert("Erro ao ler arquivo Excel: " + err.message);
+                }
+            };
+            reader.readAsBinaryString(arquivo);
+        }
+
+        async function sincronizarDadosNuvem() {
+            try {
+                let totalProdutos = Object.keys(estoqueCloud).length;
+                let somaFaturamento = faturamentoDia;
+                let transacoesQtd = totalAtendimentos;
+
+                if(supabaseClient) {
+                    const { count } = await supabaseClient.from('estoque').select('*', { count: 'exact', head: true });
+                    const { data: listaVendas } = await supabaseClient.from('vendas').select('*');
+                    if(count) totalProdutos = count;
+                    if(listaVendas) {
+                        transacoesQtd = listaVendas.length;
+                        somaFaturamento = 0;
+                        listaVendas.forEach(v => somaFaturamento += parseFloat(v.total));
+                    }
+                }
+
+                document.getElementById('dash-total').innerText = `R$ ${somaFaturamento.toFixed(2)}`;
+                document.getElementById('dash-count').innerText = totalProdutos;
+                document.getElementById('dash-vendas-qtd').innerText = transacoesQtd;
+
+                const tabelaCorpo = document.getElementById('tabela-estoque-corpo');
+                tabelaCorpo.innerHTML = '';
+                
+                Object.keys(estoqueCloud).forEach(codigo => {
+                    const item = estoqueCloud[codigo];
+                    tabelaCorpo.innerHTML += `<tr><td><code>${codigo}</code></td><td><strong>${item.nome}</strong></td><td>R$ ${item.preco.toFixed(2)}</td><td><span class="badge-estoque">✔ Sincronizado</span></td></tr>`;
+                });
+
+            } catch (err) { console.error(err); }
+        }
+
+        document.getElementById('tela-pdv').addEventListener('click', (e) => {
+            if (document.getElementById('tela-pdv').classList.contains('ativa') && caixaAberto && !dropdownSugestoes.contains(e.target)) inputCodigo.focus();
+        });
+    </script>
+</body>
+</html>
