@@ -8,7 +8,7 @@
     <!-- SDK oficial do Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <!-- Biblioteca SheetJS para ler arquivos nativos do Excel -->
+    <!-- Biblioteca SheetJS para ler a planilha Excel magicamente -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <style>
@@ -85,7 +85,7 @@
 
         .fechamento-painel { background: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
 
-        /* NOVO DESIGN DO PAINEL DO PROPRIETÁRIO (FIM DO VISUAL WORD) */
+        /* DESIGN PREMIUM DO PAINEL DO PROPRIETÁRIO */
         .dashboard-area { padding: 30px; background: #f1f5f9; width: 100%; height: calc(100% - 65px); overflow-y: auto; }
         .import-wrapper { background: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px; border-left: 6px solid var(--secundaria); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
         .box-arquivo-unico { background: #f8fafc; border: 2px dashed #cbd5e1; padding: 15px; border-radius: 8px; text-align: center; margin-top: 10px; }
@@ -99,7 +99,6 @@
         .secao-estoque .header-tabela-busca { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; gap: 20px; }
         .secao-estoque h3 { font-size: 20px; color: var(--primaria); font-weight: 700; }
         
-        /* Campo de pesquisa avançado no painel gerencial */
         .input-pesquisa-gerencial { padding: 12px 20px; width: 100%; max-width: 350px; border: 2px solid #cbd5e1; border-radius: 8px; font-size: 15px; outline: none; transition: 0.2s; }
         .input-pesquisa-gerencial:focus { border-color: var(--secundaria); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
 
@@ -196,8 +195,8 @@
         <div class="dashboard-area">
             
             <div class="import-wrapper">
-                <h3>🔄 Atualizar ou Carregar Estoque (Planilha Excel)</h3>
-                <p style="font-size: 14px; color: #64748b; margin-top: 5px;">Selecione a planilha do mercado (Plan1.xlsx) para carregar todos os produtos no sistema instantaneamente.</p>
+                <h3>🔄 Atualizar ou Importar Planilha do Mercado (Manual)</h3>
+                <p style="font-size: 14px; color: #64748b; margin-top: 5px;">A planilha principal (Plan1.xlsx) é baixada sozinha do seu repositório. Use este botão apenas se quiser forçar uma atualização manual no computador.</p>
                 <div class="box-arquivo-unico">
                     <input type="file" id="excel-universal" accept=".xlsx, .xls" onchange="processarCargaPlanilhaExcel(event)">
                 </div>
@@ -212,7 +211,6 @@
             <div class="secao-estoque">
                 <div class="header-tabela-busca">
                     <h3>📦 Relatório Detalhado de Estoque Integrado</h3>
-                    <!-- Barra de pesquisa avançada em tempo real para o Seu Luiz -->
                     <input type="text" class="input-pesquisa-gerencial" id="pesquisa-gerencial" placeholder="🔎 Pesquisar produto por nome ou código..." oninput="filtrarPainelGerencial(this.value)">
                 </div>
                 <div class="tabela-container-scroll">
@@ -233,12 +231,13 @@
     </div>
 
     <script>
+        // CONFIGURAÇÕES SUPABASE
         const SUPABASE_URL = "SUA_URL_AQUI";
         const SUPABASE_KEY = "SUA_CHAVE_AQUI";
         let supabaseClient = null;
         try { if(SUPABASE_URL.indexOf("SUA_URL") === -1 && SUPABASE_URL.trim() !== "") { supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } } catch(e){}
 
-        // O sistema inicia vazio e carrega os produtos dinamicamente do computador do mercado!
+        // O SISTEMA INICIA VAZIO E SE AUTO PREENCHE LENDO O SEU GITHUB!
         let estoqueCloud = {}; 
 
         let cupomAtual = [];
@@ -253,33 +252,69 @@
         const logSistema = document.getElementById('log-sistema');
         const dropdownSugestoes = document.getElementById('dropdown-sugestoes');
 
-        window.onload = function() {
-            carregarEstoquePermanente();
+        window.onload = async function() {
             manterFocoNoInput();
-            
             window.addEventListener('keydown', (e) => {
                 if (e.key === 'F4') { e.preventDefault(); finalizarVenda(true); }
             });
-        };
-
-        // CARREGA TODOS OS 2.300 PRODUTOS DA MEMÓRIA DO COMPUTADOR
-        function carregarEstoquePermanente() {
+            
+            // 1. TENTA RECUPERAR A MEMÓRIA INSTANTÂNEA PRIMEIRO
             const backupLocal = localStorage.getItem('backup_estoque_mercado');
             if (backupLocal) {
                 try {
                     estoqueCloud = JSON.parse(backupLocal);
-                    registrarLog("Banco local com " + Object.keys(estoqueCloud).length + " produtos carregado com sucesso!", "sucesso");
-                } catch(e) { console.error(e); }
-            } else {
-                registrarLog("Sistema aguardando importação da planilha Excel no painel gerencial.", "alerta");
+                    registrarLog(`Estoque carregado rapidamente com ${Object.keys(estoqueCloud).length} itens.`, "sucesso");
+                    sincronizarDadosNuvem();
+                } catch(e) {}
             }
-        }
 
-        // IMPORTADOR DE EXCEL INTELIGENTE (Carrega a Planilha do Seu Luiz e salva localmente)
+            // 2. MAGIA: BAIXA A PLANILHA Plan1.xlsx DIRETO DO SEU GITHUB DE FORMA INVISÍVEL
+            try {
+                registrarLog("Aguarde, verificando atualizações da planilha no servidor...", "info");
+                // Baixa o arquivo "Plan1.xlsx" que está hospedado junto com o index.html na Vercel/Github
+                const resposta = await fetch('./Plan1.xlsx');
+                
+                if (resposta.ok) {
+                    const arrayBuffer = await resposta.arrayBuffer();
+                    const data = new Uint8Array(arrayBuffer);
+                    const workbook = XLSX.read(data, {type: 'array', cellText: true, cellNF: false});
+                    const abaDados = workbook.Sheets[workbook.SheetNames[0]];
+                    const linhasContas = XLSX.utils.sheet_to_json(abaDados, { raw: false });
+                    
+                    let contagem = 0;
+                    for (let i = 0; i < linhasContas.length; i++) {
+                        const linha = linhasContas[i];
+                        const codigo = String(linha["Codigo"] || '').trim();
+                        const nome = String(linha["Produto"] || '').trim();
+                        
+                        let precoTexto = String(linha["Valor"] || '0').replace('R$', '').replace('.', '').replace(',', '.').trim();
+                        const preco = Math.round(parseFloat(precoTexto) * 100) / 100;
+
+                        if (codigo && nome && !isNaN(preco)) {
+                            estoqueCloud[codigo] = { nome: nome, preco: preco };
+                            contagem++;
+                        }
+                    }
+
+                    if(contagem > 0) {
+                        localStorage.setItem('backup_estoque_mercado', JSON.stringify(estoqueCloud));
+                        sincronizarDadosNuvem();
+                        registrarLog(`Sucesso! ${contagem} produtos foram extraídos silenciosamente da Planilha.`, "sucesso");
+                    }
+                } else {
+                    if (Object.keys(estoqueCloud).length === 0) {
+                        registrarLog("ATENÇÃO: Planilha Plan1.xlsx não foi encontrada no GitHub.", "alerta");
+                    }
+                }
+            } catch(e) {
+                console.warn(e);
+            }
+        };
+
+        // Função caso o seu Luiz queira carregar uma planilha manualmente via botão
         function processarCargaPlanilhaExcel(event) {
             const arquivo = event.target.files[0];
             if (!arquivo) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
@@ -289,33 +324,23 @@
                     const linhasContas = XLSX.utils.sheet_to_json(abaDados, { raw: false });
                     
                     let contagem = 0;
-
                     for (let i = 0; i < linhasContas.length; i++) {
                         const linha = linhasContas[i];
                         const codigo = String(linha["Codigo"] || '').trim();
                         const nome = String(linha["Produto"] || '').trim();
-                        
                         let precoTexto = String(linha["Valor"] || '0').replace('R$', '').replace('.', '').replace(',', '.').trim();
-                        let precoBruto = parseFloat(precoTexto);
-                        const preco = Math.round(precoBruto * 100) / 100;
-
+                        const preco = Math.round(parseFloat(precoTexto) * 100) / 100;
                         if (codigo && nome && !isNaN(preco)) {
                             estoqueCloud[codigo] = { nome: nome, preco: preco };
                             contagem++;
                         }
                     }
-
                     if(contagem > 0) {
-                        // Grava os 2.300+ itens no PC dele permanentemente
                         localStorage.setItem('backup_estoque_mercado', JSON.stringify(estoqueCloud));
-                        alert(`Sucesso! ${contagem} produtos foram importados e salvos no sistema.`);
+                        alert(`Sucesso! ${contagem} produtos atualizados.`);
                         sincronizarDadosNuvem();
-                    } else {
-                        alert("Verifique os cabeçalhos. Devem ser exatamente: Codigo, Produto e Valor.");
                     }
-                } catch(err) {
-                    alert("Erro ao ler arquivo Excel: " + err.message);
-                }
+                } catch(err) { alert("Erro ao ler: " + err.message); }
             };
             reader.readAsBinaryString(arquivo);
         }
@@ -569,7 +594,6 @@
             cupomAtual = []; document.getElementById('valor-pago').value = ''; renderizarCupom(); inputCodigo.focus();
         }
 
-        // MONTAGEM DO RETAGUARDA ESTILIZADO COM ROLAGEM E BUSCA INTERATIVA
         function sincronizarDadosNuvem() {
             let totalProdutos = Object.keys(estoqueCloud).length;
             document.getElementById('dash-total').innerText = "R$ " + faturamentoDia.toFixed(2);
@@ -578,7 +602,6 @@
             filtrarPainelGerencial('');
         }
 
-        // FUNÇÃO DE BUSCA E FILTRAGEM DENTRO DA TABELA GERENCIAL DO SEU LUIZ
         function filtrarPainelGerencial(filtro) {
             const texto = filtro.trim().toLowerCase();
             const tabelaCorpo = document.getElementById('tabela-estoque-corpo');
