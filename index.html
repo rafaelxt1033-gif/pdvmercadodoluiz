@@ -18,9 +18,9 @@
         
         .login-wrapper { background: linear-gradient(135deg, #020617, #1e293b); justify-content: center; align-items: center; }
         .login-box { background: white; padding: 40px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); text-align: center; }
-        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group { margin-bottom: 15px; text-align: left; }
         .input-group label { display: block; font-weight: 600; margin-bottom: 6px; color: #475569; font-size: 14px; }
-        .input-group input, .input-group select { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; }
+        .input-group input, .input-group select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; }
         .btn-universal { width: 100%; padding: 15px; background: var(--primaria); color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; }
         
         .top-bar { background: var(--primaria); color: white; padding: 0 25px; height: 65px; display: flex; justify-content: space-between; align-items: center; width: 100%; }
@@ -53,7 +53,7 @@
 
         .modal-bg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
         .modal-bg.ativo { display: flex; }
-        .modal-card { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 420px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
+        .modal-card { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 440px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
 
         @media print {
             body * { visibility: hidden; display: none !important; }
@@ -121,7 +121,7 @@
                     </div>
                 </div>
 
-                <!-- BIPADOR / BUSCA DIRETA -->
+                <!-- BIPADOR -->
                 <div style="position: relative;">
                     <div id="dropdown-sugestoes" class="dropdown-busca" style="bottom: 100%; margin-bottom: 5px;"></div>
                     <input type="text" class="input-codigo" id="codigo-barras" placeholder="Bipe o leitor ou digite o nome..." oninput="filtrarPorNome(this.value)" onkeydown="navegarSugestoes(event)" autocomplete="off">
@@ -175,16 +175,20 @@
         </div>
     </div>
 
-    <!-- MODAL ALTERAR PREÇO -->
+    <!-- MODAL ALTERAR PREÇO (COM FILTRO POR NOME AGORA!) -->
     <div id="modal-editar-preco" class="modal-bg">
         <div class="modal-card">
             <h3 style="color: var(--secundaria); margin-bottom: 5px;">Mudar Preço</h3>
-            <p style="font-size:13px; color:#64748b; margin-bottom:15px;">Atualização forçada na memória interna</p>
-            <div class="input-group">
-                <label>Bipe o Produto</label>
-                <input type="text" id="edit-cod" placeholder="Código de barras" oninput="buscarParaEdicao(this.value)">
-                <div id="edit-nome-prod" style="font-size:13px; font-weight:bold; margin-top:5px;"></div>
+            <p style="font-size:13px; color:#64748b; margin-bottom:15px;">Digite o nome ou bipe o produto</p>
+            
+            <div class="input-group" style="position: relative;">
+                <label>Buscar Produto</label>
+                <input type="text" id="edit-cod" placeholder="Ex: Goiaba, Tomate ou Bipe o código..." oninput="buscarParaEdicao(this.value)" autocomplete="off">
+                <input type="hidden" id="edit-cod-selecionado">
+                <div id="dropdown-edicao-preco" class="dropdown-busca" style="top: 100%; bottom: auto; margin-top: 5px;"></div>
+                <div id="edit-nome-prod" style="font-size:13px; font-weight:bold; margin-top:8px; min-height:18px;"></div>
             </div>
+            
             <div class="input-group">
                 <label>Novo Preço (R$)</label>
                 <input type="number" id="edit-preco" placeholder="0.00" step="0.01">
@@ -195,12 +199,11 @@
             </div>
             <div style="display: flex; gap: 10px;">
                 <button class="btn-universal" style="background: var(--erro); padding:12px;" onclick="fecharModalPreco()">Cancelar</button>
-                <button class="btn-universal" style="background: var(--sucesso); padding:12px;" onclick="salvarNovoPreco()">Salvar</button>
+                <button class="btn-universal" style="background: var(--sucesso); padding:12px;" onclick="salvarNovoPreco()">Salvar Novo Preço</button>
             </div>
         </div>
     </div>
 
-    <!-- SCRIPT DE ENGINE TOTAL -->
     <script>
         let estoqueCloud = {
             "7894900051513": {"nome": "REFRIGERANTE FANTA UVA 2LT", "preco": 9.75},
@@ -240,12 +243,14 @@
             document.addEventListener('click', (e) => {
                 const dropBarra = document.getElementById('dropdown-sugestoes');
                 const dropBalanca = document.getElementById('dropdown-balanca');
+                const dropEdicao = document.getElementById('dropdown-edicao-preco');
                 const isPdv = document.getElementById('tela-pdv').classList.contains('active') || document.getElementById('tela-pdv').classList.contains('ativa');
                 const modalPreco = document.getElementById('modal-editar-preco').classList.contains('ativo');
                 const modalBusca = document.getElementById('modal-busca').classList.contains('ativo');
                 
                 if(!document.getElementById('codigo-balanca').contains(e.target) && !dropBalanca.contains(e.target)) dropBalanca.style.display = 'none';
                 if(!document.getElementById('codigo-barras').contains(e.target) && !dropBarra.contains(e.target)) dropBarra.style.display = 'none';
+                if(!document.getElementById('edit-cod').contains(e.target) && !dropEdicao.contains(e.target)) dropEdicao.style.display = 'none';
 
                 const ativo = document.activeElement.id;
                 if (isPdv && !modalPreco && !modalBusca && !dropBarra.contains(e.target) && !dropBalanca.contains(e.target) && ativo !== 'valor-pago' && ativo !== 'forma-pagamento' && ativo !== 'peso-balanca' && ativo !== 'codigo-balanca') {
@@ -285,7 +290,7 @@
         function abrirModalBusca() { document.getElementById('modal-busca').classList.add('ativo'); document.getElementById('campo-consulta').value = ''; document.getElementById('resultado-busca').innerHTML = ''; setTimeout(() => document.getElementById('campo-consulta').focus(), 100); }
         function fecharModalBusca() { document.getElementById('modal-busca').classList.remove('ativo'); document.getElementById('codigo-barras').focus(); }
         
-        function executarBusca(val) {
+        function ejecutarBusca(val) {
             let res = document.getElementById('resultado-busca'); res.innerHTML = '';
             let t = val.toLowerCase().trim(); if(!t) return;
             Object.keys(estoqueCloud).forEach(c => {
@@ -295,26 +300,77 @@
             });
         }
 
-        function abrirModalPreco() { document.getElementById('modal-editar-preco').classList.add('ativo'); document.getElementById('edit-cod').value = ''; document.getElementById('edit-preco').value = ''; document.getElementById('edit-senha').value = ''; document.getElementById('edit-nome-prod').innerText = ''; setTimeout(() => document.getElementById('edit-cod').focus(), 100); }
+        function abrirModalPreco() { 
+            document.getElementById('modal-editar-preco').classList.add('ativo'); 
+            document.getElementById('edit-cod').value = ''; 
+            document.getElementById('edit-cod-selecionado').value = ''; 
+            document.getElementById('edit-preco').value = ''; 
+            document.getElementById('edit-senha').value = ''; 
+            document.getElementById('edit-nome-prod').innerText = ''; 
+            setTimeout(() => document.getElementById('edit-cod').focus(), 100); 
+        }
         function fecharModalPreco() { document.getElementById('modal-editar-preco').classList.remove('ativo'); document.getElementById('codigo-barras').focus(); }
         
+        // NOVO MOTOR DE BUSCA PARA ALTERAÇÃO DE PREÇOS (RESOLVE O PROBLEMA DAS FRUTAS!)
         function buscarParaEdicao(val) {
-            let cod = val.trim(); let label = document.getElementById('edit-nome-prod');
-            if (estoqueCloud[cod]) { label.innerText = `✅ ${estoqueCloud[cod].nome} (R$ ${estoqueCloud[cod].preco.toFixed(2)})`; label.style.color = "var(--sucesso)"; }
-            else { label.innerText = "Produto não encontrado"; label.style.color = "var(--erro)"; }
+            let txt = val.toLowerCase().trim();
+            let label = document.getElementById('edit-nome-prod');
+            let drop = document.getElementById('dropdown-edicao-preco');
+            drop.innerHTML = '';
+            
+            if(!txt) { drop.style.display = 'none'; label.innerText = ''; return; }
+
+            // Se for um código de barras exato (apenas números e grande)
+            if(!isNaN(txt) && txt.length >= 3) {
+                if (estoqueCloud[txt]) {
+                    document.getElementById('edit-cod-selecionado').value = txt;
+                    label.innerText = `✅ ${estoqueCloud[txt].nome} (Preço: R$ ${estoqueCloud[txt].preco.toFixed(2)})`;
+                    label.style.color = "var(--sucesso)";
+                    drop.style.display = 'none';
+                    return;
+                }
+            }
+
+            // Filtragem por nome de produto para achar itens sem código de barras
+            let itensFiltrados = Object.keys(estoqueCloud).filter(c => estoqueCloud[c].nome.toLowerCase().includes(txt)).slice(0, 5);
+            if(itensFiltrados.length > 0) {
+                drop.style.display = 'block';
+                itensFiltrados.forEach(c => {
+                    drop.innerHTML += `<div class="opcao-busca" onclick="selecionarProdutoParaPreco('${c}')"><span>✏️ ${estoqueCloud[c].nome}</span> <span>R$ ${estoqueCloud[c].preco.toFixed(2)}</span></div>`;
+                });
+            } else {
+                drop.style.display = 'none';
+                label.innerText = "Produto não encontrado";
+                label.style.color = "var(--erro)";
+            }
+        }
+
+        function selecionarProdutoParaPreco(cod) {
+            document.getElementById('edit-cod').value = estoqueCloud[cod].nome;
+            document.getElementById('edit-cod-selecionado').value = cod;
+            
+            let label = document.getElementById('edit-nome-prod');
+            label.innerText = `✅ Selecionado: ${estoqueCloud[cod].nome} (Preço: R$ ${estoqueCloud[cod].preco.toFixed(2)})`;
+            label.style.color = "var(--sucesso)";
+            
+            document.getElementById('dropdown-edicao-preco').style.display = 'none';
+            document.getElementById('edit-preco').focus();
         }
 
         function salvarNovoPreco() {
-            let cod = document.getElementById('edit-cod').value.trim();
+            let cod = document.getElementById('edit-cod-selecionado').value.trim();
             let precoFormatado = parseFloat(document.getElementById('edit-preco').value.replace(',', '.'));
             let senha = document.getElementById('edit-senha').value;
-            if (!estoqueCloud[cod]) return alert("Código inexistente!");
-            if (!precoFormatado || precoFormatado <= 0) return alert("Preço inválido!");
-            if (senha !== 'kd041022') return alert("Senha incorreta!");
+            
+            if (!cod || !estoqueCloud[cod]) return alert("Por favor, selecione um produto válido da lista primeiro!");
+            if (!precoFormatado || precoFormatado <= 0) return alert("Por favor, digite um preço válido!");
+            if (senha !== 'kd041022') return alert("Acesso Negado: Senha do Gerente incorreta!");
+            
             estoqueCloud[cod].preco = precoFormatado;
             localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
             registrarLog(`Preço alterado: ${estoqueCloud[cod].nome} para R$ ${precoFormatado.toFixed(2)}`, "alerta");
-            alert("Preço alterado!"); fecharModalPreco();
+            alert(`Sucesso! Preço de ${estoqueCloud[cod].nome} alterado para R$ ${precoFormatado.toFixed(2)}.`);
+            fecharModalPreco();
         }
 
         async function carregarExcel(e) {
@@ -409,7 +465,7 @@
         function gerarCupomPDV(formaPagto) {
             let containerAntigo = document.getElementById('recibo-impressao'); if(containerAntigo) containerAntigo.remove();
             let dataAtual = new Date().toLocaleString('pt-BR'); let pedidoNumber = Math.floor(Math.random() * 90000) + 10000;
-            let html = `<div id="recibo-impressao"><div class="txt-centro" style="font-size:14px;">MERCADINHO DOIS IRMÃOS</div><div class="txt-centro">Rua Padre Cicero, 375, Felipe Camarão</div><div class="txt-centro" style="margin-bottom:5px;">${dataAtual} - Pedido ${pedidoNumber}</div><div class="linha-tracejada"></div><div class="flex-space"><span>Qtd Descrição</span><span>Total</span></div><div class="linha-tracejada"></div><div style="margin-bottom:5px;">`;
+            let html = `<div id="recibo-impressao"><div class="txt-centro" style="font-size:14px;">MERCADINHO DOIS IRMÃOS</div><div class="txt-centro">Rua Padre Cicero, 375, Felipe Camarão</div><div class="txt-centro" style="margin-bottom:5px;">${dataAtual} - Pedido ${pedidoNumber}</div><div class="linha-tracejada"></div><div class="flex-space"><span>Qtd Descrição</span><span>Total</span></div><div class="linha-tracejada"></div><div style="margin-bottom:4px;">`;
             cupomAtual.forEach(i => { let und = Number.isInteger(i.qtd) ? 'UN' : 'KG'; html += `<div style="margin-bottom:4px;"><div>${i.qtd} ${und} ${i.nome}</div><div class="txt-direita">${formatarMoeda(i.total)}</div></div>`; });
             html += `</div><div class="linha-tracejada"></div><div class="flex-space" style="font-size:13px; margin-top:5px;"><span>Total a pagar</span><span>R$ ${formatarMoeda(totalVenda)}</span></div><div class="flex-space"><span>${formaPagto}</span><span>R$ ${formatarMoeda(totalVenda)}</span></div><div style="margin-top:5px;">Vendedor: ${document.getElementById('caixa-nome-status').innerText}</div><div class="txt-centro" style="margin-top:15px;">Obrigado pela preferência!</div><div class="txt-centro">Volte Sempre!</div></div>`;
             let divElement = document.createElement('div'); divElement.innerHTML = html; document.body.appendChild(divElement.firstElementChild);
