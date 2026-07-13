@@ -133,9 +133,9 @@
                     </div>
                 </div>
 
-                <!-- BIPADOR + VISUALIZADOR DE QUANTIDADE ATIVA -->
+                <!-- BIPADOR + SEQUENCIADOR EM ENTER -->
                 <div style="position: relative; display: flex; gap: 8px;">
-                    <input type="number" id="input-qtd-manual" value="1" style="width: 80px; text-align: center; font-size: 24px; border: 3px solid var(--primaria); border-radius: 12px; font-weight: bold;" title="Quantidade para o próximo item">
+                    <input type="number" id="input-qtd-manual" value="1" style="width: 80px; text-align: center; font-size: 24px; border: 3px solid var(--primaria); border-radius: 12px; font-weight: bold;" title="Quantidade para o próximo item" onkeydown="pularDaUnidadeProBipe(event)">
                     <div style="position: relative; flex: 1;">
                         <div id="dropdown-sugestoes" class="dropdown-busca" style="bottom: 100%; margin-bottom: 5px; width: 100%;"></div>
                         <input type="text" class="input-codigo" id="codigo-barras" placeholder="Bipe ou digite (Ex: 5*Código)..." oninput="filtrarPorNome(this.value)" onkeydown="navegarSugestoes(event)" autocomplete="off">
@@ -150,18 +150,18 @@
                     </div>
                     <div class="input-group" style="margin: 0;">
                         <label>Valor Recebido</label>
-                        <input type="number" id="valor-pago" placeholder="0.00" oninput="calcularTroco()">
+                        <input type="number" id="valor-pago" placeholder="0.00" oninput="calcularTroco()" onkeydown="fecharVendaComEnter(event)">
                     </div>
                     <div style="grid-column: span 2; text-align:right; font-weight:bold; font-size:22px; color: var(--erro);" id="box-troco">Troco: R$ 0.00</div>
                     
                     <button class="btn-universal" onclick="finalizarVenda(false)" style="background: var(--sucesso);">FINALIZAR SEM NOTA</button>
-                    <button class="btn-universal" onclick="finalizarVenda(true)" style="background: var(--fiscal); font-size: 18px;">EMITIR NFC-e (F4)</button>
+                    <button class="btn-universal" id="btn-finalizar-fiscal" onclick="finalizarVenda(true)" style="background: var(--fiscal); font-size: 18px;">EMITIR NFC-e (F4)</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- PAINEL GERENCIAL (COM SINCRONIZADOR) -->
+    <!-- PAINEL GERENCIAL -->
     <div id="tela-adm" class="tela">
         <div class="top-bar">
             <div><strong>PAINEL GERENCIAL</strong></div>
@@ -173,7 +173,6 @@
                     <h3>Importação (Plan1.xlsx)</h3>
                     <input type="file" accept=".xlsx" onchange="carregarExcel(event)" style="margin-top: 10px;">
                 </div>
-                <!-- NOVO SINCRONIZADOR ENTRE CAIXAS -->
                 <div style="background: white; padding: 20px; border-radius: 8px; border-left: 5px solid var(--sucesso);">
                     <h3>Sincronizar Preços Modificados</h3>
                     <div style="margin-top: 15px; display: flex; gap: 10px;">
@@ -206,7 +205,6 @@
         <div class="modal-card">
             <h3 style="color: var(--secundaria); margin-bottom: 5px;">Mudar Preço</h3>
             <p style="font-size:13px; color:#64748b; margin-bottom:15px;">Digite o nome ou bipe o produto</p>
-            
             <div class="input-group" style="position: relative;">
                 <label>Buscar Produto</label>
                 <input type="text" id="edit-cod" placeholder="Ex: Goiaba, Tomate ou Bipe o código..." oninput="buscarParaEdicao(this.value)" autocomplete="off">
@@ -214,7 +212,6 @@
                 <div id="dropdown-edicao-preco" class="dropdown-busca" style="top: 100%; bottom: auto; margin-top: 5px;"></div>
                 <div id="edit-nome-prod" style="font-size:13px; font-weight:bold; margin-top:8px; min-height:18px;"></div>
             </div>
-            
             <div class="input-group">
                 <label>Novo Preço (R$)</label>
                 <input type="number" id="edit-preco" placeholder="0.00" step="0.01">
@@ -235,7 +232,7 @@
             "7894900051513": {"nome": "REFRIGERANTE FANTA UVA 2LT", "preco": 9.75},
             "119": {"nome": "TOMATE KG", "preco": 4.99},
             "17": {"nome": "GOIABA KG", "preco": 5.99},
-            "55": {"nome": "QUEIJO MUSSARELA KG", "preco": 48.99} // Valor real atualizado!
+            "55": {"nome": "QUEIJO MUSSARELA KG", "preco": 48.99}
         }; 
 
         let precosModificadosManualmente = {};
@@ -244,11 +241,8 @@
         let listaFiltrada = [];
 
         window.onload = async function() {
-            // Carrega preços modificados locais primeiro para proteger mudanças de gerência
             const locais = localStorage.getItem('precos_modificados');
-            if (locais) {
-                precosModificadosManualmente = JSON.parse(locais);
-            }
+            if (locais) { precosModificadosManualmente = JSON.parse(locais); }
 
             try {
                 const res = await fetch('./Plan1.xlsx');
@@ -260,8 +254,6 @@
                         if(row.Codigo && row.Produto && row.Valor) {
                             let codStr = String(row.Codigo);
                             let precoExcel = parseFloat(String(row.Valor).replace('R$','').replace(',','.'));
-                            
-                            // Se já houver uma mudança manual salva para esse código, mantém a manual!
                             if (precosModificadosManualmente[codStr]) {
                                 estoqueCloud[codStr] = { nome: String(row.Produto), preco: precosModificadosManualmente[codStr] };
                             } else {
@@ -271,12 +263,10 @@
                     });
                 }
             } catch(e) {
-                // Se der erro no fetch, aplica o backup completo
                 const backup = localStorage.getItem('estoque_mercado');
                 if (backup) { estoqueCloud = JSON.parse(backup); }
             }
 
-            // Aplica novamente as modificações manuais caso algum item estático precise ser atualizado
             for (let c in precosModificadosManualmente) {
                 if (estoqueCloud[c]) estoqueCloud[c].preco = precosModificadosManualmente[c];
             }
@@ -287,18 +277,29 @@
             manterFocoNoInput();
         };
 
-        // EXPORTADOR DE SINCRONIZAÇÃO ENTRE MAQUINAS
-        function exportarPrecosModificados() {
-            if(Object.keys(precosModificadosManualmente).length === 0) {
-                return alert("Nenhum preço foi alterado manualmente neste caixa ainda.");
+        // ==========================================
+        // ENGENHARIA DE FLUXO CONTÍNUO (ENTER)
+        // ==========================================
+        function pularDaUnidadeProBipe(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('codigo-barras').focus();
             }
+        }
+
+        function fecharVendaComEnter(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                // O caixa escolhe a finalização padrão da loja (NFC-e Fiscal) para disparar no Enter
+                finalizarVenda(true); 
+            }
+        }
+
+        function exportarPrecosModificados() {
+            if(Object.keys(precosModificadosManualmente).length === 0) return alert("Nenhum preço modificado para exportar.");
             let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(precosModificadosManualmente));
-            let downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", "sinc_precos_dois_irmaos.json");
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
+            let downloadAnchor = document.createElement('a'); downloadAnchor.setAttribute("href", dataStr); downloadAnchor.setAttribute("download", "sinc_precos_dois_irmaos.json");
+            document.body.appendChild(downloadAnchor); downloadAnchor.click(); downloadAnchor.remove();
         }
 
         function importarPrecosModificados(e) {
@@ -307,17 +308,11 @@
             reader.onload = function(evt) {
                 try {
                     let importados = JSON.parse(evt.target.result);
-                    for (let c in importados) {
-                        precosModificadosManualmente[c] = importados[c];
-                        if (estoqueCloud[c]) estoqueCloud[c].preco = importados[c];
-                    }
+                    for (let c in importados) { precosModificadosManualmente[c] = importados[c]; if (estoqueCloud[c]) estoqueCloud[c].preco = importados[c]; }
                     localStorage.setItem('precos_modificados', JSON.stringify(precosModificadosManualmente));
                     localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-                    alert("Preços sincronizados com o outro caixa com sucesso!");
-                    renderizarTabelaAdm();
-                } catch(err) {
-                    alert("Erro ao ler o arquivo de sincronização.");
-                }
+                    alert("Preços sincronizados com sucesso!"); renderizarTabelaAdm();
+                } catch(err) { alert("Erro ao importar."); }
             };
             reader.readAsText(file);
         }
@@ -395,63 +390,37 @@
         function fecharModalPreco() { document.getElementById('modal-editar-preco').classList.remove('ativo'); document.getElementById('codigo-barras').focus(); }
         
         function buscarParaEdicao(val) {
-            let txt = val.toLowerCase().trim();
-            let label = document.getElementById('edit-nome-prod');
-            let drop = document.getElementById('dropdown-edicao-preco');
-            drop.innerHTML = '';
-            
+            let txt = val.toLowerCase().trim(); let label = document.getElementById('edit-nome-prod'); let drop = document.getElementById('dropdown-edicao-preco'); drop.innerHTML = '';
             if(!txt) { drop.style.display = 'none'; label.innerText = ''; return; }
-
             if(!isNaN(txt) && txt.length >= 3) {
                 if (estoqueCloud[txt]) {
                     document.getElementById('edit-cod-selecionado').value = txt;
                     label.innerText = `✅ ${estoqueCloud[txt].nome} (Preço: R$ ${estoqueCloud[txt].preco.toFixed(2)})`;
-                    label.style.color = "var(--sucesso)";
-                    drop.style.display = 'none';
-                    return;
+                    label.style.color = "var(--sucesso)"; drop.style.display = 'none'; return;
                 }
             }
-
             let itensFiltrados = Object.keys(estoqueCloud).filter(c => estoqueCloud[c].nome.toLowerCase().includes(txt)).slice(0, 5);
             if(itensFiltrados.length > 0) {
                 drop.style.display = 'block';
-                itensFiltrados.forEach(c => {
-                    drop.innerHTML += `<div class="opcao-busca" onclick="selecionarProdutoParaPreco('${c}')"><span>✏️ ${estoqueCloud[c].nome}</span> <span>R$ ${estoqueCloud[c].preco.toFixed(2)}</span></div>`;
-                });
-            } else {
-                drop.style.display = 'none';
-                label.innerText = "Produto não encontrado";
-                label.style.color = "var(--erro)";
-            }
+                itensFiltrados.forEach(c => { drop.innerHTML += `<div class="opcao-busca" onclick="selecionarProdutoParaPreco('${c}')"><span>✏️ ${estoqueCloud[c].nome}</span> <span>R$ ${estoqueCloud[c].preco.toFixed(2)}</span></div>`; });
+            } else { drop.style.display = 'none'; label.innerText = "Produto não encontrado"; label.style.color = "var(--erro)"; }
         }
 
         function selecionarProdutoParaPreco(cod) {
-            document.getElementById('edit-cod').value = estoqueCloud[cod].nome;
-            document.getElementById('edit-cod-selecionado').value = cod;
-            let label = document.getElementById('edit-nome-prod');
-            label.innerText = `✅ Selecionado: ${estoqueCloud[cod].nome} (Preço: R$ ${estoqueCloud[cod].preco.toFixed(2)})`;
-            label.style.color = "var(--sucesso)";
-            document.getElementById('dropdown-edicao-preco').style.display = 'none';
-            document.getElementById('edit-preco').focus();
+            document.getElementById('edit-cod').value = estoqueCloud[cod].nome; document.getElementById('edit-cod-selecionado').value = cod;
+            let label = document.getElementById('edit-nome-prod'); label.innerText = `✅ Selecionado: ${estoqueCloud[cod].nome} (Preço: R$ ${estoqueCloud[cod].preco.toFixed(2)})`;
+            label.style.color = "var(--sucesso)"; document.getElementById('dropdown-edicao-preco').style.display = 'none'; document.getElementById('edit-preco').focus();
         }
 
         function salvarNovoPreco() {
-            let cod = document.getElementById('edit-cod-selecionado').value.trim();
-            let precoFormatado = parseFloat(document.getElementById('edit-preco').value.replace(',', '.'));
-            let senha = document.getElementById('edit-senha').value;
-            if (!cod || !estoqueCloud[cod]) return alert("Por favor, selecione um produto válido!");
-            if (!precoFormatado || precoFormatado <= 0) return alert("Por favor, digite um preço válido!");
+            let cod = document.getElementById('edit-cod-selecionado').value.trim(); let precoFormatado = parseFloat(document.getElementById('edit-preco').value.replace(',', '.')); let senha = document.getElementById('edit-senha').value;
+            if (!cod || !estoqueCloud[cod]) return alert("Selecione um produto válido!");
+            if (!precoFormatado || precoFormatado <= 0) return alert("Digite um preço válido!");
             if (senha !== 'kd041022') return alert("Senha do Gerente incorreta!");
-            
-            estoqueCloud[cod].preco = precoFormatado;
-            precosModificadosManualmente[cod] = precoFormatado; // Registra no array de sincronização
-            
-            localStorage.setItem('precos_modificados', JSON.stringify(precosModificadosManualmente));
-            localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-            
+            estoqueCloud[cod].preco = precoFormatado; precosModificadosManualmente[cod] = precoFormatado;
+            localStorage.setItem('precos_modificados', JSON.stringify(precosModificadosManualmente)); localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
             registrarLog(`Preço alterado: ${estoqueCloud[cod].nome} para R$ ${precoFormatado.toFixed(2)}`, "alerta");
-            alert(`Sucesso! Preço de ${estoqueCloud[cod].nome} alterado para R$ ${precoFormatado.toFixed(2)}.`);
-            fecharModalPreco();
+            alert(`Sucesso! Preço de ${estoqueCloud[cod].nome} alterado para R$ ${precoFormatado.toFixed(2)}.`); fecharModalPreco();
         }
 
         async function carregarExcel(e) {
@@ -463,20 +432,13 @@
                 let count = 0;
                 json.forEach(row => {
                     if(row.Codigo && row.Produto && row.Valor) {
-                        let codStr = String(row.Codigo);
-                        let precoExcel = parseFloat(String(row.Valor).replace('R$','').replace(',','.'));
-                        
-                        // Protege modificações manuais locais durante a importação da planilha
-                        if (precosModificadosManualmente[codStr]) {
-                            estoqueCloud[codStr] = { nome: String(row.Produto), preco: precosModificadosManualmente[codStr] };
-                        } else {
-                            estoqueCloud[codStr] = { nome: String(row.Produto), preco: precoExcel };
-                        }
+                        let codStr = String(row.Codigo); let precoExcel = parseFloat(String(row.Valor).replace('R$','').replace(',','.'));
+                        if (precosModificadosManualmente[codStr]) { estoqueCloud[codStr] = { nome: String(row.Produto), preco: precosModificadosManualmente[codStr] }; } 
+                        else { estoqueCloud[codStr] = { nome: String(row.Produto), preco: precoExcel }; }
                         count++;
                     }
                 });
-                localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-                alert(`${count} produtos importados!`); renderizarTabelaAdm();
+                localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud)); alert(`${count} produtos importados!`); renderizarTabelaAdm();
             };
             reader.readAsArrayBuffer(file);
         }
@@ -492,34 +454,31 @@
             if(!texto || !isNaN(texto)) { drop.style.display = 'none'; return; }
             listaFiltrada = Object.keys(estoqueCloud).filter(c => estoqueCloud[c].nome.toLowerCase().includes(texto)).slice(0, 15);
             if(listaFiltrada.length > 0) {
-                drop.style.display = 'block';
-                // Puxa a Qtd ativa do seletor manual ao clicar na lista
-                let qtdAtiva = parseFloat(document.getElementById('input-qtd-manual').value || 1);
+                drop.style.display = 'block'; let qtdAtiva = parseFloat(document.getElementById('input-qtd-manual').value || 1);
                 listaFiltrada.forEach(c => drop.innerHTML += `<div class="opcao-busca" onclick="addCupom('${c}', ${qtdAtiva})"><span>📦 ${estoqueCloud[c].nome}</span> <span>R$ ${estoqueCloud[c].preco.toFixed(2)}</span></div>`);
             } else { drop.style.display = 'none'; }
         }
 
         function navegarSugestoes(e) {
-            if(e.key === 'Enter' && document.getElementById('dropdown-sugestoes').style.display !== 'block') {
+            if(e.key === 'Enter') {
                 e.preventDefault(); 
-                let txt = document.getElementById('codigo-barras').value.trim(); if(!txt) return;
+                let txt = document.getElementById('codigo-barras').value.trim();
                 
-                let qtd = parseFloat(document.getElementById('input-qtd-manual').value || 1); 
-                let cod = txt; 
-                
-                // Trata o padrão clássico do bipador de caixa: 5*Código
-                if(txt.includes('*')) { 
-                    qtd = parseFloat(txt.split('*')[0]); 
-                    cod = txt.split('*')[1]; 
+                // FLUXO DO ENTER: Se o operador der Enter com o campo vazio, salta direto para o fechamento (Valor Pago)
+                if(!txt) {
+                    if (cupomAtual.length === 0) return alert("Passe os produtos primeiro antes de avançar!");
+                    document.getElementById('valor-pago').focus();
+                    document.getElementById('valor-pago').select();
+                    return;
                 }
+                
+                let qtd = parseFloat(document.getElementById('input-qtd-manual').value || 1); let cod = txt;
+                if(txt.includes('*')) { qtd = parseFloat(txt.split('*')[0]); cod = txt.split('*')[1]; }
                 
                 if(estoqueCloud[cod]) { 
-                    addCupom(cod, qtd); 
-                    document.getElementById('input-qtd-manual').value = "1"; // Reseta o multiplicador para o próximo produto
-                } else { 
-                    registrarLog("Código não cadastrado: " + cod, "erro"); 
-                    document.getElementById('codigo-barras').value = ''; 
-                }
+                    addCupom(cod, qtd); document.getElementById('input-qtd-manual').value = "1"; 
+                    document.getElementById('input-qtd-manual').focus(); // Mantém o ciclo focado na sequência
+                } else { registrarLog("Código não cadastrado: " + cod, "erro"); document.getElementById('codigo-barras').value = ''; }
             }
         }
 
@@ -557,8 +516,7 @@
                 totalVenda += item.total; let unidade = Number.isInteger(item.qtd) ? 'UN' : 'KG';
                 lista.innerHTML += `<div class="item-cupom"><span>${item.nome}</span><span style="text-align:center">${item.qtd} <span class="badge-unidade">${unidade}</span></span><span style="text-align:right">${item.unit.toFixed(2)}</span><span style="text-align:right; font-weight:bold; color:var(--secundaria);">${item.total.toFixed(2)}</span><button class="btn-remover" onclick="removerItem(${i})">❌</button></div>`;
             });
-            document.getElementById('valor-total').innerText = totalVenda.toFixed(2); 
-            calcularTroco();
+            document.getElementById('valor-total').innerText = totalVenda.toFixed(2); calcularTroco();
         }
 
         function calcularTroco() {
@@ -596,7 +554,10 @@
             const formaPagto = document.getElementById('forma-pagamento').value;
             if(nfce) { gerarNFCe(formaPagto); setTimeout(() => { window.print(); }, 200); } 
             else { gerarCupomPDV(formaPagto); setTimeout(() => { window.print(); }, 100); }
-            cupomAtual = []; document.getElementById('valor-pago').value = ''; renderizarCupom(); document.getElementById('codigo-barras').focus();
+            cupomAtual = []; document.getElementById('valor-pago').value = ''; renderizarCupom(); 
+            
+            // JOGA O FOCO AUTOMATICAMENTE NA UNIDADE PARA O PRÓXIMO CLIENTE DA FILA
+            setTimeout(() => { document.getElementById('input-qtd-manual').focus(); document.getElementById('input-qtd-manual').select(); }, 500);
         }
     </script>
 </body>
