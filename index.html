@@ -51,9 +51,10 @@
         .tabela-dados { width: 100%; border-collapse: collapse; background: white; margin-top: 20px;}
         .tabela-dados th, .tabela-dados td { padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: left; }
 
-        /* ============================================================== */
-        /* CSS DA IMPRESSORA EPSON (LETRAS GROSSAS E NÍTIDAS)             */
-        /* ============================================================== */
+        /* MODAL DE ALTERAR PREÇO */
+        .modal-bg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+        .modal-bg.ativo { display: flex; }
+
         @media print {
             body * { visibility: hidden; display: none !important; }
             #recibo-impressao, #recibo-impressao * { visibility: visible; display: block !important; }
@@ -62,13 +63,11 @@
                 position: absolute; left: 0; top: 0; 
                 width: 100%; max-width: 80mm; 
                 margin: 0; padding: 0 2mm;
-                
-                /* TROCADO PARA ARIAL PARA DEIXAR A LETRA BEM CHEIA */
                 font-family: Arial, Helvetica, sans-serif !important; 
-                color: #000 !important; /* PRETO ABSOLUTO */
-                font-weight: bold !important; /* LETRAS GROSSAS */
+                color: #000 !important; 
+                font-weight: bold !important; 
                 background: white; 
-                font-size: 12px; /* AUMENTADO O TAMANHO */
+                font-size: 12px; 
                 line-height: 1.25; 
                 text-rendering: optimizeLegibility;
             }
@@ -108,9 +107,12 @@
         <div class="top-bar">
             <div><strong>CAIXA 01</strong> | Operador: <span id="caixa-nome-status">Eduardo</span></div>
             <div style="display: flex; gap: 10px;">
-                <button class="btn-universal" id="btn-painel-atalho" onclick="mostrarTela('tela-adm')" style="background: var(--alerta); padding: 8px; display: none;">Painel Gerencial</button>
-                <button class="btn-universal" onclick="cancelarCupom()" style="background: var(--erro); padding: 8px;">Cancelar Compra</button>
-                <button class="btn-universal" onclick="sair()" style="background: #475569; padding: 8px;">Sair</button>
+                <button class="btn-universal" id="btn-painel-atalho" onclick="mostrarTela('tela-adm')" style="background: var(--alerta); padding: 8px; display: none; width: auto;">Painel Gerencial</button>
+                <!-- NOVO BOTÃO DE EDITAR PREÇO RÁPIDO -->
+                <button class="btn-universal" onclick="abrirModalPreco()" style="background: var(--secundaria); padding: 8px; width: auto;">✏️ Mudar Preço</button>
+                
+                <button class="btn-universal" onclick="cancelarCupom()" style="background: var(--erro); padding: 8px; width: auto;">Cancelar Compra</button>
+                <button class="btn-universal" onclick="sair()" style="background: #475569; padding: 8px; width: auto;">Sair</button>
             </div>
         </div>
         <div class="pdv-container">
@@ -174,6 +176,32 @@
         </div>
     </div>
 
+    <!-- MODAL DE EDIÇÃO DE PREÇO -->
+    <div id="modal-editar-preco" class="modal-bg">
+        <div class="login-box">
+            <h2 style="margin-bottom: 5px; color: var(--secundaria);">Mudar Preço</h2>
+            <p style="font-size: 13px; color: #64748b; margin-bottom: 20px;">Atualização instantânea no sistema</p>
+            
+            <div class="input-group">
+                <label>Bipe o Produto</label>
+                <input type="text" id="edit-cod" placeholder="Código de barras" oninput="buscarParaEdicao(this.value)">
+                <div id="edit-nome-prod" style="font-size: 13px; font-weight: bold; margin-top: 5px; color: #475569;"></div>
+            </div>
+            <div class="input-group">
+                <label>Novo Preço (R$)</label>
+                <input type="number" id="edit-preco" placeholder="Ex: 5.50" step="0.01">
+            </div>
+            <div class="input-group">
+                <label>Senha do Gerente</label>
+                <input type="password" id="edit-senha" placeholder="••••••••" onkeypress="if(event.key === 'Enter') salvarNovoPreco()">
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-universal" style="background: var(--erro);" onclick="fecharModalPreco()">Cancelar</button>
+                <button class="btn-universal" style="background: var(--sucesso);" onclick="salvarNovoPreco()">Salvar Preço</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let estoqueCloud = {
             "7894900051513": {"nome": "REFRIGERANTE FANTA UVA 2LT", "preco": 9.75},
@@ -215,17 +243,74 @@
                 const dropBarra = document.getElementById('dropdown-sugestoes');
                 const dropBalanca = document.getElementById('dropdown-balanca');
                 const isPdv = document.getElementById('tela-pdv').classList.contains('ativa');
+                const modalAberto = document.getElementById('modal-editar-preco').classList.contains('ativo');
                 
                 if(!document.getElementById('codigo-balanca').contains(e.target) && !dropBalanca.contains(e.target)) dropBalanca.style.display = 'none';
                 if(!document.getElementById('codigo-barras').contains(e.target) && !dropBarra.contains(e.target)) dropBarra.style.display = 'none';
 
                 const ativo = document.activeElement.id;
-                if (isPdv && !dropBarra.contains(e.target) && !dropBalanca.contains(e.target) && ativo !== 'valor-pago' && ativo !== 'forma-pagamento' && ativo !== 'peso-balanca' && ativo !== 'codigo-balanca') {
+                // Não rouba o foco se o modal de preço estiver aberto
+                if (isPdv && !modalAberto && !dropBarra.contains(e.target) && !dropBalanca.contains(e.target) && ativo !== 'valor-pago' && ativo !== 'forma-pagamento' && ativo !== 'peso-balanca' && ativo !== 'codigo-balanca') {
                     document.getElementById('codigo-barras').focus();
                 }
             });
         }
 
+        // ==========================================
+        // LÓGICA DE ALTERAÇÃO RÁPIDA DE PREÇO
+        // ==========================================
+        function abrirModalPreco() {
+            document.getElementById('modal-editar-preco').classList.add('ativo');
+            document.getElementById('edit-cod').value = '';
+            document.getElementById('edit-preco').value = '';
+            document.getElementById('edit-senha').value = '';
+            document.getElementById('edit-nome-prod').innerText = '';
+            setTimeout(() => document.getElementById('edit-cod').focus(), 100);
+        }
+
+        function fecharModalPreco() {
+            document.getElementById('modal-editar-preco').classList.remove('ativo');
+            document.getElementById('codigo-barras').focus();
+        }
+
+        function buscarParaEdicao(val) {
+            let cod = val.trim();
+            let label = document.getElementById('edit-nome-prod');
+            if (estoqueCloud[cod]) {
+                label.innerText = `✅ ${estoqueCloud[cod].nome} | Valor Atual: R$ ${estoqueCloud[cod].preco.toFixed(2)}`;
+                label.style.color = "var(--sucesso)";
+            } else {
+                label.innerText = "Produto não cadastrado";
+                label.style.color = "var(--erro)";
+            }
+        }
+
+        function salvarNovoPreco() {
+            let cod = document.getElementById('edit-cod').value.trim();
+            let precoInput = document.getElementById('edit-preco').value.replace(',', '.');
+            let precoFormatado = parseFloat(precoInput);
+            let senha = document.getElementById('edit-senha').value;
+
+            if (!estoqueCloud[cod]) return alert("Erro: Código não encontrado!");
+            if (!precoFormatado || precoFormatado <= 0) return alert("Erro: Digite um preço válido!");
+            if (senha !== 'kd041022') return alert("Acesso Negado: Senha do Gerente incorreta!");
+
+            // Atualiza na memória e no LocalStorage
+            estoqueCloud[cod].preco = precoFormatado;
+            localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
+
+            registrarLog(`ATUALIZAÇÃO: Preço de ${estoqueCloud[cod].nome} alterado para R$ ${precoFormatado.toFixed(2)}`, "alerta");
+            alert(`Sucesso! O preço de ${estoqueCloud[cod].nome} foi atualizado para R$ ${precoFormatado.toFixed(2)}.`);
+            
+            fecharModalPreco();
+            
+            // Atualiza a tabela se o painel adm estiver aberto
+            if(document.getElementById('tela-adm').classList.contains('ativa')) renderizarTabelaAdm();
+        }
+
+        // ==========================================
+        // FLUXO DO SISTEMA PDV
+        // ==========================================
         function mostrarTela(id) {
             document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
             document.getElementById(id).classList.add('ativa');
@@ -252,7 +337,7 @@
 
         function registrarLog(msg, tipo='info') {
             const log = document.getElementById('log-sistema');
-            const cor = tipo === 'erro' ? 'red' : tipo === 'sucesso' ? '#10b981' : '#38bdf8';
+            const cor = tipo === 'erro' ? 'red' : tipo === 'alerta' ? 'orange' : tipo === 'sucesso' ? '#10b981' : '#38bdf8';
             log.innerHTML = `<div style="color:${cor}">[SISTEMA] ${msg}</div>` + log.innerHTML;
         }
 
@@ -378,7 +463,6 @@
             return valor.toFixed(2).replace('.', ',');
         }
 
-        // LAYOUT 1: CUPOM PDV SIMPLES 
         function gerarCupomPDV(formaPagto) {
             let containerAntigo = document.getElementById('recibo-impressao');
             if(containerAntigo) containerAntigo.remove();
@@ -431,7 +515,6 @@
             document.body.appendChild(divElement.firstElementChild);
         }
 
-        // LAYOUT 2: NFC-E OFICIAL DA SEFAZ RN 
         function gerarNFCe(formaPagto) {
             let containerAntigo = document.getElementById('recibo-impressao');
             if(containerAntigo) containerAntigo.remove();
@@ -464,7 +547,6 @@
                 html += `
                     <div style="margin-bottom: 4px;">
                         <div>${numItem} ${codProduto} ${i.nome.toUpperCase()}</div>
-                        <!-- padding-left impede que a linha quebre e fique embaixo da descrição -->
                         <div class="flex-space" style="padding-left: 15px;">
                             <span>${i.qtd} ${und} X ${formatarMoeda(i.unit)}</span>
                             <span>${formatarMoeda(i.total)}</span>
