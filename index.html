@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mercadinho Dois Irmãos - PDV</title>
+    <!-- Biblioteca Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- Biblioteca QR Code -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
     <style>
         :root { --primaria: #0f172a; --secundaria: #2563eb; --sucesso: #10b981; --alerta: #f59e0b; --erro: #ef4444; --fundo: #f8fafc; --texto: #1e293b; --fiscal: #7c3aed; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
@@ -34,7 +38,6 @@
         .operacao-area { width: 55%; padding: 30px; display: flex; flex-direction: column; background: #f8fafc; justify-content: space-between; }
         .terminal-log { background: #020617; color: #38bdf8; padding: 15px; border-radius: 8px; height: 110px; overflow-y: auto; font-family: monospace; font-size: 13px; margin-bottom: 15px; }
         
-        /* ÁREA DA BALANÇA */
         .area-balanca { background: #e2e8f0; padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; gap: 10px; align-items: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
         .area-balanca input { padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; }
         
@@ -50,11 +53,20 @@
         .tabela-dados { width: 100%; border-collapse: collapse; background: white; margin-top: 20px;}
         .tabela-dados th, .tabela-dados td { padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: left; }
 
-        /* MÁGICA DA IMPRESSORA: OCULTA O SITE E MOSTRA SÓ O RECIBO LIMPO */
+        /* ========================================== */
+        /* CSS DA IMPRESSORA EPSON (O SEGREDO AQUI!)  */
+        /* ========================================== */
         @media print {
             body * { visibility: hidden; display: none !important; }
             #recibo-impressao, #recibo-impressao * { visibility: visible; display: block !important; }
-            #recibo-impressao { position: absolute; left: 0; top: 0; width: 100%; max-width: 300px; padding: 0; margin: 0; font-family: monospace; color: black; background: white; }
+            #recibo-impressao { 
+                position: absolute; left: 0; top: 0; width: 100%; max-width: 80mm; 
+                margin: 0; padding: 5px; 
+                font-family: 'Courier New', Courier, monospace; 
+                color: black; background: white; font-size: 12px; 
+            }
+            .linha-tracejada { border-top: 1px dashed black; margin: 4px 0; width: 100%; }
+            #qrcode-recibo img { width: 110px; height: 110px; margin: 0 auto; }
             @page { margin: 0; }
         }
     </style>
@@ -80,7 +92,7 @@
     <!-- TELA DE CAIXA -->
     <div id="tela-pdv" class="tela">
         <div class="top-bar">
-            <div><strong>CAIXA 01</strong> | Operador: <span id="caixa-nome-status">Caixa</span></div>
+            <div><strong>CAIXA 01</strong> | Operador: <span id="caixa-nome-status">Eduardo</span></div>
             <div style="display: flex; gap: 10px;">
                 <button class="btn-universal" id="btn-painel-atalho" onclick="mostrarTela('tela-adm')" style="background: var(--alerta); padding: 8px; display: none;">Painel Gerencial</button>
                 <button class="btn-universal" onclick="cancelarCupom()" style="background: var(--erro); padding: 8px;">Cancelar Compra</button>
@@ -96,14 +108,12 @@
             <div class="operacao-area">
                 <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Sistema pronto para vendas.</div></div>
                 
-                <!-- NOVA CALCULADORA DE BALANÇA INTELIGENTE -->
                 <div class="area-balanca">
                     <span style="font-size: 24px;" title="Modo Balança">⚖️</span>
                     <input type="number" id="peso-balanca" placeholder="Peso (ex: 0.450)" style="width: 140px;" step="0.001">
                     
                     <div style="position: relative; flex: 1;">
                         <input type="text" id="codigo-balanca" placeholder="Digite o nome (Ex: Tomate, Goiaba)..." style="width: 100%;" oninput="filtrarNomeBalanca(this.value)" autocomplete="off">
-                        <!-- Dropdown que abre APENAS para os produtos de balança -->
                         <div id="dropdown-balanca" class="dropdown-busca" style="top: 100%; bottom: auto; margin-top: 5px;"></div>
                     </div>
                 </div>
@@ -151,9 +161,8 @@
     </div>
 
     <script>
-        // LISTA DE EMERGÊNCIA + TESTES DE FRUTAS
         let estoqueCloud = {
-            "7894900010015": {"nome": "COCA COLA LATA 350ML", "preco": 4.5},
+            "7894900010015": {"nome": "Refrigerante fanta uva 2lt", "preco": 9.75},
             "119": {"nome": "TOMATE KG", "preco": 4.99},
             "17": {"nome": "GOIABA KG", "preco": 5.99},
             "55": {"nome": "QUEIJO MUSSARELA KG", "preco": 46.99}
@@ -176,7 +185,6 @@
                         }
                     });
                     localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-                    registrarLog("Planilha oficial carregada com sucesso.", "sucesso");
                 }
             } catch(e) {
                 const backup = localStorage.getItem('estoque_mercado');
@@ -194,13 +202,8 @@
                 const dropBalanca = document.getElementById('dropdown-balanca');
                 const isPdv = document.getElementById('tela-pdv').classList.contains('ativa');
                 
-                // Fecha as listas se clicar fora delas
-                if(!document.getElementById('codigo-balanca').contains(e.target) && !dropBalanca.contains(e.target)) {
-                    dropBalanca.style.display = 'none';
-                }
-                if(!document.getElementById('codigo-barras').contains(e.target) && !dropBarra.contains(e.target)) {
-                    dropBarra.style.display = 'none';
-                }
+                if(!document.getElementById('codigo-balanca').contains(e.target) && !dropBalanca.contains(e.target)) dropBalanca.style.display = 'none';
+                if(!document.getElementById('codigo-barras').contains(e.target) && !dropBarra.contains(e.target)) dropBarra.style.display = 'none';
 
                 const ativo = document.activeElement.id;
                 if (isPdv && !dropBarra.contains(e.target) && !dropBalanca.contains(e.target) && ativo !== 'valor-pago' && ativo !== 'forma-pagamento' && ativo !== 'peso-balanca' && ativo !== 'codigo-balanca') {
@@ -218,8 +221,16 @@
         function fazerLogin() {
             const u = document.getElementById('login-usuario').value.toLowerCase();
             const s = document.getElementById('login-senha').value;
-            if (u === 'eduardo' && s === 'kd041022') { document.getElementById('btn-painel-atalho').style.display = 'block'; mostrarTela('tela-pdv'); }
-            else if (u === 'caixa' && s === '123') { document.getElementById('btn-painel-atalho').style.display = 'none'; mostrarTela('tela-pdv'); }
+            if (u === 'eduardo' && s === 'kd041022') { 
+                document.getElementById('btn-painel-atalho').style.display = 'block'; 
+                document.getElementById('caixa-nome-status').innerText = 'Eduardo';
+                mostrarTela('tela-pdv'); 
+            }
+            else if (u === 'caixa' && s === '123') { 
+                document.getElementById('btn-painel-atalho').style.display = 'none'; 
+                document.getElementById('caixa-nome-status').innerText = 'Caixa';
+                mostrarTela('tela-pdv'); 
+            }
             else { alert("Senha incorreta!"); }
         }
         
@@ -263,9 +274,6 @@
             }
         }
 
-        // ==========================================
-        // BUSCA PRINCIPAL (CÓDIGO DE BARRAS / NOME)
-        // ==========================================
         function filtrarPorNome(val) {
             const texto = val.toLowerCase().trim();
             const drop = document.getElementById('dropdown-sugestoes'); drop.innerHTML = '';
@@ -298,54 +306,33 @@
             renderizarCupom();
         }
 
-        // ==========================================
-        // NOVA BUSCA INTELIGENTE DA BALANÇA
-        // ==========================================
         function filtrarNomeBalanca(val) {
             const texto = val.toLowerCase().trim();
             const drop = document.getElementById('dropdown-balanca');
             drop.innerHTML = '';
             if(!texto) { drop.style.display = 'none'; return; }
-            
             let listaBalanca = Object.keys(estoqueCloud).filter(c => estoqueCloud[c].nome.toLowerCase().includes(texto)).slice(0, 10);
-            
             if(listaBalanca.length > 0) {
                 drop.style.display = 'block';
                 listaBalanca.forEach(c => {
-                    // Ao clicar no nome, o sistema puxa o peso e já insere!
                     drop.innerHTML += `<div class="opcao-busca" onclick="addCupomBalanca('${c}')"><span>⚖️ ${estoqueCloud[c].nome}</span> <span style="color:var(--secundaria)">R$ ${estoqueCloud[c].preco.toFixed(2)}/Kg</span></div>`;
                 });
-            } else {
-                drop.style.display = 'none';
-            }
+            } else { drop.style.display = 'none'; }
         }
 
         function addCupomBalanca(cod) {
             let peso = parseFloat(document.getElementById('peso-balanca').value);
-            
-            if (!peso || peso <= 0) {
-                alert("Por favor, digite primeiro o peso da balança! (Ex: 0.450)");
-                document.getElementById('peso-balanca').focus();
-                return;
-            }
-            
+            if (!peso || peso <= 0) { alert("Por favor, digite o peso primeiro!"); document.getElementById('peso-balanca').focus(); return; }
             const p = estoqueCloud[cod];
-            // O total é calculado exatamente pelo peso (Preço x Kg)
             cupomAtual.push({ nome: p.nome, qtd: peso, unit: p.preco, total: p.preco * peso });
-            
-            // Limpa tudo e volta o foco pro código de barras principal
             document.getElementById('peso-balanca').value = '';
             document.getElementById('codigo-balanca').value = '';
             document.getElementById('dropdown-balanca').style.display = 'none';
             document.getElementById('codigo-barras').focus();
-            
             registrarLog(`Pesado: ${peso}kg de ${p.nome}`, 'sucesso');
             renderizarCupom();
         }
 
-        // ==========================================
-        // FECHAMENTO E CUPOM
-        // ==========================================
         function removerItem(idx) { cupomAtual.splice(idx, 1); renderizarCupom(); }
         function cancelarCupom() { if(confirm("Cancelar compra?")) { cupomAtual = []; renderizarCupom(); registrarLog("Compra Cancelada", "erro"); } }
 
@@ -353,9 +340,7 @@
             const lista = document.getElementById('lista-cupom'); lista.innerHTML = ''; totalVenda = 0;
             cupomAtual.forEach((item, i) => {
                 totalVenda += item.total;
-                // Detecta se é Unidade ou KG com base na casa decimal
                 let unidade = Number.isInteger(item.qtd) ? 'UN' : 'KG';
-                
                 lista.innerHTML += `
                 <div class="item-cupom">
                     <span>${item.nome}</span>
@@ -375,39 +360,78 @@
             else { box.innerText = `Troco: R$ 0.00`; box.style.color = 'var(--erro)'; }
         }
 
+        // ====================================================================
+        // NOVO CUPOM ORGANIZADO IGUAL A FOTO (COM ENDEREÇO, PEDIDO E QR CODE)
+        // ====================================================================
         function gerarReciboParaImpressao(formaPagto) {
             let containerAntigo = document.getElementById('recibo-impressao');
             if(containerAntigo) containerAntigo.remove();
 
+            let pedidoNumber = Math.floor(Math.random() * 90000) + 10000;
+            let dataAtual = new Date().toLocaleString('pt-BR');
+            let nomeVendedor = document.getElementById('caixa-nome-status').innerText;
+
             let html = `
             <div id="recibo-impressao">
-                <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:5px;">MERCADINHO DOIS IRMÃOS</div>
-                <div style="text-align:center; font-size:12px; margin-bottom:10px;">${new Date().toLocaleString('pt-BR')}</div>
-                <div style="border-bottom: 1px dashed black; margin-bottom: 5px;"></div>
+                <div style="text-align:center; font-weight:bold; font-size:14px; margin-bottom:2px;">Mercadinho Dois Irmãos</div>
+                <div style="text-align:center; font-size:12px; margin-bottom:10px;">Rua Padre Cicero, 375, Felipe Camarão</div>
+                
+                <div style="font-size:12px; margin-bottom:5px;">${dataAtual} - Pedido ${pedidoNumber}</div>
+                
                 <table style="width:100%; font-size:12px; text-align:left; border-collapse: collapse;">
-                    <tr><th>Qtd</th><th>Item</th><th style="text-align:right;">R$ Total</th></tr>`;
+                    <tr>
+                        <th style="width:15%; border-bottom: 1px dashed black; padding-bottom:3px;">Quant</th>
+                        <th style="width:45%; border-bottom: 1px dashed black; padding-bottom:3px;">Descricao</th>
+                        <th style="width:20%; border-bottom: 1px dashed black; padding-bottom:3px; text-align:right;">Unit</th>
+                        <th style="width:20%; border-bottom: 1px dashed black; padding-bottom:3px; text-align:right;">Total</th>
+                    </tr>`;
             
             cupomAtual.forEach(i => {
-                let und = Number.isInteger(i.qtd) ? 'UN' : 'KG';
-                html += `<tr>
-                    <td style="padding-top:4px; vertical-align:top;">${i.qtd}${und}</td>
-                    <td style="padding-top:4px; padding-right:5px; vertical-align:top;">${i.nome} <br><small>R$ ${i.unit.toFixed(2)}</small></td>
-                    <td style="padding-top:4px; text-align:right; vertical-align:top;">${i.total.toFixed(2)}</td>
-                </tr>`;
+                html += `
+                    <tr>
+                        <td style="vertical-align:top; padding-top:4px;">${i.qtd}</td>
+                        <td style="vertical-align:top; padding-top:4px; padding-right:5px;">${i.nome}</td>
+                        <td style="vertical-align:top; padding-top:4px; text-align:right;">${i.unit.toFixed(3)}</td>
+                        <td style="vertical-align:top; padding-top:4px; text-align:right;">${i.total.toFixed(2)}</td>
+                    </tr>`;
             });
 
             html += `
                 </table>
-                <div style="border-bottom: 1px dashed black; margin-top: 5px; margin-bottom: 5px;"></div>
-                <div style="font-size:16px; font-weight:bold; text-align:right;">TOTAL: R$ ${totalVenda.toFixed(2)}</div>
-                <div style="font-size:12px; text-align:right; margin-top:3px;">Pagto: ${formaPagto}</div>
-                <div style="text-align:center; font-size:12px; margin-top:15px;">Obrigado pela preferência!</div>
-                <div style="text-align:center; font-size:10px; margin-top:5px; color:#666;">Volte Sempre!</div>
+                <div class="linha-tracejada" style="margin-top: 5px;"></div>
+                
+                <div style="display:flex; justify-content:space-between; font-size:13px; margin-top:5px;">
+                    <span>Total a pagar</span>
+                    <strong>R$ ${totalVenda.toFixed(2)}</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:13px; margin-top:2px;">
+                    <span>${formaPagto}</span>
+                    <span>R$ ${totalVenda.toFixed(2)}</span>
+                </div>
+                <div style="font-size:13px; margin-top:2px;">Vendedor: ${nomeVendedor}</div>
+                
+                <div style="text-align:center; margin-top:15px; margin-bottom:5px;">
+                    <div id="qrcode-recibo" style="display:flex; justify-content:center;"></div>
+                    <div style="font-size:10px; margin-top:3px;">Consulte via QRCode</div>
+                </div>
+                
+                <div style="text-align:center; font-size:12px; margin-top:10px;">Obrigado pela preferência!</div>
+                <div style="text-align:center; font-size:11px; color:#333;">Volte Sempre!</div>
             </div>`;
 
             let divElement = document.createElement('div');
             divElement.innerHTML = html;
             document.body.appendChild(divElement.firstElementChild);
+
+            // Gera o QR Code automaticamente
+            new QRCode(document.getElementById("qrcode-recibo"), {
+                text: "https://sefaz.rn.gov.br/nfce/consulta?p=" + pedidoNumber + "v" + totalVenda.toFixed(2),
+                width: 110,
+                height: 110,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.L
+            });
         }
 
         function finalizarVenda(nfce) {
@@ -415,7 +439,7 @@
             const formaPagto = document.getElementById('forma-pagamento').value;
             
             gerarReciboParaImpressao(formaPagto);
-            window.print(); 
+            setTimeout(() => { window.print(); }, 200); // Dá 200 milissegundos pro QR Code desenhar antes da guilhotina cortar
             
             cupomAtual = []; document.getElementById('valor-pago').value = ''; renderizarCupom();
             document.getElementById('codigo-barras').focus();
