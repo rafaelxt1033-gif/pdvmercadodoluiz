@@ -33,13 +33,7 @@
         .btn-remover { color: var(--erro); background: transparent; border: none; cursor: pointer; font-size: 16px; }
         
         .total-box { 
-            background: #ffffff; 
-            color: var(--erro); 
-            padding: 25px; 
-            border-radius: 12px; 
-            text-align: center; 
-            margin-top: 20px; 
-            border: 4px solid var(--erro);
+            background: #ffffff; color: var(--erro); padding: 25px; border-radius: 12px; text-align: center; margin-top: 20px; border: 4px solid var(--erro);
             box-shadow: 0 4px 15px rgba(239, 68, 68, 0.15);
         }
         .total-box h3 { font-size: 16px; letter-spacing: 1px; margin-bottom: 5px; font-weight: 800; }
@@ -47,22 +41,16 @@
         
         .operacao-area { width: 55%; padding: 30px; display: flex; flex-direction: column; background: #f8fafc; justify-content: space-between; }
         .terminal-log { background: #020617; color: #38bdf8; padding: 15px; border-radius: 8px; height: 110px; overflow-y: auto; font-family: monospace; font-size: 13px; margin-bottom: 15px; }
-        
         .area-balanca { background: #e2e8f0; padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; gap: 10px; align-items: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
         .area-balanca input { padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; }
-        
         .input-codigo { width: 100%; padding: 22px; font-size: 38px; text-align: center; border: 3px solid var(--primaria); border-radius: 12px; outline: none; font-weight: bold; }
-        
         .dropdown-busca { display: none; position: absolute; left: 0; width: 100%; background: white; border: 2px solid var(--secundaria); border-radius: 8px; max-height: 250px; overflow-y: auto; z-index: 999; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         .opcao-busca { padding: 14px; cursor: pointer; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; }
         .opcao-busca:hover { background: #eff6ff; color: var(--secundaria); }
-        
         .fechamento-painel { background: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        
         .dashboard-area { padding: 30px; background: #f1f5f9; width: 100%; height: calc(100% - 65px); overflow-y: auto; }
         .tabela-dados { width: 100%; border-collapse: collapse; background: white; margin-top: 20px;}
         .tabela-dados th, .tabela-dados td { padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: left; }
-
         .modal-bg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
         .modal-bg.ativo { display: flex; }
         .modal-card { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 440px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
@@ -70,11 +58,7 @@
         @media print {
             body * { visibility: hidden; display: none !important; }
             #recibo-impressao, #recibo-impressao * { visibility: visible; display: block !important; }
-            #recibo-impressao { 
-                position: absolute; left: 0; top: 0; width: 100%; max-width: 80mm; margin: 0; padding: 0 2mm;
-                font-family: Arial, Helvetica, sans-serif !important; color: #000 !important; font-weight: bold !important; 
-                background: white; font-size: 12px; line-height: 1.25; text-rendering: optimizeLegibility;
-            }
+            #recibo-impressao { position: absolute; left: 0; top: 0; width: 100%; max-width: 80mm; margin: 0; padding: 0 2mm; font-family: Arial, Helvetica, sans-serif !important; color: #000 !important; font-weight: bold !important; background: white; font-size: 12px; line-height: 1.25; }
             .txt-centro { text-align: center; } .txt-direita { text-align: right; }
             .linha-tracejada { border-top: 1px dashed #000; margin: 4px 0; width: 100%; }
             .flex-space { display: flex; justify-content: space-between; }
@@ -161,26 +145,40 @@
         </div>
     </div>
 
-    <!-- PAINEL GERENCIAL -->
+    <!-- PAINEL GERENCIAL (COM MÓDULO DE SINCRONIZAÇÃO AUTOMÁTICA EM NUVEM) -->
     <div id="tela-adm" class="tela">
         <div class="top-bar">
             <div><strong>PAINEL GERENCIAL</strong></div>
             <button class="btn-universal" onclick="mostrarTela('tela-pdv')" style="background: var(--secundaria); width: auto; padding: 8px 15px;">Voltar ao Caixa</button>
         </div>
         <div class="dashboard-area">
+            <!-- PAINEL DA NUVEM -->
+            <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid var(--fiscal); margin-bottom: 20px;">
+                <h3 style="color: var(--fiscal)">☁️ Sincronização Automática entre Caixas (Nuvem)</h3>
+                <p style="font-size: 13px; color:#64748b; margin-bottom: 15px;">Configure aqui o seu GitHub para atualizar todos os computadores instantaneamente.</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="input-group" style="margin:0;">
+                        <label>Seu Repositório GitHub (Ex: usuario/nome-do-repositorio)</label>
+                        <input type="text" id="cloud-repo" placeholder="tiago/pdv-mercado">
+                    </div>
+                    <div class="input-group" style="margin:0;">
+                        <label>Seu Token de Acesso do GitHub (Classic Token)</label>
+                        <input type="password" id="cloud-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxx">
+                    </div>
+                </div>
+                <button onclick="salvarConfiguracaoNuvem()" style="margin-top:15px; padding:12px 20px; background: var(--fiscal); color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">Gravar Configuração da Nuvem</button>
+            </div>
+
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                 <div style="background: white; padding: 20px; border-radius: 8px; border-left: 5px solid var(--secundaria); display: flex; flex-direction: column; justify-content: space-between;">
                     <h3>Gerenciamento de Planilha Oficial</h3>
                     <input type="file" accept=".xlsx" onchange="carregarExcel(event)" style="margin-top: 10px; margin-bottom: 10px;">
                     <button onclick="baixarPlanilhaExcelAtualizada()" style="padding: 12px; background: var(--primaria); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px;">💾 Baixar Nova Planilha Oficial (.xlsx)</button>
                 </div>
-                <div style="background: white; padding: 20px; border-radius: 8px; border-left: 5px solid var(--sucesso);">
-                    <h3>Sincronizar Preços Modificados</h3>
-                    <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
-                        <button onclick="exportarPrecosModificados()" style="padding: 10px; background: var(--sucesso); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">1. Exportar Preços deste Caixa</button>
-                        <button onclick="document.getElementById('import-sinc').click()" style="padding: 10px; background: var(--secundaria); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">2. Importar Preços no outro Caixa</button>
-                        <input type="file" id="import-sinc" accept=".json" style="display: none;" onchange="importarPrecosModificados(event)">
-                    </div>
+                <div style="background: white; padding: 20px; border-radius: 8px; border-left: 5px solid var(--sucesso); display: flex; flex-direction: column; justify-content: center; text-align: center;">
+                    <h3>Forçar Atualização na Nuvem</h3>
+                    <p style="font-size:12px; margin-bottom:10px;">Envia as mudanças locais para o servidor agora.</p>
+                    <button onclick="forcarSincronizacaoNuvem()" style="padding: 12px; background: var(--sucesso); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">⚡ Enviar Preços para Outros Caixas</button>
                 </div>
             </div>
             <h3 style="margin-top: 20px;">Estoque total: <span id="contador-produtos">0</span> itens</h3>
@@ -242,8 +240,15 @@
         let listaFiltrada = [];
 
         window.onload = async function() {
+            // Puxa as credenciais da nuvem gravadas no computador local
+            document.getElementById('cloud-repo').value = localStorage.getItem('cloud_repo') || '';
+            document.getElementById('cloud-token').value = localStorage.getItem('cloud_token') || '';
+
             const locais = localStorage.getItem('precos_modificados');
             if (locais) { precosModificadosManualmente = JSON.parse(locais); }
+
+            // Puxa primeiro os preços modificados em tempo real na nuvem do GitHub (se houver)
+            await puxarPrecosNuvemGitHub();
 
             try {
                 const res = await fetch('./Plan1.xlsx');
@@ -278,26 +283,90 @@
             manterFocoNoInput();
         };
 
+        // ==========================================
+        // ENGENHARIA DE SINCRONIZAÇÃO EM NUVEM AUTOMÁTICA
+        // ==========================================
+        function salvarConfiguracaoNuvem() {
+            let repo = document.getElementById('cloud-repo').value.trim();
+            let token = document.getElementById('cloud-token').value.trim();
+            localStorage.setItem('cloud_repo', repo);
+            localStorage.setItem('cloud_token', token);
+            alert("Configuração da nuvem salva neste terminal!");
+        }
+
+        async function puxarPrecosNuvemGitHub() {
+            let repo = localStorage.getItem('cloud_repo');
+            if(!repo) return;
+            try {
+                // Tenta puxar o arquivo precos.json do repositório público/privado
+                let res = await fetch(`https://raw.githubusercontent.com/${repo}/main/precos.json?t=${new Date().getTime()}`);
+                if (res.ok) {
+                    let nuvemPrecos = await res.json();
+                    precosModificadosManualmente = nuvemPrecos;
+                    localStorage.setItem('precos_modificados', JSON.stringify(precosModificadosManualmente));
+                    console.log("Preços atualizados direto da Nuvem!");
+                }
+            } catch(e) { console.log("Nuvem ainda sem arquivo de preços."); }
+        }
+
+        async function forcarSincronizacaoNuvem() {
+            let repo = localStorage.getItem('cloud_repo');
+            let token = localStorage.getItem('cloud_token');
+            if(!repo || !token) return alert("Por favor, configure o Repositório e o Token na aba ADM primeiro!");
+
+            registrarLog("Enviando preços novos para os caixas na nuvem...", "alerta");
+
+            try {
+                // 1. Verifica se o arquivo já existe para obter o SHA (obrigatório na API do GitHub)
+                let sha = "";
+                let url = `https://api.github.com/repos/${repo}/contents/precos.json`;
+                let resCheck = await fetch(url, { headers: { "Authorization": `token ${token}` } });
+                
+                if(resCheck.ok) {
+                    let dataCheck = await resCheck.json();
+                    sha = dataCheck.sha;
+                }
+
+                // 2. Prepara o conteúdo do precos.json em base64
+                let conteudoJson = JSON.stringify(precosModificadosManualmente, null, 2);
+                let bodyPayload = {
+                    message: "Atualização automática de preços do PDV",
+                    content: btoa(unescape(encodeURIComponent(conteudoJson))),
+                    branch: "main"
+                };
+                if(sha) bodyPayload.sha = sha;
+
+                // 3. Faz o envio via API do GitHub
+                let resUpload = await fetch(url, {
+                    method: "PUT",
+                    headers: { "Authorization": `token ${token}`, "Content-Type": "application/json" },
+                    body: JSON.stringify(bodyPayload)
+                });
+
+                if(resUpload.ok) {
+                    registrarLog("Nuvem Atualizada! Todos os caixas receberam os novos preços.", "sucesso");
+                    alert("Sucesso absoluto! Preços enviados para a nuvem. Em instantes todos os caixas estarão com os valores idênticos.");
+                } else {
+                    alert("Erro na API do GitHub. Verifique as credenciais digitadas.");
+                }
+            } catch(err) {
+                alert("Falha de conexão ao enviar para a nuvem.");
+            }
+        }
+
         function baixarPlanilhaExcelAtualizada() {
             let dadosExcel = [];
-            for (let codigo in estoqueCloud) {
-                dadosExcel.push({
-                    "Codigo": isNaN(codigo) ? codigo : Number(codigo),
-                    "Produto": estoqueCloud[codigo].nome,
-                    "Valor": estoqueCloud[codigo].preco
-                });
-            }
+            for (let codigo in estoqueCloud) { dadosExcel.push({ "Codigo": isNaN(codigo) ? codigo : Number(codigo), "Produto": estoqueCloud[codigo].nome, "Valor": estoqueCloud[codigo].preco }); }
             let wb = XLSX.utils.book_new(); let ws = XLSX.utils.json_to_sheet(dadosExcel);
             XLSX.utils.book_append_sheet(wb, ws, "Produtos"); XLSX.writeFile(wb, "Plan1.xlsx");
-            registrarLog("Nova planilha Plan1.xlsx baixada com sucesso!", "sucesso");
-            alert("Sucesso! Substitua o arquivo antigo por este para fixar as alterações.");
+            alert("Planilha oficial gerada!");
         }
 
         function pularDaUnidadeProBipe(e) { if (e.key === 'Enter') { e.preventDefault(); document.getElementById('codigo-barras').focus(); } }
         function fecharVendaComEnter(e) { if (e.key === 'Enter') { e.preventDefault(); finalizarVenda(true); } }
 
         function exportarPrecosModificados() {
-            if(Object.keys(precosModificadosManualmente).length === 0) return alert("Nenhum preço modificado para exportar.");
+            if(Object.keys(precosModificadosManualmente).length === 0) return alert("Nenhum preço modificado.");
             let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(precosModificadosManualmente));
             let downloadAnchor = document.createElement('a'); downloadAnchor.setAttribute("href", dataStr); downloadAnchor.setAttribute("download", "sinc_precos_dois_irmaos.json");
             document.body.appendChild(downloadAnchor); downloadAnchor.click(); downloadAnchor.remove();
@@ -311,8 +380,8 @@
                     let importados = JSON.parse(evt.target.result);
                     for (let c in importados) { precosModificadosManualmente[c] = importados[c]; if (estoqueCloud[c]) estoqueCloud[c].preco = importados[c]; }
                     localStorage.setItem('precos_modificados', JSON.stringify(precosModificadosManualmente)); localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-                    alert("Preços sincronizados com sucesso!"); renderizarTabelaAdm();
-                } catch(err) { alert("Erro ao importar."); }
+                    alert("Sincronizado!"); renderizarTabelaAdm();
+                } catch(err) { alert("Erro."); }
             };
             reader.readAsText(file);
         }
@@ -331,10 +400,7 @@
                 if(!document.getElementById('edit-cod').contains(e.target) && !dropEdicao.contains(e.target)) dropEdicao.style.display = 'none';
 
                 const ativo = document.activeElement.id;
-                
-                // CRUCIAL: Modificado aqui para NÃO roubar o foco se o usuário estiver usando Tab nativo pelos campos
-                if (isPdv && !modalPreco && !modalBusca && !dropBarra.contains(e.target) && !dropBalanca.contains(e.target) && 
-                    ativo !== 'valor-pago' && ativo !== 'forma-pagamento' && ativo !== 'peso-balanca' && ativo !== 'codigo-balanca' && ativo !== 'input-qtd-manual') {
+                if (isPdv && !modalPreco && !modalBusca && !dropBarra.contains(e.target) && !dropBalanca.contains(e.target) && ativo !== 'valor-pago' && ativo !== 'forma-pagamento' && ativo !== 'peso-balanca' && ativo !== 'codigo-balanca' && ativo !== 'input-qtd-manual') {
                     document.getElementById('codigo-barras').focus();
                 }
             });
@@ -422,8 +488,11 @@
             if (senha !== 'kd041022') return alert("Senha do Gerente incorreta!");
             estoqueCloud[cod].preco = precoFormatado; precosModificadosManualmente[cod] = precoFormatado;
             localStorage.setItem('precos_modificados', JSON.stringify(precosModificadosManualmente)); localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-            registrarLog(`Preço alterado: ${estoqueCloud[cod].nome} para R$ ${precoFormatado.toFixed(2)}`, "alerta");
-            alert(`Sucesso! Preço de ${estoqueCloud[cod].nome} alterado para R$ ${precoFormatado.toFixed(2)}.`); fecharModalPreco();
+            
+            fecharModalPreco();
+
+            // Sincroniza na nuvem na hora de forma silenciosa e automática!
+            forcarSincronizacaoNuvem();
         }
 
         async function carregarExcel(e) {
@@ -471,10 +540,8 @@
                 }
                 let qtd = parseFloat(document.getElementById('input-qtd-manual').value || 1); let cod = txt;
                 if(txt.includes('*')) { qtd = parseFloat(txt.split('*')[0]); cod = txt.split('*')[1]; }
-                if(estoqueCloud[cod]) { 
-                    addCupom(cod, qtd); 
-                    document.getElementById('input-qtd-manual').value = "1"; 
-                } else { registrarLog("Código não cadastrado: " + cod, "erro"); document.getElementById('codigo-barras').value = ''; }
+                if(estoqueCloud[cod]) { addCupom(cod, qtd); document.getElementById('input-qtd-manual').value = "1"; } 
+                else { registrarLog("Código não cadastrado: " + cod, "erro"); document.getElementById('codigo-barras').value = ''; }
             }
         }
 
@@ -482,8 +549,6 @@
             const p = estoqueCloud[cod]; cupomAtual.push({ cod: cod, nome: p.nome, qtd: qtd, unit: p.preco, total: p.preco * qtd });
             document.getElementById('codigo-barras').value = ''; document.getElementById('dropdown-sugestoes').style.display = 'none';
             registrarLog(`Adicionado: ${qtd}x ${p.nome}`, 'sucesso'); renderizarCupom();
-            
-            // CORRIGIDO: O FOCO AGORA SE MANTÉM LIVRE NO BIPADOR PARA NÃO ATRAPALHAR O TAB!
             document.getElementById('codigo-barras').focus();
         }
 
@@ -554,8 +619,6 @@
             if(nfce) { gerarNFCe(formaPagto); setTimeout(() => { window.print(); }, 200); } 
             else { gerarCupomPDV(formaPagto); setTimeout(() => { window.print(); }, 100); }
             cupomAtual = []; document.getElementById('valor-pago').value = ''; renderizarCupom(); 
-            
-            // Retorna o foco inicial para a quantidade apenas ao iniciar um cliente totalmente do zero!
             setTimeout(() => { document.getElementById('input-qtd-manual').focus(); document.getElementById('input-qtd-manual').select(); }, 500);
         }
     </script>
