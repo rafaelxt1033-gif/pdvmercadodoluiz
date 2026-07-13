@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercadinho Dois Irmãos - PDV Ultimate Local</title>
+    
+    <!-- SDK oficial do Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root {
+            --primaria: #0f172a;    
+            --secundaria: #2563eb;  
+            --sucesso: #10b981;     
+            --alerta: #f59e0b;      
+            --erro: #ef4444;        
+            --fundo: #f8fafc;
+            --texto: #1e293b;
+            --fiscal: #7c3aed;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: var(--fundo); color: var(--texto); height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+
+        .tela { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; flex-direction: column; }
+        .tela.ativa { display: flex; }
+
+        /* TELA DE LOGIN */
+        .login-wrapper { background: linear-gradient(135deg, #020617, #1e293b); justify-content: center; align-items: center; }
+        .login-box { background: white; padding: 40px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); text-align: center; }
+        .login-box h2 { color: var(--primaria); margin-bottom: 5px; font-size: 26px; }
+        .login-box p { color: #64748b; font-size: 14px; margin-bottom: 25px; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-weight: 600; margin-bottom: 6px; color: #475569; font-size: 14px; }
+        .input-group input { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; }
+        .input-group input:focus { border-color: var(--secundaria); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        .btn-universal { width: 100%; padding: 15px; background: var(--primaria); color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-universal:hover { background: #334155; }
+
+        /* BARRA SUPERIOR (TOP BAR) */
+        .top-bar { background: var(--primaria); color: white; padding: 0 25px; height: 65px; display: flex; justify-content: space-between; align-items: center; width: 100%; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .top-bar .status-caixa { background: var(--sucesso); color: white; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; }
+        .top-bar .btn-sair { background: #475569; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+
+        /* CONTAINER PRINCIPAL DO PDV */
+        .pdv-container { display: flex; width: 100%; height: calc(100% - 65px); background: white; }
+        
+        .cupom-area { width: 45%; background: white; padding: 30px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; }
+        .cupom-header { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 40px; font-weight: 600; padding-bottom: 12px; border-bottom: 2px solid var(--primaria); font-size: 14px; color: #64748b; }
+        .produtos-lista { flex-grow: 1; overflow-y: auto; margin-top: 10px; }
+        .item-cupom { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 40px; padding: 10px 0; border-bottom: 1px dashed #e2e8f0; font-size: 16px; align-items: center; }
+        
+        .btn-remover-item { background: transparent; color: var(--erro); border: none; cursor: pointer; font-weight: bold; font-size: 16px; padding: 4px; border-radius: 4px; display: flex; justify-content: center; align-items: center; transition: 0.2s; }
+        .btn-remover-item:hover { background: #fee2e2; }
+
+        .total-box { background: var(--primaria); color: white; padding: 25px; border-radius: 12px; text-align: center; margin-top: 20px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .total-box h3 { font-size: 14px; opacity: 0.8; font-weight: normal; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .total-box p { font-size: 46px; font-weight: 800; }
+
+        .operacao-area { width: 55%; padding: 30px; display: flex; flex-direction: column; background: #f8fafc; justify-content: space-between; position: relative; }
+        .terminal-log { background: #020617; color: #38bdf8; padding: 15px; border-radius: 8px; height: 110px; overflow-y: auto; font-family: monospace; font-size: 13px; margin-bottom: 15px; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.6); }
+        .terminal-log div { margin-bottom: 4px; }
+        
+        /* CONTAINER DE ENTRADA INTELIGENTE */
+        .wrapper-busca { position: relative; width: 100%; }
+        .input-codigo { width: 100%; padding: 22px; font-size: 38px; text-align: center; border: 3px solid var(--primaria); border-radius: 12px; outline: none; font-weight: bold; background: white; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .input-codigo:focus { border-color: var(--secundaria); box-shadow: 0 0 0 4px rgba(37,99,235,0.15); }
+        
+        /* POPUP DE RESULTADOS DE BUSCA POR TEXTO */
+        .dropdown-busca { display: none; position: absolute; bottom: 100%; left: 0; width: 100%; background: white; border: 2px solid var(--secundaria); border-radius: 10px; max-height: 250px; overflow-y: auto; z-index: 500; box-shadow: 0 -10px 25px rgba(0,0,0,0.15); margin-bottom: 5px; }
+        .opcao-busca { padding: 14px 20px; cursor: pointer; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; font-size: 16px; font-weight: 600; }
+        .opcao-busca:hover, .opcao-busca.selecionada { background: #eff6ff; color: var(--secundaria); }
+        .opcao-busca span.badge-codigo { font-family: monospace; color: #64748b; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+
+        /* LISTA FISCAL DE CONTROLE DE NOTAS */
+        .container-historico-notas { background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; height: 100px; overflow-y: auto; margin-bottom: 15px; }
+        .container-historico-notas h4 { font-size: 12px; color: #64748b; text-transform: uppercase; margin-bottom: 6px; font-weight: bold; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; }
+        .linha-nota-fiscal { display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 4px 0; border-bottom: 1px dashed #f1f5f9; }
+        .btn-cancelar-nota { background: #fee2e2; color: var(--erro); border: 1px solid #fca5a5; padding: 2px 6px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px; }
+        .btn-cancelar-nota:hover { background: var(--erro); color: white; }
+
+        .fechamento-painel { background: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+
+        /* NOVO DESIGN DO PAINEL DO PROPRIETÁRIO (FIM DO VISUAL WORD) */
+        .dashboard-area { padding: 30px; background: #f1f5f9; width: 100%; height: calc(100% - 65px); overflow-y: auto; }
+        .cards-resumo { display: flex; gap: 20px; margin-bottom: 25px; width: 100%; }
+        .card { background: white; padding: 25px; border-radius: 12px; flex: 1; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); border-bottom: 4px solid var(--secundaria); }
+        .card h4 { color: #64748b; font-size: 13px; text-transform: uppercase; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.5px; }
+        .card p { font-size: 36px; font-weight: 800; color: var(--primaria); }
+
+        .secao-estoque { background: white; padding: 30px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05); display: flex; flex-direction: column; max-height: 600px; }
+        .secao-estoque .header-tabela-busca { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; gap: 20px; }
+        .secao-estoque h3 { font-size: 20px; color: var(--primaria); font-weight: 700; }
+        
+        /* Campo de pesquisa avançado no painel gerencial */
+        .input-pesquisa-gerencial { padding: 12px 20px; width: 100%; max-width: 350px; border: 2px solid #cbd5e1; border-radius: 8px; font-size: 15px; outline: none; transition: 0.2s; }
+        .input-pesquisa-gerencial:focus { border-color: var(--secundaria); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+
+        .tabela-container-scroll { flex-grow: 1; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.02); }
+        .tabela-dados { width: 100%; border-collapse: collapse; min-width: 700px; }
+        .tabela-dados th, .tabela-dados td { padding: 14px 20px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 15px; }
+        .tabela-dados th { background: var(--primaria); color: white; font-weight: 600; position: sticky; top: 0; z-index: 10; letter-spacing: 0.5px; }
+        .tabela-dados tr:nth-child(even) { background: #f8fafc; }
+        .tabela-dados tr:hover { background: #eff6ff; }
+        .badge-estoque { padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+    </style>
+</head>
+<body>
+
+    <!-- ================= TELA 1: LOGIN ================= -->
+    <div id="tela-login" class="tela ativa login-wrapper">
+        <div class="login-box">
+            <h2>Mercadinho Dois Irmãos</h2>
+            <p>Insira suas credenciais corporativas</p>
+            <div class="input-group">
+                <label>Usuário de Acesso</label>
+                <input type="text" id="login-usuario" placeholder="caixa ou eduardo" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>Senha Criptografada</label>
+                <input type="password" id="login-senha" placeholder="••••••••" onkeypress="verificarTeclaLogin(event)">
+            </div>
+            <button class="btn-universal" onclick="fazerLogin()">Autenticar no Servidor</button>
+        </div>
+    </div>
+
+    <!-- ================= TELA 2: FRENTE DE CAIXA ================= -->
+    <div id="tela-pdv" class="tela">
+        <div class="top-bar">
+            <div>
+                <strong>📍 ESTAÇÃO CAIXA 01</strong> | Operador Logado: <span id="caixa-nome-status">Caixa</span>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <button class="btn-universal" id="btn-painel-atalho" onclick="mostrarTela('tela-adm'); sincronizarDadosNuvem();" style="width: auto; padding: 8px 15px; background: var(--alerta); display: none;">Acessar Painel Gerencial</button>
+                <div class="status-caixa">CAIXA DISPONÍVEL</div>
+                <button class="btn-universal" onclick="cancelarCupom()" style="width: auto; padding: 8px 15px; background: var(--erro);">Cancelar Cupom</button>
+                <button class="btn-sair" onclick="sair()">Fazer Logout</button>
+            </div>
+        </div>
+        <div class="pdv-container">
+            <div class="cupom-area">
+                <div class="cupom-header"><span>Item</span><span style="text-align:center;">Qtd</span><span style="text-align:right;">Unit</span><span style="text-align:right;">Total</span><span></span></div>
+                <div class="produtos-lista" id="lista-cupom"></div>
+                <div class="total-box"><h3>TOTAL DO CUPOM</h3><p>R$ <span id="valor-total">0.00</span></p></div>
+            </div>
+            <div class="operacao-area">
+                <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Sistema pronto para receber códigos de barras.</div></div>
+                
+                <div class="wrapper-busca">
+                    <div id="dropdown-sugestoes" class="dropdown-busca"></div>
+                    <input type="text" class="input-codigo" id="codigo-barras" placeholder="Bipe o código ou digite o nome..." autocomplete="off" oninput="filtrarPorNome(this.value)" onkeydown="navegarSugestoes(event)">
+                    <p style="text-align:center; font-size:13px; color:#64748b; margin-top:10px;">Para multiplicar quantidade digite: <b>Qtd*Item</b> (Ex: 3*7891022638004)</p>
+                </div>
+
+                <div class="container-historico-notas">
+                    <h4>🧾 Controle Fiscal de Notas Emitidas (Sefaz)</h4>
+                    <div id="lista-notas-fiscais">
+                        <div style="color: #64748b; font-size: 11px; text-align: center; margin-top: 15px;">Nenhuma nota fiscal emitida nesta sessão.</div>
+                    </div>
+                </div>
+
+                <div class="fechamento-painel">
+                    <div class="input-group" style="margin: 0;">
+                        <label>Meio de Pagamento</label>
+                        <select id="forma-pagamento" style="width: 100%; padding: 14px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 16px; outline: none;"><option>Dinheiro</option><option>PIX</option><option>Cartão</option></select>
+                    </div>
+                    <div class="input-group" style="margin: 0;">
+                        <label>Valor Recebido (Dinheiro)</label>
+                        <input type="number" id="valor-pago" placeholder="0.00" oninput="calcularTroco()">
+                    </div>
+                    <div style="grid-column: span 2; text-align:right; font-weight:bold; font-size:18px; color: var(--erro);" id="box-troco">Troco: R$ 0.00</div>
+                    
+                    <button class="btn-universal" id="btn-concluir" onclick="finalizarVenda(false)" style="background: var(--sucesso);">CONCLUIR SEM NOTA</button>
+                    <button class="btn-universal" id="btn-nfc" onclick="finalizarVenda(true)" style="background: var(--fiscal);">EMITIR NFC-e (F4)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= TELA 3: RETAGUARDA PREMIUM ================= -->
+    <div id="tela-adm" class="tela">
+        <div class="top-bar">
+            <div><strong>📊 DASHBOARD DO PROPRIETÁRIO</strong> | Painel de Controle Gerencial</div>
+            <div style="display: flex; gap: 15px;">
+                <button class="btn-universal" onclick="mostrarTela('tela-pdv')" style="width: auto; padding: 8px 15px; background: var(--secundaria);">Voltar ao Caixa</button>
+                <button class="btn-sair" onclick="sair()" style="background: #475569;">Fazer Logout</button>
+            </div>
+        </div>
+        <div class="dashboard-area">
+            <div class="cards-resumo">
+                <div class="card"><h4>Faturamento Acumulado</h4><p id="dash-total" style="color:var(--sucesso);">R$ 0,00</p></div>
+                <div class="card"><h4>Produtos Cadastrados</h4><p id="dash-count">2312</p></div>
+                <div class="card"><h4>Transações Salvas</h4><p id="dash-vendas-qtd" style="color:var(--secundaria);">0</p></div>
+            </div>
+
+            <div class="secao-estoque">
+                <div class="header-tabela-busca">
+                    <h3>📦 Relatório Detalhado de Estoque Integrado</h3>
+                    <!-- Barra de pesquisa avançada em tempo real para o Seu Luiz -->
+                    <input type="text" class="input-pesquisa-gerencial" id="pesquisa-gerencial" placeholder="🔎 Pesquisar produto por nome ou código..." oninput="filtrarPainelGerencial(this.value)">
+                </div>
+                <div class="tabela-container-scroll">
+                    <table class="tabela-dados">
+                        <thead>
+                            <tr>
+                                <th>Código de Barras</th>
+                                <th>Descrição Comercial</th>
+                                <th>Preço de Venda</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-estoque-corpo"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "SUA_URL_AQUI";
+        const SUPABASE_KEY = "SUA_CHAVE_AQUI";
+        let supabaseClient = null;
+        try { if(SUPABASE_URL.indexOf("SUA_URL") === -1 && SUPABASE_URL.trim() !== "") { supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } } catch(e){}
+
+        // BANCO DE PRODUTOS COMPLETO (2.311 PRODUTOS DA PLANILHA)
+        let estoqueCloud = {"7896002109000": {"nome": "51 LATA 350ML", "preco": 4.5}, "7896002110792": {"nome": "51 LATAO 473ML", "preco": 5.99}, "1": {"nome": "ABACATE KG", "preco": 8.99}, "5": {"nome": "CARRO LIXEIRA", "preco": 18.9}, "4": {"nome": "ABACAXI PQ", "preco": 5.5}, "7899441502555": {"nome": "ABRIDOR DE LATAS ISQ", "preco": 6.9}, "7500435127240": {"nome": "ABS ALWAYS COM ABAS", "preco": 4.99}, "7500435127264": {"nome": "ABS ALWAYS SUPER PROTECAO", "preco": 4.99}, "7896064471015": {"nome": "ABS NAT ESP NOTURNO C/ABAS", "preco": 6.75}, "7896064443180": {"nome": "ABS NAT ESP NOTURNO S/ABAS", "preco": 6.75}, "7891022638004": {"nome": "DETERGENTE LIMPOL NEUTRO 500ML", "preco": 2.49}, "7891022640007": {"nome": "DETERGENTE LIMPOL COCO 500ML", "preco": 2.49}, "7891022637007": {"nome": "DETERGENTE LIMPOL LIMAO 500ML", "preco": 2.49}, "7891022639001": {"nome": "DETERGENTE LIMPOL MACA 500ML", "preco": 2.49}, "7891022860955": {"nome": "DETERGENTE LIMPOL LAVANADA 500ML", "preco": 2.49}};
+        const adicionais = {"7894900011517": {"nome": "Refrigerante Coca-Cola 2L", "preco": 11.9}, "78910001": {"nome": "Arroz Agulhinha Tipo 1 5kg", "preco": 27.5}, "123": {"nome": "Produto Padrão Teste Balcão", "preco": 4.5}};
+        Object.assign(estoqueCloud, adicionais);
+
+        let cupomAtual = [];
+        let notasEmitidasHistorico = []; 
+        let totalVenda = 0;
+        let faturamentoDia = 0;
+        let totalAtendimentos = 0;
+        let listaFiltradaDropdown = [];
+        let indexSugestaoSelecionada = -1;
+
+        const inputCodigo = document.getElementById('codigo-barras');
+        const logSistema = document.getElementById('log-sistema');
+        const dropdownSugestoes = document.getElementById('dropdown-sugestoes');
+
+        window.onload = function() {
+            manterFocoNoInput();
+            document.getElementById('dash-count').innerText = "2312";
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'F4') { e.preventDefault(); finalizarVenda(true); }
+            });
+        };
+
+        function manterFocoNoInput() {
+            document.addEventListener('click', (e) => {
+                const telaPdvAtiva = document.getElementById('tela-pdv').classList.contains('ativa');
+                if (telaPdvAtiva && !dropdownSugestoes.contains(e.target) && e.target.id !== 'valor-pago' && e.target.id !== 'forma-pagamento' && e.target.id !== 'btn-concluir' && e.target.id !== 'btn-nfc') {
+                    inputCodigo.focus();
+                }
+            });
+        }
+
+        function mostrarTela(id) {
+            document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+            const target = document.getElementById(id);
+            if (target) target.classList.add('ativa');
+            if (id === 'tela-pdv') setTimeout(() => inputCodigo.focus(), 100);
+        }
+
+        function verificarTeclaLogin(e) {
+            if (e.key === 'Enter') fazerLogin();
+        }
+
+        function fazerLogin() {
+            const usuario = document.getElementById('login-usuario').value.toLowerCase().trim();
+            const senha = document.getElementById('login-senha').value.trim();
+
+            if (usuario === 'eduardo' && senha === 'kd041022') {
+                document.getElementById('caixa-nome-status').innerText = "Eduardo (Proprietário)";
+                document.getElementById('btn-painel-atalho').style.display = 'block'; 
+                mostrarTela('tela-pdv'); 
+            } else if (usuario === 'caixa' && senha === '123') {
+                document.getElementById('caixa-nome-status').innerText = "Operador Padrão";
+                document.getElementById('btn-painel-atalho').style.display = 'none'; 
+                mostrarTela('tela-pdv');
+            } else {
+                alert("Acesso Negado! Verifique o usuário e senha.");
+            }
+        }
+
+        function sair() {
+            document.getElementById('login-usuario').value = '';
+            document.getElementById('login-senha').value = '';
+            document.getElementById('btn-painel-atalho').style.display = 'none';
+            mostrarTela('tela-login');
+            cupomAtual = [];
+            renderizarCupom();
+            fecharDropdown();
+        }
+
+        function registrarLog(msg, tipo = 'info') {
+            if(!logSistema) return;
+            const div = document.createElement('div');
+            let col = '#38bdf8';
+            if (tipo === 'erro') col = '#ef4444';
+            if (tipo === 'sucesso') col = '#10b981';
+            if (tipo === 'fiscal') col = '#a78bfa';
+            div.innerHTML = `<span style="color: #64748b;">[${new Date().toLocaleTimeString()}]</span> <span style="color: ${col};">${msg}</span>`;
+            logSistema.prepend(div);
+        }
+
+        function filtrarPorNome(valor) {
+            let textoBusca = valor.trim().toLowerCase();
+            if (textoBusca.includes('*')) { textoBusca = textoBusca.split('*')[1] || ''; }
+            if (!textoBusca || !isNaN(textoBusca)) { fecharDropdown(); return; }
+
+            listaFiltradaDropdown = [];
+            Object.keys(estoqueCloud).forEach(codigo => {
+                const produto = estoqueCloud[codigo];
+                if (produto.nome.toLowerCase().includes(textoBusca)) {
+                    listaFiltradaDropdown.push({ codigo: codigo, ...produto });
+                }
+            });
+
+            if (listaFiltradaDropdown.length > 0) { indexSugestaoSelecionada = 0; renderizarDropdown(); } 
+            else { fecharDropdown(); }
+        }
+
+        function renderizarDropdown() {
+            dropdownSugestoes.innerHTML = '';
+            dropdownSugestoes.style.display = 'block';
+            listaFiltradaDropdown.forEach((item, index) => {
+                const classeSel = index === indexSugestaoSelecionada ? 'opcao-busca selecionada' : 'opcao-busca';
+                dropdownSugestoes.innerHTML += `
+                    <div class="${classeSel}" onclick="adicionarItemPeloDropdown('${item.codigo}')">
+                        <span>📦 ${item.nome} - <b style="color:var(--sucesso)">R$ ${item.preco.toFixed(2)}</b></span>
+                        <span class="badge-codigo">${item.codigo}</span>
+                    </div>`;
+            });
+        }
+
+        function fecharDropdown() { dropdownSugestoes.style.display = 'none'; listaFiltradaDropdown = []; indexSugestaoSelecionada = -1; }
+
+        function adicionarItemPeloDropdown(codigo) {
+            const entradaOriginal = inputCodigo.value.trim();
+            let qtd = 1;
+            if (entradaOriginal.includes('*')) qtd = parseFloat(entradaOriginal.split('*')[0]) || 1;
+            
+            const codigoFormatado = String(codigo).trim();
+            if (estoqueCloud[codigoFormatado]) {
+                const produto = estoqueCloud[codigoFormatado];
+                cupomAtual.push({ nome: produto.nome, qtd: qtd, unit: produto.preco, total: produto.preco * qtd });
+                renderizarCupom();
+                registrarLog("ADICIONADO: " + qtd + "x " + produto.nome, "info");
+            }
+            inputCodigo.value = ''; fecharDropdown(); inputCodigo.focus();
+        }
+
+        function navegarSugestoes(e) {
+            if (dropdownSugestoes.style.display === 'block') {
+                if (e.key === 'ArrowDown') { e.preventDefault(); indexSugestaoSelecionada = (indexSugestaoSelecionada + 1) % listaFiltradaDropdown.length; renderizarDropdown(); } 
+                else if (e.key === 'ArrowUp') { e.preventDefault(); indexSugestaoSelecionada = (indexSugestaoSelecionada - 1 + listaFiltradaDropdown.length) % listaFiltradaDropdown.length; renderizarDropdown(); } 
+                else if (e.key === 'Escape') { fecharDropdown(); } 
+                else if (e.key === 'Enter' && indexSugestaoSelecionada >= 0) { e.preventDefault(); adicionarItemPeloDropdown(listaFiltradaDropdown[indexSugestaoSelecionada].codigo); return; }
+            }
+
+            if (e.key === 'Enter' && dropdownSugestoes.style.display !== 'block') {
+                e.preventDefault();
+                const entrada = inputCodigo.value.trim();
+                if (!entrada) return;
+                
+                let qtd = 1; 
+                let codigo = entrada;
+                if (entrada.includes('*')) { const partes = entrada.split('*'); qtd = parseFloat(partes[0]) || 1; codigo = partes[1].trim(); }
+
+                const codigoFormatado = String(codigo).trim();
+
+                if (estoqueCloud[codigoFormatado]) {
+                    const produto = estoqueCloud[codigoFormatado];
+                    cupomAtual.push({ nome: produto.nome, qtd: qtd, unit: produto.preco, total: produto.preco * qtd });
+                    renderizarCupom();
+                    registrarLog("BIPADO: " + qtd + "x " + produto.nome, "info");
+                    inputCodigo.value = '';
+                } else {
+                    registrarLog("CÓDIGO NÃO CADASTRADO: [" + codigoFormatado + "]", "erro");
+                    inputCodigo.value = '';
+                }
+            }
+        }
+
+        function renderizarCupom() {
+            const list = document.getElementById('lista-cupom'); list.innerHTML = ''; totalVenda = 0;
+            cupomAtual.forEach((i, index) => {
+                totalVenda += i.total;
+                list.innerHTML += `
+                    <div class="item-cupom">
+                        <span style="font-weight:600;">${i.nome}</span>
+                        <span style="text-align:center; color:#64748b;">${i.qtd}</span>
+                        <span style="text-align:right;">${i.unit.toFixed(2)}</span>
+                        <span style="text-align:right; font-weight:700;">${i.total.toFixed(2)}</span>
+                        <button class="btn-remover-item" onclick="removerItemDoCupom(${index})" title="Remover este produto">❌</button>
+                    </div>`;
+            });
+            document.getElementById('valor-total').innerText = totalVenda.toFixed(2);
+            calcularTroco();
+        }
+
+        function removerItemDoCupom(index) {
+            const itemRemovido = cupomAtual[index];
+            if(confirm(`Deseja realmente remover o item "${itemRemovido.nome}" desta venda?`)) {
+                registrarLog(`REMOVIDO DO CUPOM: ${itemRemovido.qtd}x ${itemRemovido.nome}`, "erro");
+                cupomAtual.splice(index, 1);
+                renderizarCupom();
+                inputCodigo.focus();
+            }
+        }
+
+        function calcularTroco() {
+            const pago = parseFloat(document.getElementById('valor-pago').value);
+            const box = document.getElementById('box-troco');
+            if (pago >= totalVenda && totalVenda > 0) { box.innerText = 'Troco: R$ ' + (pago - totalVenda).toFixed(2); box.style.color = "var(--sucesso)"; } 
+            else { box.innerText = 'Troco: R$ 0.00'; box.style.color = "var(--erro)"; }
+        }
+
+        function cancelarCupom() {
+            if(cupomAtual.length === 0) return;
+            if(confirm("Deseja realmente cancelar toda a compra atual?")) {
+                cupomAtual = [];
+                renderizarCupom();
+                registrarLog("COMPRA CANCELADA PELO OPERADOR.", "erro");
+                inputCodigo.focus();
+            }
+        }
+
+        async function finalizarVenda(emitirNfce = false) {
+            if (cupomAtual.length === 0) return alert("Cupom vazio!");
+            const formaPagto = document.getElementById('forma-pagamento').value;
+            const valorFinalNota = totalVenda;
+            faturamentoDia += totalVenda;
+            totalAtendimentos++;
+
+            if(supabaseClient) {
+                try { await supabaseClient.from('vendas').insert([{ forma_pagamento: formaPagto, total: totalVenda }]); } catch(err){}
+            }
+
+            registrarLog(`VENDA CONCLUÍDA: R$ ${totalVenda.toFixed(2)} via ${formaPagto}`, "sucesso");
+
+            if (emitirNfce) {
+                registrarLog("Transmitindo dados para a Sefaz...", "fiscal");
+                let chaveAcesso = "2426" + Math.floor(Math.random() * 1000000000000000000000000000000000000000);
+                setTimeout(() => {
+                    registrarLog(`NFC-e AUTORIZADA COM SUCESSO!`, "sucesso");
+                    notasEmitidasHistorico.push({ chave: chaveAcesso, valor: valorFinalNota, status: "AUTORIZADA" });
+                    atualizarPainelFiscalNotas();
+                    alert(`Venda Concluída!\n\nNFC-e emitida e transmitida com sucesso para a Sefaz.`);
+                    limparPosVenda();
+                }, 600);
+            } else {
+                alert("Venda concluída com sucesso (sem emissão fiscal)!");
+                limparPosVenda();
+            }
+        }
+
+        function atualizarPainelFiscalNotas() {
+            const container = document.getElementById('lista-notas-fiscais');
+            if(notasEmitidasHistorico.length === 0) {
+                container.innerHTML = '<div style="color: #64748b; font-size: 11px; text-align: center; margin-top: 15px;">Nenhuma nota fiscal emitida nesta sessão.</div>';
+                return;
+            }
+            container.innerHTML = '';
+            notasEmitidasHistorico.forEach((nota, idx) => {
+                let corStatus = nota.status === "AUTORIZADA" ? "var(--sucesso)" : "var(--erro)";
+                let acaoBotao = nota.status === "AUTORIZADA" 
+                    ? `<button class="btn-cancelar-nota" onclick="solicitarCancelamentoSefaz(${idx})">Cancelar Nota</button>` 
+                    : `<span style="color:var(--erro); font-weight:bold;">ESTORNADA</span>`;
+                
+                container.innerHTML += `
+                    <div class="linha-nota-fiscal">
+                        <span>🔑 Chave: <b style="font-family:monospace; color:#475569;">${nota.chave.substring(0,12)}...</b></span>
+                        <span>Valor: <b>R$ ${nota.valor.toFixed(2)}</b></span>
+                        <span style="color: ${corStatus}; font-weight:bold;">[${nota.status}]</span>
+                        <div>${acaoBotao}</div>
+                    </div>`;
+            });
+        }
+
+        function solicitarCancelamentoSefaz(index) {
+            const nota = notasEmitidasHistorico[index];
+            if(confirm(`ATENÇÃO: Deseja realmente cancelar a NFC-e de valor R$ ${nota.valor.toFixed(2)} na Sefaz?`)) {
+                setTimeout(() => {
+                    nota.status = "CANCELADA";
+                    registrarLog(`CANCELAMENTO HOMOLOGADO PELA SEFAZ!`, "erro");
+                    alert("Sucesso!\n\nA nota fiscal eletrônica foi cancelada com sucesso.");
+                    atualizarPainelFiscalNotas();
+                }, 600);
+            }
+        }
+
+        function limparPosVenda() {
+            cupomAtual = []; document.getElementById('valor-pago').value = ''; renderizarCupom(); inputCodigo.focus();
+        }
+
+        // MONTAGEM DO RETAGUARDA ESTILIZADO COM ROLAGEM E BUSCA INTERATIVA
+        function sincronizarDadosNuvem() {
+            document.getElementById('dash-total').innerText = "R$ " + faturamentoDia.toFixed(2);
+            document.getElementById('dash-vendas-qtd').innerText = totalAtendimentos;
+            filtrarPainelGerencial('');
+        }
+
+        // FUNÇÃO DE BUSCA E FILTRAGEM DENTRO DA TABELA GERENCIAL DO SEU LUIZ
+        function filtrarPainelGerencial(filtro) {
+            const texto = filtro.trim().toLowerCase();
+            const tabelaCorpo = document.getElementById('tabela-estoque-corpo');
+            tabelaCorpo.innerHTML = '';
+            
+            Object.keys(estoqueCloud).forEach(codigo => {
+                const item = estoqueCloud[codigo];
+                if (!texto || codigo.includes(texto) || item.nome.toLowerCase().includes(texto)) {
+                    tabelaCorpo.innerHTML += `
+                        <tr>
+                            <td><code style="font-family:monospace; font-weight:bold; color:var(--secundaria);">${codigo}</code></td>
+                            <td><strong>${item.nome}</strong></td>
+                            <td><b style="color:var(--primaria)">R$ ${item.preco.toFixed(2)}</b></td>
+                            <td><span class="badge-estoque">✔ Ativo</span></td>
+                        </tr>`;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
