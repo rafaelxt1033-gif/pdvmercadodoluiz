@@ -53,20 +53,31 @@
         .tabela-dados { width: 100%; border-collapse: collapse; background: white; margin-top: 20px;}
         .tabela-dados th, .tabela-dados td { padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: left; }
 
-        /* ========================================== */
-        /* CSS DA IMPRESSORA EPSON (O SEGREDO AQUI!)  */
-        /* ========================================== */
+        /* ============================================================== */
+        /* CSS DA IMPRESSORA EPSON: LAYOUT OFICIAL NFC-E SEFAZ RN         */
+        /* ============================================================== */
         @media print {
             body * { visibility: hidden; display: none !important; }
             #recibo-impressao, #recibo-impressao * { visibility: visible; display: block !important; }
+            
             #recibo-impressao { 
-                position: absolute; left: 0; top: 0; width: 100%; max-width: 80mm; 
-                margin: 0; padding: 5px; 
+                position: absolute; left: 0; top: 0; 
+                width: 100%; max-width: 80mm; 
+                margin: 0; padding: 0 2mm; /* Zero margem externa, mínimo de respiro interno */
                 font-family: 'Courier New', Courier, monospace; 
-                color: black; background: white; font-size: 12px; 
+                color: black; background: white; 
+                font-size: 11px; /* Letra padrão de NFC-e */
+                line-height: 1.2; /* Tira o excesso de espaço entre as linhas */
             }
-            .linha-tracejada { border-top: 1px dashed black; margin: 4px 0; width: 100%; }
-            #qrcode-recibo img { width: 110px; height: 110px; margin: 0 auto; }
+            
+            .txt-centro { text-align: center; }
+            .txt-direita { text-align: right; }
+            .linha-tracejada { border-top: 1px dashed black; margin: 3px 0; width: 100%; }
+            .flex-space { display: flex; justify-content: space-between; }
+            
+            #qrcode-recibo { margin: 8px auto 0 auto; display: flex; justify-content: center; }
+            #qrcode-recibo img { width: 130px; height: 130px; }
+            
             @page { margin: 0; }
         }
     </style>
@@ -162,7 +173,7 @@
 
     <script>
         let estoqueCloud = {
-            "7894900010015": {"nome": "Refrigerante fanta uva 2lt", "preco": 9.75},
+            "7894900051513": {"nome": "REFRIGERANTE FANTA UVA 2LT", "preco": 9.75},
             "119": {"nome": "TOMATE KG", "preco": 4.99},
             "17": {"nome": "GOIABA KG", "preco": 5.99},
             "55": {"nome": "QUEIJO MUSSARELA KG", "preco": 46.99}
@@ -299,7 +310,7 @@
 
         function addCupom(cod, qtd) {
             const p = estoqueCloud[cod];
-            cupomAtual.push({ nome: p.nome, qtd: qtd, unit: p.preco, total: p.preco * qtd });
+            cupomAtual.push({ cod: cod, nome: p.nome, qtd: qtd, unit: p.preco, total: p.preco * qtd });
             document.getElementById('codigo-barras').value = '';
             document.getElementById('dropdown-sugestoes').style.display = 'none';
             registrarLog(`Adicionado: ${qtd}x ${p.nome}`, 'sucesso');
@@ -324,7 +335,7 @@
             let peso = parseFloat(document.getElementById('peso-balanca').value);
             if (!peso || peso <= 0) { alert("Por favor, digite o peso primeiro!"); document.getElementById('peso-balanca').focus(); return; }
             const p = estoqueCloud[cod];
-            cupomAtual.push({ nome: p.nome, qtd: peso, unit: p.preco, total: p.preco * peso });
+            cupomAtual.push({ cod: cod, nome: p.nome, qtd: peso, unit: p.preco, total: p.preco * peso });
             document.getElementById('peso-balanca').value = '';
             document.getElementById('codigo-balanca').value = '';
             document.getElementById('dropdown-balanca').style.display = 'none';
@@ -361,73 +372,86 @@
         }
 
         // ====================================================================
-        // NOVO CUPOM ORGANIZADO IGUAL A FOTO (COM ENDEREÇO, PEDIDO E QR CODE)
+        // GERAÇÃO DO RECIBO IDÊNTICO À NFC-E DO SEFAZ RN (IMAGEM ENVIADA)
         // ====================================================================
+        function formatarMoeda(valor) {
+            return valor.toFixed(2).replace('.', ',');
+        }
+
         function gerarReciboParaImpressao(formaPagto) {
             let containerAntigo = document.getElementById('recibo-impressao');
             if(containerAntigo) containerAntigo.remove();
 
-            let pedidoNumber = Math.floor(Math.random() * 90000) + 10000;
-            let dataAtual = new Date().toLocaleString('pt-BR');
-            let nomeVendedor = document.getElementById('caixa-nome-status').innerText;
+            let dataAtual = new Date();
+            let dataStr = dataAtual.toLocaleDateString('pt-BR');
+            let horaStr = dataAtual.toLocaleTimeString('pt-BR');
+            let numCupom = Math.floor(Math.random() * 9000) + 1000;
+            let qtdItens = String(cupomAtual.length).padStart(3, '0');
 
             let html = `
             <div id="recibo-impressao">
-                <div style="text-align:center; font-weight:bold; font-size:14px; margin-bottom:2px;">Mercadinho Dois Irmãos</div>
-                <div style="text-align:center; font-size:12px; margin-bottom:10px;">Rua Padre Cicero, 375, Felipe Camarão</div>
+                <div class="txt-centro">
+                    CNPJ: 44.133.465/0001-96 MERCADINHO DOIS IRMAOS LTDA<br>
+                    RUA PADRE CICERO, 375 FELIPE CAMARAO - NATAL - RN<br>
+                    59072-433 Fone: (84)98631-5330 I.E.: 20.591.002-5<br>
+                    DOCUMENTO AUXILIAR DA NOTA FISCAL DE CONSUMIDOR ELETRÔNICA
+                </div>
                 
-                <div style="font-size:12px; margin-bottom:5px;">${dataAtual} - Pedido ${pedidoNumber}</div>
+                <div class="linha-tracejada"></div>
+                <div style="font-weight:bold;"># Cód Descrição Qtd Un Vl Unit. Vl Total</div>
+                <div class="linha-tracejada"></div>
                 
-                <table style="width:100%; font-size:12px; text-align:left; border-collapse: collapse;">
-                    <tr>
-                        <th style="width:15%; border-bottom: 1px dashed black; padding-bottom:3px;">Quant</th>
-                        <th style="width:45%; border-bottom: 1px dashed black; padding-bottom:3px;">Descricao</th>
-                        <th style="width:20%; border-bottom: 1px dashed black; padding-bottom:3px; text-align:right;">Unit</th>
-                        <th style="width:20%; border-bottom: 1px dashed black; padding-bottom:3px; text-align:right;">Total</th>
-                    </tr>`;
+                <div style="margin-bottom: 5px;">`;
             
-            cupomAtual.forEach(i => {
+            // Loop de itens formatação 2 linhas igual foto NFC-e
+            cupomAtual.forEach((i, index) => {
+                let numItem = String(index + 1).padStart(3, '0');
+                let und = Number.isInteger(i.qtd) ? 'UN' : 'KG';
+                let codProduto = i.cod.length > 3 ? i.cod : "0000000000000"; // Se não tiver cod de barras, simula um.
+                
                 html += `
-                    <tr>
-                        <td style="vertical-align:top; padding-top:4px;">${i.qtd}</td>
-                        <td style="vertical-align:top; padding-top:4px; padding-right:5px;">${i.nome}</td>
-                        <td style="vertical-align:top; padding-top:4px; text-align:right;">${i.unit.toFixed(3)}</td>
-                        <td style="vertical-align:top; padding-top:4px; text-align:right;">${i.total.toFixed(2)}</td>
-                    </tr>`;
+                    <div style="margin-bottom: 2px;">
+                        <div>${numItem} ${codProduto} ${i.nome.toUpperCase()}</div>
+                        <div class="flex-space">
+                            <span>&nbsp;&nbsp;&nbsp;&nbsp;${i.qtd} ${und} X ${formatarMoeda(i.unit)}</span>
+                            <span>${formatarMoeda(i.total)}</span>
+                        </div>
+                    </div>`;
             });
 
             html += `
-                </table>
-                <div class="linha-tracejada" style="margin-top: 5px;"></div>
-                
-                <div style="display:flex; justify-content:space-between; font-size:13px; margin-top:5px;">
-                    <span>Total a pagar</span>
-                    <strong>R$ ${totalVenda.toFixed(2)}</strong>
                 </div>
-                <div style="display:flex; justify-content:space-between; font-size:13px; margin-top:2px;">
-                    <span>${formaPagto}</span>
-                    <span>R$ ${totalVenda.toFixed(2)}</span>
-                </div>
-                <div style="font-size:13px; margin-top:2px;">Vendedor: ${nomeVendedor}</div>
+                <div class="linha-tracejada"></div>
                 
-                <div style="text-align:center; margin-top:15px; margin-bottom:5px;">
-                    <div id="qrcode-recibo" style="display:flex; justify-content:center;"></div>
-                    <div style="font-size:10px; margin-top:3px;">Consulte via QRCode</div>
+                <div class="flex-space"><span>QTD. TOTAL DE ITENS</span><span>${qtdItens}</span></div>
+                <div class="flex-space" style="font-weight:bold;"><span>VALOR TOTAL R$</span><span>${formatarMoeda(totalVenda)}</span></div>
+                <div class="flex-space"><span>FORMA DE PAGAMENTO</span><span>Valor Pago</span></div>
+                <div class="flex-space"><span>${formaPagto}</span><span>${formatarMoeda(totalVenda)}</span></div>
+                
+                <div class="linha-tracejada" style="margin-top:5px;"></div>
+                
+                <div class="txt-centro" style="margin-top: 5px;">
+                    Consulte pela Chave de Acesso em<br>
+                    www.set.rn.gov.br/nfce/consulta<br>
+                    2426 0744 1334 6500 0196 6500 1000 0057 0210 0038 4190<br>
+                    <strong>CONSUMIDOR NÃO IDENTIFICADO</strong><br>
+                    NFC-e nº 000005702 Série 001 ${dataStr} ${horaStr}<br>
+                    Protocolo de Autorização: 224260250855527<br>
+                    Data de Autorização ${dataStr} ${horaStr}
                 </div>
                 
-                <div style="text-align:center; font-size:12px; margin-top:10px;">Obrigado pela preferência!</div>
-                <div style="text-align:center; font-size:11px; color:#333;">Volte Sempre!</div>
+                <div id="qrcode-recibo"></div>
             </div>`;
 
             let divElement = document.createElement('div');
             divElement.innerHTML = html;
             document.body.appendChild(divElement.firstElementChild);
 
-            // Gera o QR Code automaticamente
+            // Geração do QR Code
             new QRCode(document.getElementById("qrcode-recibo"), {
-                text: "https://sefaz.rn.gov.br/nfce/consulta?p=" + pedidoNumber + "v" + totalVenda.toFixed(2),
-                width: 110,
-                height: 110,
+                text: "https://www.set.rn.gov.br/nfce/consulta?p=24260744133465000196650010000057021000384190",
+                width: 130,
+                height: 130,
                 colorDark : "#000000",
                 colorLight : "#ffffff",
                 correctLevel : QRCode.CorrectLevel.L
@@ -439,7 +463,7 @@
             const formaPagto = document.getElementById('forma-pagamento').value;
             
             gerarReciboParaImpressao(formaPagto);
-            setTimeout(() => { window.print(); }, 200); // Dá 200 milissegundos pro QR Code desenhar antes da guilhotina cortar
+            setTimeout(() => { window.print(); }, 200); // Aguarda o QR Code carregar
             
             cupomAtual = []; document.getElementById('valor-pago').value = ''; renderizarCupom();
             document.getElementById('codigo-barras').focus();
@@ -447,3 +471,5 @@
     </script>
 </body>
 </html>
+
+
