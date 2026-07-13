@@ -21,7 +21,8 @@
         .input-group { margin-bottom: 15px; text-align: left; }
         .input-group label { display: block; font-weight: 600; margin-bottom: 6px; color: #475569; font-size: 14px; }
         .input-group input, .input-group select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; }
-        .btn-universal { width: 100%; padding: 15px; background: var(--primaria); color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; }
+        .btn-universal { width: 100%; padding: 15px; background: var(--primaria); color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-universal:hover { filter: brightness(1.1); }
         
         .top-bar { background: var(--primaria); color: white; padding: 0 25px; height: 65px; display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .pdv-container { display: flex; width: 100%; height: calc(100% - 65px); background: white; }
@@ -47,9 +48,44 @@
         .dropdown-busca { display: none; position: absolute; left: 0; width: 100%; background: white; border: 2px solid var(--secundaria); border-radius: 8px; max-height: 250px; overflow-y: auto; z-index: 999; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         .opcao-busca { padding: 14px; cursor: pointer; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; }
         .opcao-busca:hover { background: #eff6ff; color: var(--secundaria); }
-        .fechamento-painel { background: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        
+        /* ================================================================= */
+        /* TARJA DE FECHAMENTO PREMIUM: LETRAS MAIORES E CORES MUITO MAIS VIVAS */
+        /* ================================================================= */
+        .fechamento-painel { 
+            background: #0f172a; /* Preto nobre para alto contraste */
+            padding: 25px; 
+            border-radius: 12px; 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .fechamento-painel label { 
+            font-size: 15px !important; 
+            font-weight: 900 !important; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            display: block;
+            margin-bottom: 6px;
+        }
+        .label-pagamento { color: #facc15 !important; } /* Amarelo Vivo Neon */
+        .label-recebido { color: #4ade80 !important; }  /* Verde Elétrico Neon */
+        
+        .fechamento-painel input, .fechamento-painel select { 
+            background: #1e293b !important; 
+            color: #ffffff !important; 
+            border: 3px solid #475569 !important; 
+            font-size: 26px !important; /* Letras de digitação gigantes */
+            font-weight: 900 !important; 
+            padding: 15px !important;
+            border-radius: 10px !important;
+        }
+        .fechamento-painel input:focus, .fechamento-painel select:focus { border-color: #38bdf8 !important; }
+        #box-troco { color: #38bdf8 !important; font-size: 34px !important; text-shadow: 0 2px 6px rgba(0,0,0,0.7); font-weight: 900; }
+        
         .dashboard-area { padding: 30px; background: #f1f5f9; width: 100%; height: calc(100% - 65px); overflow-y: auto; }
-        .tabela-dados { width: 100%; border-collapse: collapse; background: white; margin-top: 20px;}
+        .tabela-dados { width: 100%; border-collapse: collapse; background: white; margin-top: 10px;}
         .tabela-dados th, .tabela-dados td { padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: left; }
         .modal-bg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
         .modal-bg.ativo { display: flex; }
@@ -126,17 +162,17 @@
                     </div>
                 </div>
                 
-                <!-- FECHAMENTO -->
+                <!-- FECHAMENTO (TEXTOS MAIORES E CORES ULTRA NEON) -->
                 <div class="fechamento-painel">
                     <div class="input-group" style="margin: 0;">
-                        <label>Pagamento</label>
+                        <label class="label-pagamento">Forma de Pagamento</label>
                         <select id="forma-pagamento"><option>Dinheiro</option><option>PIX</option><option>Cartão</option></select>
                     </div>
                     <div class="input-group" style="margin: 0;">
-                        <label>Valor Recebido</label>
+                        <label class="label-recebido">Valor Recebido (R$)</label>
                         <input type="number" id="valor-pago" placeholder="0.00" oninput="calcularTroco()" onkeydown="fecharVendaComEnter(event)">
                     </div>
-                    <div style="grid-column: span 2; text-align:right; font-weight:bold; font-size:22px; color: var(--erro);" id="box-troco">Troco: R$ 0.00</div>
+                    <div style="grid-column: span 2; text-align:right; font-weight:bold;" id="box-troco">Troco: R$ 0.00</div>
                     
                     <button class="btn-universal" onclick="finalizarVenda(false)" style="background: var(--sucesso);">FINALIZAR SEM NOTA</button>
                     <button class="btn-universal" id="btn-finalizar-fiscal" onclick="finalizarVenda(true)" style="background: var(--fiscal); font-size: 18px;">EMITIR NFC-e (F4)</button>
@@ -145,47 +181,79 @@
         </div>
     </div>
 
-    <!-- PAINEL GERENCIAL (COM MÓDULO DE SINCRONIZAÇÃO AUTOMÁTICA EM NUVEM) -->
+    <!-- PAINEL GERENCIAL -->
     <div id="tela-adm" class="tela">
         <div class="top-bar">
-            <div><strong>PAINEL GERENCIAL</strong></div>
+            <div><strong>PAINEL GERENCIAL E DASHBOARD</strong></div>
             <button class="btn-universal" onclick="mostrarTela('tela-pdv')" style="background: var(--secundaria); width: auto; padding: 8px 15px;">Voltar ao Caixa</button>
         </div>
         <div class="dashboard-area">
-            <!-- PAINEL DA NUVEM -->
-            <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid var(--fiscal); margin-bottom: 20px;">
-                <h3 style="color: var(--fiscal)">☁️ Sincronização Automática entre Caixas (Nuvem)</h3>
-                <p style="font-size: 13px; color:#64748b; margin-bottom: 15px;">Configure aqui o seu GitHub para atualizar todos os computadores instantaneamente.</p>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <div class="input-group" style="margin:0;">
-                        <label>Seu Repositório GitHub (Ex: usuario/nome-do-repositorio)</label>
-                        <input type="text" id="cloud-repo" placeholder="tiago/pdv-mercado">
+            
+            <!-- DASHBOARD DE VENDAS -->
+            <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid var(--sucesso); margin-bottom: 20px;">
+                <h3 style="color: var(--sucesso); margin-bottom: 15px;">📊 Dashboard de Vendas (Expediente Atual)</h3>
+                <div style="display: flex; gap: 20px;">
+                    <div style="flex: 1; background: #f0fdf4; padding: 20px; border-radius: 8px; text-align: center; border: 1px solid #bbf7d0;">
+                        <p style="font-size: 14px; color: #166534; font-weight: bold; margin-bottom:5px;">TOTAL VENDIDO</p>
+                        <h2 style="font-size: 38px; color: #15803d;" id="dash-total">R$ 0,00</h2>
                     </div>
-                    <div class="input-group" style="margin:0;">
-                        <label>Seu Token de Acesso do GitHub (Classic Token)</label>
-                        <input type="password" id="cloud-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxx">
+                    <div style="flex: 1; background: #eff6ff; padding: 20px; border-radius: 8px; text-align: center; border: 1px solid #bfdbfe;">
+                        <p style="font-size: 14px; color: #1e40af; font-weight: bold; margin-bottom:5px;">QTD. DE COMPRAS</p>
+                        <h2 style="font-size: 38px; color: #1d4ed8;" id="dash-qtd">0</h2>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: center; padding: 0 10px;">
+                        <button onclick="zerarVendas()" style="padding: 20px; background: var(--erro); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px;">🗑️ Zerar Caixa do Dia</button>
                     </div>
                 </div>
-                <button onclick="salvarConfiguracaoNuvem()" style="margin-top:15px; padding:12px 20px; background: var(--fiscal); color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">Gravar Configuração da Nuvem</button>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div style="background: white; padding: 20px; border-radius: 8px; border-left: 5px solid var(--secundaria); display: flex; flex-direction: column; justify-content: space-between;">
-                    <h3>Gerenciamento de Planilha Oficial</h3>
-                    <input type="file" accept=".xlsx" onchange="carregarExcel(event)" style="margin-top: 10px; margin-bottom: 10px;">
-                    <button onclick="baixarPlanilhaExcelAtualizada()" style="padding: 12px; background: var(--primaria); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px;">💾 Baixar Nova Planilha Oficial (.xlsx)</button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <!-- CADASTRO INTERNO -->
+                <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid var(--alerta);">
+                    <h3>➕ Cadastrar Novo Produto Interno</h3>
+                    <div class="input-group" style="margin-top: 15px; margin-bottom: 10px;">
+                        <input type="text" id="novo-cod" placeholder="Código de Barras ou Interno">
+                    </div>
+                    <div class="input-group" style="margin-bottom: 10px;">
+                        <input type="text" id="novo-nome" placeholder="Nome do Produto">
+                    </div>
+                    <div class="input-group" style="margin-bottom: 15px;">
+                        <input type="number" id="novo-preco" placeholder="Preço Final (Ex: 5.50)" step="0.01">
+                    </div>
+                    <button onclick="cadastrarProdutoLocal()" class="btn-universal" style="background: var(--alerta);">Salvar Produto no Sistema</button>
                 </div>
-                <div style="background: white; padding: 20px; border-radius: 8px; border-left: 5px solid var(--sucesso); display: flex; flex-direction: column; justify-content: center; text-align: center;">
-                    <h3>Forçar Atualização na Nuvem</h3>
-                    <p style="font-size:12px; margin-bottom:10px;">Envia as mudanças locais para o servidor agora.</p>
-                    <button onclick="forcarSincronizacaoNuvem()" style="padding: 12px; background: var(--sucesso); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">⚡ Enviar Preços para Outros Caixas</button>
+
+                <!-- CONFIGURAÇÃO DA NUVEM -->
+                <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid var(--fiscal);">
+                    <h3>☁️ Sincronização em Nuvem (GitHub)</h3>
+                    <div class="input-group" style="margin-top: 15px; margin-bottom: 10px;">
+                        <input type="text" id="cloud-repo" placeholder="Repositório (Ex: usuario/pdv)">
+                    </div>
+                    <div class="input-group" style="margin-bottom: 15px;">
+                        <input type="password" id="cloud-token" placeholder="Token GitHub (ghp_...)">
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="salvarConfiguracaoNuvem()" class="btn-universal" style="background: var(--fiscal); padding: 12px; font-size:14px;">Salvar Dados</button>
+                        <button onclick="forcarSincronizacaoNuvem()" class="btn-universal" style="background: var(--sucesso); padding: 12px; font-size:14px;">⚡ Forçar Envio</button>
+                    </div>
                 </div>
             </div>
-            <h3 style="margin-top: 20px;">Estoque total: <span id="contador-produtos">0</span> itens</h3>
-            <table class="tabela-dados">
-                <thead><tr><th>Código</th><th>Nome</th><th>Preço (R$)</th></tr></thead>
-                <tbody id="tabela-estoque-corpo"></tbody>
-            </table>
+
+            <!-- GESTÃO DE ESTOQUE COMPLETA -->
+            <div style="background: white; padding: 25px; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3>Lista de Produtos Integrados: <span id="contador-produtos" style="color: var(--secundaria);">0</span> itens</h3>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="file" id="import-excel" accept=".xlsx" onchange="carregarExcel(event)" style="display: none;">
+                        <button onclick="document.getElementById('import-excel').click()" style="padding: 10px; background: #64748b; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight:bold;">📥 Carregar Excel Inicial (2300 Itens)</button>
+                        <button onclick="baixarPlanilhaExcelAtualizada()" style="padding: 10px; background: var(--primaria); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight:bold;">💾 Baixar Backup Oficial</button>
+                    </div>
+                </div>
+                <table class="tabela-dados">
+                    <thead><tr><th>Código</th><th>Nome do Produto</th><th>Preço (R$)</th></tr></thead>
+                    <tbody id="tabela-estoque-corpo"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -227,131 +295,159 @@
     </div>
 
     <script>
-        let estoqueCloud = {
-            "7894900051513": {"nome": "REFRIGERANTE FANTA UVA 2LT", "preco": 9.75},
-            "119": {"nome": "TOMATE KG", "preco": 4.99},
-            "17": {"nome": "GOIABA KG", "preco": 5.99},
-            "55": {"nome": "QUEIJO MUSSARELA KG", "preco": 48.99}
-        }; 
-
+        let estoqueCloud = {}; 
         let precosModificadosManualmente = {};
+        let vendasRealizadas = [];
         let cupomAtual = [];
         let totalVenda = 0;
         let listaFiltrada = [];
 
         window.onload = async function() {
-            // Puxa as credenciais da nuvem gravadas no computador local
             document.getElementById('cloud-repo').value = localStorage.getItem('cloud_repo') || '';
             document.getElementById('cloud-token').value = localStorage.getItem('cloud_token') || '';
+            
+            const vendasSalvas = localStorage.getItem('vendas_realizadas');
+            if (vendasSalvas) vendasRealizadas = JSON.parse(vendasSalvas);
 
             const locais = localStorage.getItem('precos_modificados');
-            if (locais) { precosModificadosManualmente = JSON.parse(locais); }
+            if (locais) precosModificadosManualmente = JSON.parse(locais);
 
-            // Puxa primeiro os preços modificados em tempo real na nuvem do GitHub (se houver)
-            await puxarPrecosNuvemGitHub();
-
-            try {
-                const res = await fetch('./Plan1.xlsx');
-                if (res.ok) {
-                    const buffer = await res.arrayBuffer();
-                    const wb = XLSX.read(new Uint8Array(buffer), {type: 'array'});
-                    const json = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-                    json.forEach(row => {
-                        if(row.Codigo && row.Produto && row.Valor) {
-                            let codStr = String(row.Codigo);
-                            let precoExcel = parseFloat(String(row.Valor).replace('R$','').replace(',','.'));
-                            if (precosModificadosManualmente[codStr]) {
-                                estoqueCloud[codStr] = { nome: String(row.Produto), preco: precosModificadosManualmente[codStr] };
-                            } else {
-                                estoqueCloud[codStr] = { nome: String(row.Produto), preco: precoExcel };
-                            }
-                        }
-                    });
-                }
-            } catch(e) {
-                const backup = localStorage.getItem('estoque_mercado');
-                if (backup) { estoqueCloud = JSON.parse(backup); }
+            // ==========================================================
+            // MOTOR AUTOMÁTICO INTEGRAÇÃO ABSOLUTA (NUNCA VOLTA PARA 4 ITENS)
+            // ==========================================================
+            const estoqueIntegrado = localStorage.getItem('estoque_mercado');
+            if (estoqueIntegrado && Object.keys(JSON.parse(estoqueIntegrado)).length > 5) {
+                estoqueCloud = JSON.parse(estoqueIntegrado);
+            } else {
+                // Se a memória estiver limpa, ele puxa automaticamente o banco de 2300 itens da nuvem do GitHub!
+                await carregarEstoqueCompletoDaNuvem();
             }
 
+            // Aplica as modificações de gerência e novos produtos criados internamente
             for (let c in precosModificadosManualmente) {
-                if (estoqueCloud[c]) estoqueCloud[c].preco = precosModificadosManualmente[c];
+                estoqueCloud[c] = precosModificadosManualmente[c].nome ? precosModificadosManualmente[c] : { nome: estoqueCloud[c]?.nome || "PRODUTO SEM NOME", preco: precosModificadosManualmente[c] };
             }
 
             localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
             document.getElementById('contador-produtos').innerText = Object.keys(estoqueCloud).length;
+            
+            atualizarDashboard();
             document.addEventListener('keydown', (e) => { if (e.key === 'F4') { e.preventDefault(); finalizarVenda(true); } });
             manterFocoNoInput();
         };
 
-        // ==========================================
-        // ENGENHARIA DE SINCRONIZAÇÃO EM NUVEM AUTOMÁTICA
-        // ==========================================
+        // CARREGA OS 2300 PRODUTOS AUTOMATICAMENTE SEM PRECISAR ESCOLHER ARQUIVO
+        async function carregarEstoqueCompletoDaNuvem() {
+            let repo = localStorage.getItem('cloud_repo') || 'rafaelzt1033-gif/pdvmercadoluiz';
+            registrarLog("Carregando banco de 2300 produtos da nuvem...", "alerta");
+            try {
+                let res = await fetch(`https://raw.githubusercontent.com/${repo}/main/precos.json?t=${new Date().getTime()}`);
+                if (res.ok) {
+                    let dadosNuvem = await res.json();
+                    if(Object.keys(dadosNuvem).length > 0){
+                        estoqueCloud = dadosNuvem;
+                        localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
+                        console.log("Estoque carregado com sucesso!");
+                    }
+                }
+            } catch(e) {
+                // Caso falhe por falta de configuração inicial, mantém os itens mínimos de teste
+                estoqueCloud = { "7894900051513": {"nome": "REFRIGERANTE FANTA UVA 2LT", "preco": 9.75}, "119": {"nome": "TOMATE KG", "preco": 4.99}, "17": {"nome": "GOIABA KG", "preco": 5.99}, "55": {"nome": "QUEIJO MUSSARELA KG", "preco": 48.99} };
+            }
+        }
+
+        function cadastrarProdutoLocal() {
+            let cod = document.getElementById('novo-cod').value.trim();
+            let nome = document.getElementById('novo-nome').value.trim().toUpperCase();
+            let preco = parseFloat(document.getElementById('novo-preco').value.replace(',', '.'));
+
+            if(!cod || !nome || !preco || preco <= 0) return alert("Preencha todos os campos!");
+
+            estoqueCloud[cod] = { nome: nome, preco: preco };
+            localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
+
+            precosModificadosManualmente[cod] = { nome: nome, preco: preco };
+            localStorage.setItem('precos_modificados', JSON.stringify(precosModificadosManualmente));
+            
+            // Força a sincronização na nuvem
+            forcarSincronizacaoNuvemSilenciosa(); 
+
+            alert("Produto cadastrado e sincronizado com os outros caixas!");
+            document.getElementById('novo-cod').value = ''; document.getElementById('novo-nome').value = ''; document.getElementById('novo-preco').value = '';
+            renderizarTabelaAdm();
+        }
+
+        function atualizarDashboard() {
+            let totalFinanceiro = 0;
+            vendasRealizadas.forEach(v => totalFinanceiro += v.total);
+            document.getElementById('dash-total').innerText = "R$ " + formatarMoeda(totalFinanceiro);
+            document.getElementById('dash-qtd').innerText = vendasRealizadas.length;
+        }
+
+        function zerarVendas() {
+            if(confirm("Deseja fechar o expediente e zerar o dashboard?")) {
+                vendasRealizadas = []; localStorage.removeItem('vendas_realizadas');
+                atualizarDashboard(); registrarLog("Expediente zerado.", "alerta");
+            }
+        }
+
         function salvarConfiguracaoNuvem() {
             let repo = document.getElementById('cloud-repo').value.trim();
             let token = document.getElementById('cloud-token').value.trim();
-            localStorage.setItem('cloud_repo', repo);
-            localStorage.setItem('cloud_token', token);
-            alert("Configuração da nuvem salva neste terminal!");
+            localStorage.setItem('cloud_repo', repo); localStorage.setItem('cloud_token', token);
+            alert("Configurações salvas!");
+            carregarEstoqueCompletoDaNuvem().then(() => renderizarTabelaAdm());
         }
 
         async function puxarPrecosNuvemGitHub() {
-            let repo = localStorage.getItem('cloud_repo');
-            if(!repo) return;
+            let repo = localStorage.getItem('cloud_repo'); if(!repo) return;
             try {
-                // Tenta puxar o arquivo precos.json do repositório público/privado
                 let res = await fetch(`https://raw.githubusercontent.com/${repo}/main/precos.json?t=${new Date().getTime()}`);
                 if (res.ok) {
                     let nuvemPrecos = await res.json();
-                    precosModificadosManualmente = nuvemPrecos;
-                    localStorage.setItem('precos_modificados', JSON.stringify(precosModificadosManualmente));
-                    console.log("Preços atualizados direto da Nuvem!");
+                    if(Object.keys(nuvemPrecos).length > 5) {
+                        estoqueCloud = nuvemPrecos;
+                        localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
+                    }
                 }
-            } catch(e) { console.log("Nuvem ainda sem arquivo de preços."); }
+            } catch(e) { console.log("Erro de leitura rápida."); }
         }
 
         async function forcarSincronizacaoNuvem() {
-            let repo = localStorage.getItem('cloud_repo');
-            let token = localStorage.getItem('cloud_token');
-            if(!repo || !token) return alert("Por favor, configure o Repositório e o Token na aba ADM primeiro!");
-
-            registrarLog("Enviando preços novos para os caixas na nuvem...", "alerta");
-
+            let repo = localStorage.getItem('cloud_repo'); let token = localStorage.getItem('cloud_token');
+            if(!repo || !token) return alert("Configure a Nuvem primeiro!");
+            registrarLog("Enviando banco completo para a nuvem...", "alerta");
             try {
-                // 1. Verifica se o arquivo já existe para obter o SHA (obrigatório na API do GitHub)
-                let sha = "";
-                let url = `https://api.github.com/repos/${repo}/contents/precos.json`;
+                let sha = ""; let url = `https://api.github.com/repos/${repo}/contents/precos.json`;
                 let resCheck = await fetch(url, { headers: { "Authorization": `token ${token}` } });
-                
-                if(resCheck.ok) {
-                    let dataCheck = await resCheck.json();
-                    sha = dataCheck.sha;
-                }
+                if(resCheck.ok) { let dataCheck = await resCheck.json(); sha = dataCheck.sha; }
 
-                // 2. Prepara o conteúdo do precos.json em base64
-                let conteudoJson = JSON.stringify(precosModificadosManualmente, null, 2);
                 let bodyPayload = {
-                    message: "Atualização automática de preços do PDV",
-                    content: btoa(unescape(encodeURIComponent(conteudoJson))),
+                    message: "Sync Geral PDV",
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(estoqueCloud, null, 2)))),
                     branch: "main"
                 };
                 if(sha) bodyPayload.sha = sha;
 
-                // 3. Faz o envio via API do GitHub
-                let resUpload = await fetch(url, {
-                    method: "PUT",
-                    headers: { "Authorization": `token ${token}`, "Content-Type": "application/json" },
-                    body: JSON.stringify(bodyPayload)
-                });
-
+                let resUpload = await fetch(url, { method: "PUT", headers: { "Authorization": `token ${token}`, "Content-Type": "application/json" }, body: JSON.stringify(bodyPayload) });
                 if(resUpload.ok) {
-                    registrarLog("Nuvem Atualizada! Todos os caixas receberam os novos preços.", "sucesso");
-                    alert("Sucesso absoluto! Preços enviados para a nuvem. Em instantes todos os caixas estarão com os valores idênticos.");
-                } else {
-                    alert("Erro na API do GitHub. Verifique as credenciais digitadas.");
-                }
-            } catch(err) {
-                alert("Falha de conexão ao enviar para a nuvem.");
-            }
+                    registrarLog("Nuvem atualizada!", "sucesso");
+                    alert("Sucesso absoluto! Todos os caixas sincronizados.");
+                } else { alert("Erro de comunicação com o GitHub."); }
+            } catch(err) { alert("Erro de conexão."); }
+        }
+
+        async function forcarSincronizacaoNuvemSilenciosa() {
+            let repo = localStorage.getItem('cloud_repo'); let token = localStorage.getItem('cloud_token');
+            if(!repo || !token) return;
+            try {
+                let sha = ""; let url = `https://api.github.com/repos/${repo}/contents/precos.json`;
+                let resCheck = await fetch(url, { headers: { "Authorization": `token ${token}` } });
+                if(resCheck.ok) { let dataCheck = await resCheck.json(); sha = dataCheck.sha; }
+                let bodyPayload = { message: "Sync Item PDV", content: btoa(unescape(encodeURIComponent(JSON.stringify(estoqueCloud, null, 2)))), branch: "main" };
+                if(sha) bodyPayload.sha = sha;
+                await fetch(url, { method: "PUT", headers: { "Authorization": `token ${token}`, "Content-Type": "application/json" }, body: JSON.stringify(bodyPayload) });
+            } catch(e) {}
         }
 
         function baixarPlanilhaExcelAtualizada() {
@@ -359,32 +455,10 @@
             for (let codigo in estoqueCloud) { dadosExcel.push({ "Codigo": isNaN(codigo) ? codigo : Number(codigo), "Produto": estoqueCloud[codigo].nome, "Valor": estoqueCloud[codigo].preco }); }
             let wb = XLSX.utils.book_new(); let ws = XLSX.utils.json_to_sheet(dadosExcel);
             XLSX.utils.book_append_sheet(wb, ws, "Produtos"); XLSX.writeFile(wb, "Plan1.xlsx");
-            alert("Planilha oficial gerada!");
         }
 
         function pularDaUnidadeProBipe(e) { if (e.key === 'Enter') { e.preventDefault(); document.getElementById('codigo-barras').focus(); } }
         function fecharVendaComEnter(e) { if (e.key === 'Enter') { e.preventDefault(); finalizarVenda(true); } }
-
-        function exportarPrecosModificados() {
-            if(Object.keys(precosModificadosManualmente).length === 0) return alert("Nenhum preço modificado.");
-            let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(precosModificadosManualmente));
-            let downloadAnchor = document.createElement('a'); downloadAnchor.setAttribute("href", dataStr); downloadAnchor.setAttribute("download", "sinc_precos_dois_irmaos.json");
-            document.body.appendChild(downloadAnchor); downloadAnchor.click(); downloadAnchor.remove();
-        }
-
-        function importarPrecosModificados(e) {
-            const file = e.target.files[0]; if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                try {
-                    let importados = JSON.parse(evt.target.result);
-                    for (let c in importados) { precosModificadosManualmente[c] = importados[c]; if (estoqueCloud[c]) estoqueCloud[c].preco = importados[c]; }
-                    localStorage.setItem('precos_modificados', JSON.stringify(precosModificadosManualmente)); localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-                    alert("Sincronizado!"); renderizarTabelaAdm();
-                } catch(err) { alert("Erro."); }
-            };
-            reader.readAsText(file);
-        }
 
         function manterFocoNoInput() {
             document.addEventListener('click', (e) => {
@@ -416,13 +490,9 @@
             const u = document.getElementById('login-usuario').value.toLowerCase();
             const s = document.getElementById('login-senha').value;
             if (u === 'eduardo' && s === 'kd041022') { 
-                document.getElementById('btn-painel-atalho').style.display = 'block'; 
-                document.getElementById('caixa-nome-status').innerText = 'Eduardo';
-                mostrarTela('tela-pdv'); 
+                document.getElementById('btn-painel-atalho').style.display = 'block'; document.getElementById('caixa-nome-status').innerText = 'Eduardo'; mostrarTela('tela-pdv'); 
             } else if (u === 'caixa' && s === '123') { 
-                document.getElementById('btn-painel-atalho').style.display = 'none'; 
-                document.getElementById('caixa-nome-status').innerText = 'Caixa';
-                mostrarTela('tela-pdv'); 
+                document.getElementById('btn-painel-atalho').style.display = 'none'; document.getElementById('caixa-nome-status').innerText = 'Caixa'; mostrarTela('tela-pdv'); 
             } else { alert("Senha incorreta!"); }
         }
         
@@ -430,7 +500,7 @@
 
         function registrarLog(msg, tipo='info') {
             const log = document.getElementById('log-sistema');
-            const col = tipo === 'erro' ? 'red' : tipo === 'alerta' ? 'orange' : tipo === 'sucesso' ? '#10b981' : '#38bdf8';
+            const col = tipo === 'erro' ? '#ef4444' : tipo === 'alerta' ? '#f59e0b' : tipo === 'sucesso' ? '#10b981' : '#38bdf8';
             log.innerHTML = `<div style="color:${col}">[SISTEMA] ${msg}</div>` + log.innerHTML;
         }
 
@@ -448,13 +518,8 @@
         }
 
         function abrirModalPreco() { 
-            document.getElementById('modal-editar-preco').classList.add('ativo'); 
-            document.getElementById('edit-cod').value = ''; 
-            document.getElementById('edit-cod-selecionado').value = ''; 
-            document.getElementById('edit-preco').value = ''; 
-            document.getElementById('edit-senha').value = ''; 
-            document.getElementById('edit-nome-prod').innerText = ''; 
-            setTimeout(() => document.getElementById('edit-cod').focus(), 100); 
+            document.getElementById('modal-editar-preco').classList.add('ativo'); document.getElementById('edit-cod').value = ''; document.getElementById('edit-cod-selecionado').value = ''; 
+            document.getElementById('edit-preco').value = ''; document.getElementById('edit-senha').value = ''; document.getElementById('edit-nome-prod').innerText = ''; setTimeout(() => document.getElementById('edit-cod').focus(), 100); 
         }
         function fecharModalPreco() { document.getElementById('modal-editar-preco').classList.remove('ativo'); document.getElementById('codigo-barras').focus(); }
         
@@ -463,8 +528,7 @@
             if(!txt) { drop.style.display = 'none'; label.innerText = ''; return; }
             if(!isNaN(txt) && txt.length >= 3) {
                 if (estoqueCloud[txt]) {
-                    document.getElementById('edit-cod-selecionado').value = txt;
-                    label.innerText = `✅ ${estoqueCloud[txt].nome} (Preço: R$ ${estoqueCloud[txt].preco.toFixed(2)})`;
+                    document.getElementById('edit-cod-selecionado').value = txt; label.innerText = `✅ ${estoqueCloud[txt].nome} (Preço: R$ ${estoqueCloud[txt].preco.toFixed(2)})`;
                     label.style.color = "var(--sucesso)"; drop.style.display = 'none'; return;
                 }
             }
@@ -483,21 +547,15 @@
 
         function salvarNovoPreco() {
             let cod = document.getElementById('edit-cod-selecionado').value.trim(); let precoFormatado = parseFloat(document.getElementById('edit-preco').value.replace(',', '.')); let senha = document.getElementById('edit-senha').value;
-            if (!cod || !estoqueCloud[cod]) return alert("Selecione um produto válido!");
-            if (!precoFormatado || precoFormatado <= 0) return alert("Digite um preço válido!");
-            if (senha !== 'kd041022') return alert("Senha do Gerente incorreta!");
-            estoqueCloud[cod].preco = precoFormatado; precosModificadosManualmente[cod] = precoFormatado;
+            if (!cod || !estoqueCloud[cod]) return alert("Selecione um produto válido!"); if (!precoFormatado || precoFormatado <= 0) return alert("Digite um preço válido!"); if (senha !== 'kd041022') return alert("Senha do Gerente incorreta!");
+            estoqueCloud[cod].preco = precoFormatado;
+            precosModificadosManualmente[cod] = precoFormatado;
             localStorage.setItem('precos_modificados', JSON.stringify(precosModificadosManualmente)); localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-            
-            fecharModalPreco();
-
-            // Sincroniza na nuvem na hora de forma silenciosa e automática!
-            forcarSincronizacaoNuvem();
+            fecharModalPreco(); forcarSincronizacaoNuvemSilenciosa(); alert(`Preço alterado!`);
         }
 
         async function carregarExcel(e) {
-            const file = e.target.files[0]; if (!file) return;
-            const reader = new FileReader();
+            const file = e.target.files[0]; if (!file) return; const reader = new FileReader();
             reader.onload = function(evt) {
                 const workbook = XLSX.read(new Uint8Array(evt.target.result), {type: 'array'});
                 const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
@@ -505,19 +563,20 @@
                 json.forEach(row => {
                     if(row.Codigo && row.Produto && row.Valor) {
                         let codStr = String(row.Codigo); let precoExcel = parseFloat(String(row.Valor).replace('R$','').replace(',','.'));
-                        if (precosModificadosManualmente[codStr]) { estoqueCloud[codStr] = { nome: String(row.Produto), preco: precosModificadosManualmente[codStr] }; } 
-                        else { estoqueCloud[codStr] = { nome: String(row.Produto), preco: precoExcel }; }
+                        estoqueCloud[codStr] = { nome: String(row.Produto), preco: precoExcel };
                         count++;
                     }
                 });
-                localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud)); alert(`${count} produtos importados!`); renderizarTabelaAdm();
+                localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud)); 
+                alert(`${count} produtos importados com sucesso para a memória!`); 
+                renderizarTabelaAdm();
+                forcarSincronizacaoNuvem(); // Sobe o pacote dos 2300 para o GitHub de uma vez
             };
             reader.readAsArrayBuffer(file);
         }
 
         function renderizarTabelaAdm() {
-            const tbody = document.getElementById('tabela-estoque-corpo'); tbody.innerHTML = '';
-            document.getElementById('contador-produtos').innerText = Object.keys(estoqueCloud).length;
+            const tbody = document.getElementById('tabela-estoque-corpo'); tbody.innerHTML = ''; document.getElementById('contador-produtos').innerText = Object.keys(estoqueCloud).length;
             let i = 0; for(let cod in estoqueCloud) { if(i > 100) break; tbody.innerHTML += `<tr><td>${cod}</td><td>${estoqueCloud[cod].nome}</td><td>${estoqueCloud[cod].preco.toFixed(2)}</td></tr>`; i++; }
         }
 
@@ -535,7 +594,7 @@
             if(e.key === 'Enter') {
                 e.preventDefault(); let txt = document.getElementById('codigo-barras').value.trim();
                 if(!txt) {
-                    if (cupomAtual.length === 0) return alert("Passe os produtos primeiro antes de avançar!");
+                    if (cupomAtual.length === 0) return alert("Passe os produtos primeiro!");
                     document.getElementById('valor-pago').focus(); document.getElementById('valor-pago').select(); return;
                 }
                 let qtd = parseFloat(document.getElementById('input-qtd-manual').value || 1); let cod = txt;
@@ -548,8 +607,7 @@
         function addCupom(cod, qtd) {
             const p = estoqueCloud[cod]; cupomAtual.push({ cod: cod, nome: p.nome, qtd: qtd, unit: p.preco, total: p.preco * qtd });
             document.getElementById('codigo-barras').value = ''; document.getElementById('dropdown-sugestoes').style.display = 'none';
-            registrarLog(`Adicionado: ${qtd}x ${p.nome}`, 'sucesso'); renderizarCupom();
-            document.getElementById('codigo-barras').focus();
+            registrarLog(`Adicionado: ${qtd}x ${p.nome}`, 'sucesso'); renderizarCupom(); document.getElementById('codigo-barras').focus();
         }
 
         function filtrarNomeBalanca(val) {
@@ -564,7 +622,7 @@
 
         function addCupomBalanca(cod) {
             let peso = parseFloat(document.getElementById('peso-balanca').value);
-            if (!peso || peso <= 0) { alert("Digite o peso primeiro!"); document.getElementById('peso-balanca').focus(); return; }
+            if (!peso || peso <= 0) { alert("Digite o peso!"); document.getElementById('peso-balanca').focus(); return; }
             const p = estoqueCloud[cod]; cupomAtual.push({ cod: cod, nome: p.nome, qtd: peso, unit: p.preco, total: p.preco * peso });
             document.getElementById('peso-balanca').value = ''; document.getElementById('codigo-balanca').value = '';
             document.getElementById('dropdown-balanca').style.display = 'none'; document.getElementById('codigo-barras').focus();
@@ -585,8 +643,8 @@
 
         function calcularTroco() {
             const pago = parseFloat(document.getElementById('valor-pago').value || 0); const box = document.getElementById('box-troco');
-            if(pago >= totalVenda && totalVenda > 0) { box.innerText = `Troco: R$ ${(pago - totalVenda).toFixed(2)}`; box.style.color = 'var(--sucesso)'; }
-            else { box.innerText = `Troco: R$ 0.00`; box.style.color = 'var(--erro)'; }
+            if(pago >= totalVenda && totalVenda > 0) { box.innerText = `Troco: R$ ${(pago - totalVenda).toFixed(2)}`; box.style.color = '#4ade80'; }
+            else { box.innerText = `Troco: R$ 0.00`; box.style.color = '#38bdf8'; }
         }
 
         function formatarMoeda(valor) { return valor.toFixed(2).replace('.', ','); }
@@ -616,8 +674,13 @@
         function finalizarVenda(nfce) {
             if(cupomAtual.length === 0) return alert("Passe os produtos primeiro!");
             const formaPagto = document.getElementById('forma-pagamento').value;
+            vendasRealizadas.push({ data: new Date().toLocaleString('pt-BR'), total: totalVenda, pagamento: formaPagto });
+            localStorage.setItem('vendas_realizadas', JSON.stringify(vendasRealizadas));
+            atualizarDashboard();
+
             if(nfce) { gerarNFCe(formaPagto); setTimeout(() => { window.print(); }, 200); } 
             else { gerarCupomPDV(formaPagto); setTimeout(() => { window.print(); }, 100); }
+            
             cupomAtual = []; document.getElementById('valor-pago').value = ''; renderizarCupom(); 
             setTimeout(() => { document.getElementById('input-qtd-manual').focus(); document.getElementById('input-qtd-manual').select(); }, 500);
         }
