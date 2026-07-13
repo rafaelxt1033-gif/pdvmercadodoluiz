@@ -32,9 +32,6 @@
         .badge-unidade { font-size: 11px; background: #e2e8f0; color: #475569; padding: 2px 4px; border-radius: 4px; margin-left: 4px; font-weight: bold; }
         .btn-remover { color: var(--erro); background: transparent; border: none; cursor: pointer; font-size: 16px; }
         
-        /* ============================================================== */
-        /* NOVO DESIGN DO COMPONENTE DE TOTAL: FUNDO BRANCO E TEXTO VERMELHO */
-        /* ============================================================== */
         .total-box { 
             background: #ffffff; 
             color: var(--erro); 
@@ -45,16 +42,8 @@
             border: 4px solid var(--erro);
             box-shadow: 0 4px 15px rgba(239, 68, 68, 0.15);
         }
-        .total-box h3 {
-            font-size: 16px;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-            font-weight: 800;
-        }
-        .total-box p {
-            font-size: 42px;
-            font-weight: 900;
-        }
+        .total-box h3 { font-size: 16px; letter-spacing: 1px; margin-bottom: 5px; font-weight: 800; }
+        .total-box p { font-size: 42px; font-weight: 900; }
         
         .operacao-area { width: 55%; padding: 30px; display: flex; flex-direction: column; background: #f8fafc; justify-content: space-between; }
         .terminal-log { background: #020617; color: #38bdf8; padding: 15px; border-radius: 8px; height: 110px; overflow-y: auto; font-family: monospace; font-size: 13px; margin-bottom: 15px; }
@@ -129,7 +118,6 @@
             <div class="cupom-area">
                 <div class="cupom-header"><span>Item</span><span style="text-align:center;">Qtd/Peso</span><span style="text-align:right;">Unit</span><span style="text-align:right;">Total</span><span></span></div>
                 <div class="produtos-lista" id="lista-cupom"></div>
-                <!-- TOTAL ATUALIZADO EM VERMELHO E BRANCO -->
                 <div class="total-box"><h3>TOTAL A PAGAR</h3><p>R$ <span id="valor-total">0.00</span></p></div>
             </div>
             <div class="operacao-area">
@@ -145,10 +133,13 @@
                     </div>
                 </div>
 
-                <!-- BIPADOR -->
-                <div style="position: relative;">
-                    <div id="dropdown-sugestoes" class="dropdown-busca" style="bottom: 100%; margin-bottom: 5px;"></div>
-                    <input type="text" class="input-codigo" id="codigo-barras" placeholder="Bipe o leitor ou digite o nome..." oninput="filtrarPorNome(this.value)" onkeydown="navegarSugestoes(event)" autocomplete="off">
+                <!-- BIPADOR + VISUALIZADOR DE QUANTIDADE ATIVA -->
+                <div style="position: relative; display: flex; gap: 8px;">
+                    <input type="number" id="input-qtd-manual" value="1" style="width: 80px; text-align: center; font-size: 24px; border: 3px solid var(--primaria); border-radius: 12px; font-weight: bold;" title="Quantidade para o próximo item">
+                    <div style="position: relative; flex: 1;">
+                        <div id="dropdown-sugestoes" class="dropdown-busca" style="bottom: 100%; margin-bottom: 5px; width: 100%;"></div>
+                        <input type="text" class="input-codigo" id="codigo-barras" placeholder="Bipe ou digite (Ex: 5*Código)..." oninput="filtrarPorNome(this.value)" onkeydown="navegarSugestoes(event)" autocomplete="off">
+                    </div>
                 </div>
                 
                 <!-- FECHAMENTO -->
@@ -170,16 +161,27 @@
         </div>
     </div>
 
-    <!-- PAINEL GERENCIAL -->
+    <!-- PAINEL GERENCIAL (COM SINCRONIZADOR) -->
     <div id="tela-adm" class="tela">
         <div class="top-bar">
             <div><strong>PAINEL GERENCIAL</strong></div>
             <button class="btn-universal" onclick="mostrarTela('tela-pdv')" style="background: var(--secundaria); width: auto; padding: 8px 15px;">Voltar ao Caixa</button>
         </div>
         <div class="dashboard-area">
-            <div style="background: white; padding: 20px; border-radius: 8px; border-left: 5px solid var(--secundaria);">
-                <h3>Importação Forçada (Plan1.xlsx)</h3>
-                <input type="file" accept=".xlsx" onchange="carregarExcel(event)" style="margin-top: 10px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="background: white; padding: 20px; border-radius: 8px; border-left: 5px solid var(--secundaria);">
+                    <h3>Importação (Plan1.xlsx)</h3>
+                    <input type="file" accept=".xlsx" onchange="carregarExcel(event)" style="margin-top: 10px;">
+                </div>
+                <!-- NOVO SINCRONIZADOR ENTRE CAIXAS -->
+                <div style="background: white; padding: 20px; border-radius: 8px; border-left: 5px solid var(--sucesso);">
+                    <h3>Sincronizar Preços Modificados</h3>
+                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                        <button onclick="exportarPrecosModificados()" style="padding: 10px; background: var(--sucesso); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">1. Exportar Preços deste Caixa</button>
+                        <button onclick="document.getElementById('import-sinc').click()" style="padding: 10px; background: var(--secundaria); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">2. Importar Preços no outro Caixa</button>
+                        <input type="file" id="import-sinc" accept=".json" style="display: none;" onchange="importarPrecosModificados(event)">
+                    </div>
+                </div>
             </div>
             <h3 style="margin-top: 20px;">Estoque total: <span id="contador-produtos">0</span> itens</h3>
             <table class="tabela-dados">
@@ -233,14 +235,21 @@
             "7894900051513": {"nome": "REFRIGERANTE FANTA UVA 2LT", "preco": 9.75},
             "119": {"nome": "TOMATE KG", "preco": 4.99},
             "17": {"nome": "GOIABA KG", "preco": 5.99},
-            "55": {"nome": "QUEIJO MUSSARELA KG", "preco": 46.99}
+            "55": {"nome": "QUEIJO MUSSARELA KG", "preco": 48.99} // Valor real atualizado!
         }; 
 
+        let precosModificadosManualmente = {};
         let cupomAtual = [];
         let totalVenda = 0;
         let listaFiltrada = [];
 
         window.onload = async function() {
+            // Carrega preços modificados locais primeiro para proteger mudanças de gerência
+            const locais = localStorage.getItem('precos_modificados');
+            if (locais) {
+                precosModificadosManualmente = JSON.parse(locais);
+            }
+
             try {
                 const res = await fetch('./Plan1.xlsx');
                 if (res.ok) {
@@ -249,19 +258,69 @@
                     const json = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
                     json.forEach(row => {
                         if(row.Codigo && row.Produto && row.Valor) {
-                            estoqueCloud[String(row.Codigo)] = { nome: String(row.Produto), preco: parseFloat(String(row.Valor).replace('R$','').replace(',','.')) };
+                            let codStr = String(row.Codigo);
+                            let precoExcel = parseFloat(String(row.Valor).replace('R$','').replace(',','.'));
+                            
+                            // Se já houver uma mudança manual salva para esse código, mantém a manual!
+                            if (precosModificadosManualmente[codStr]) {
+                                estoqueCloud[codStr] = { nome: String(row.Produto), preco: precosModificadosManualmente[codStr] };
+                            } else {
+                                estoqueCloud[codStr] = { nome: String(row.Produto), preco: precoExcel };
+                            }
                         }
                     });
-                    localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
                 }
             } catch(e) {
+                // Se der erro no fetch, aplica o backup completo
                 const backup = localStorage.getItem('estoque_mercado');
                 if (backup) { estoqueCloud = JSON.parse(backup); }
             }
+
+            // Aplica novamente as modificações manuais caso algum item estático precise ser atualizado
+            for (let c in precosModificadosManualmente) {
+                if (estoqueCloud[c]) estoqueCloud[c].preco = precosModificadosManualmente[c];
+            }
+
+            localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
             document.getElementById('contador-produtos').innerText = Object.keys(estoqueCloud).length;
             document.addEventListener('keydown', (e) => { if (e.key === 'F4') { e.preventDefault(); finalizarVenda(true); } });
             manterFocoNoInput();
         };
+
+        // EXPORTADOR DE SINCRONIZAÇÃO ENTRE MAQUINAS
+        function exportarPrecosModificados() {
+            if(Object.keys(precosModificadosManualmente).length === 0) {
+                return alert("Nenhum preço foi alterado manualmente neste caixa ainda.");
+            }
+            let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(precosModificadosManualmente));
+            let downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "sinc_precos_dois_irmaos.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importarPrecosModificados(e) {
+            const file = e.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    let importados = JSON.parse(evt.target.result);
+                    for (let c in importados) {
+                        precosModificadosManualmente[c] = importados[c];
+                        if (estoqueCloud[c]) estoqueCloud[c].preco = importados[c];
+                    }
+                    localStorage.setItem('precos_modificados', JSON.stringify(precosModificadosManualmente));
+                    localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
+                    alert("Preços sincronizados com o outro caixa com sucesso!");
+                    renderizarTabelaAdm();
+                } catch(err) {
+                    alert("Erro ao ler o arquivo de sincronização.");
+                }
+            };
+            reader.readAsText(file);
+        }
 
         function manterFocoNoInput() {
             document.addEventListener('click', (e) => {
@@ -277,7 +336,7 @@
                 if(!document.getElementById('edit-cod').contains(e.target) && !dropEdicao.contains(e.target)) dropEdicao.style.display = 'none';
 
                 const ativo = document.activeElement.id;
-                if (isPdv && !modalPreco && !modalBusca && !dropBarra.contains(e.target) && !dropBalanca.contains(e.target) && ativo !== 'valor-pago' && ativo !== 'forma-pagamento' && ativo !== 'peso-balanca' && ativo !== 'codigo-balanca') {
+                if (isPdv && !modalPreco && !modalBusca && !dropBarra.contains(e.target) && !dropBalanca.contains(e.target) && ativo !== 'valor-pago' && ativo !== 'forma-pagamento' && ativo !== 'peso-balanca' && ativo !== 'codigo-balanca' && ativo !== 'input-qtd-manual') {
                     document.getElementById('codigo-barras').focus();
                 }
             });
@@ -383,8 +442,13 @@
             if (!cod || !estoqueCloud[cod]) return alert("Por favor, selecione um produto válido!");
             if (!precoFormatado || precoFormatado <= 0) return alert("Por favor, digite um preço válido!");
             if (senha !== 'kd041022') return alert("Senha do Gerente incorreta!");
+            
             estoqueCloud[cod].preco = precoFormatado;
+            precosModificadosManualmente[cod] = precoFormatado; // Registra no array de sincronização
+            
+            localStorage.setItem('precos_modificados', JSON.stringify(precosModificadosManualmente));
             localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
+            
             registrarLog(`Preço alterado: ${estoqueCloud[cod].nome} para R$ ${precoFormatado.toFixed(2)}`, "alerta");
             alert(`Sucesso! Preço de ${estoqueCloud[cod].nome} alterado para R$ ${precoFormatado.toFixed(2)}.`);
             fecharModalPreco();
@@ -399,7 +463,15 @@
                 let count = 0;
                 json.forEach(row => {
                     if(row.Codigo && row.Produto && row.Valor) {
-                        estoqueCloud[String(row.Codigo)] = { nome: String(row.Produto), preco: parseFloat(String(row.Valor).replace('R$','').replace(',','.')) };
+                        let codStr = String(row.Codigo);
+                        let precoExcel = parseFloat(String(row.Valor).replace('R$','').replace(',','.'));
+                        
+                        // Protege modificações manuais locais durante a importação da planilha
+                        if (precosModificadosManualmente[codStr]) {
+                            estoqueCloud[codStr] = { nome: String(row.Produto), preco: precosModificadosManualmente[codStr] };
+                        } else {
+                            estoqueCloud[codStr] = { nome: String(row.Produto), preco: precoExcel };
+                        }
                         count++;
                     }
                 });
@@ -421,16 +493,33 @@
             listaFiltrada = Object.keys(estoqueCloud).filter(c => estoqueCloud[c].nome.toLowerCase().includes(texto)).slice(0, 15);
             if(listaFiltrada.length > 0) {
                 drop.style.display = 'block';
-                listaFiltrada.forEach(c => drop.innerHTML += `<div class="opcao-busca" onclick="addCupom('${c}', 1)"><span>📦 ${estoqueCloud[c].nome}</span> <span>R$ ${estoqueCloud[c].preco.toFixed(2)}</span></div>`);
+                // Puxa a Qtd ativa do seletor manual ao clicar na lista
+                let qtdAtiva = parseFloat(document.getElementById('input-qtd-manual').value || 1);
+                listaFiltrada.forEach(c => drop.innerHTML += `<div class="opcao-busca" onclick="addCupom('${c}', ${qtdAtiva})"><span>📦 ${estoqueCloud[c].nome}</span> <span>R$ ${estoqueCloud[c].preco.toFixed(2)}</span></div>`);
             } else { drop.style.display = 'none'; }
         }
 
         function navegarSugestoes(e) {
             if(e.key === 'Enter' && document.getElementById('dropdown-sugestoes').style.display !== 'block') {
-                e.preventDefault(); let txt = document.getElementById('codigo-barras').value; if(!txt) return;
-                let qtd = 1; let cod = txt; if(txt.includes('*')) { qtd = parseFloat(txt.split('*')[0]); cod = txt.split('*')[1]; }
-                if(estoqueCloud[cod]) { addCupom(cod, qtd); } 
-                else { registrarLog("Código não cadastrado: " + cod, "erro"); document.getElementById('codigo-barras').value = ''; }
+                e.preventDefault(); 
+                let txt = document.getElementById('codigo-barras').value.trim(); if(!txt) return;
+                
+                let qtd = parseFloat(document.getElementById('input-qtd-manual').value || 1); 
+                let cod = txt; 
+                
+                // Trata o padrão clássico do bipador de caixa: 5*Código
+                if(txt.includes('*')) { 
+                    qtd = parseFloat(txt.split('*')[0]); 
+                    cod = txt.split('*')[1]; 
+                }
+                
+                if(estoqueCloud[cod]) { 
+                    addCupom(cod, qtd); 
+                    document.getElementById('input-qtd-manual').value = "1"; // Reseta o multiplicador para o próximo produto
+                } else { 
+                    registrarLog("Código não cadastrado: " + cod, "erro"); 
+                    document.getElementById('codigo-barras').value = ''; 
+                }
             }
         }
 
@@ -469,8 +558,6 @@
                 lista.innerHTML += `<div class="item-cupom"><span>${item.nome}</span><span style="text-align:center">${item.qtd} <span class="badge-unidade">${unidade}</span></span><span style="text-align:right">${item.unit.toFixed(2)}</span><span style="text-align:right; font-weight:bold; color:var(--secundaria);">${item.total.toFixed(2)}</span><button class="btn-remover" onclick="removerItem(${i})">❌</button></div>`;
             });
             document.getElementById('valor-total').innerText = totalVenda.toFixed(2); 
-            
-            // DISPARA O CÁLCULO DE TROCO AUTOMATICAMENTE A CADA ITEM ADICIONADO
             calcularTroco();
         }
 
