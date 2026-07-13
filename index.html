@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mercadinho Dois Irmãos - PDV Ultimate Local</title>
     
-    <!-- SDK oficial do Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- Biblioteca SheetJS para ler a planilha Excel magicamente -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
     <style>
@@ -29,7 +26,6 @@
         .tela { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; flex-direction: column; }
         .tela.ativa { display: flex; }
 
-        /* TELA DE LOGIN */
         .login-wrapper { background: linear-gradient(135deg, #020617, #1e293b); justify-content: center; align-items: center; }
         .login-box { background: white; padding: 40px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); text-align: center; }
         .login-box h2 { color: var(--primaria); margin-bottom: 5px; font-size: 26px; }
@@ -41,12 +37,10 @@
         .btn-universal { width: 100%; padding: 15px; background: var(--primaria); color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; transition: 0.2s; }
         .btn-universal:hover { background: #334155; }
 
-        /* BARRA SUPERIOR (TOP BAR) */
         .top-bar { background: var(--primaria); color: white; padding: 0 25px; height: 65px; display: flex; justify-content: space-between; align-items: center; width: 100%; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
         .top-bar .status-caixa { background: var(--sucesso); color: white; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; }
         .top-bar .btn-sair { background: #475569; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
-        /* CONTAINER PRINCIPAL DO PDV */
         .pdv-container { display: flex; width: 100%; height: calc(100% - 65px); background: white; }
         
         .cupom-area { width: 45%; background: white; padding: 30px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; }
@@ -65,18 +59,15 @@
         .terminal-log { background: #020617; color: #38bdf8; padding: 15px; border-radius: 8px; height: 110px; overflow-y: auto; font-family: monospace; font-size: 13px; margin-bottom: 15px; box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.6); }
         .terminal-log div { margin-bottom: 4px; }
         
-        /* CONTAINER DE ENTRADA INTELIGENTE */
         .wrapper-busca { position: relative; width: 100%; }
         .input-codigo { width: 100%; padding: 22px; font-size: 38px; text-align: center; border: 3px solid var(--primaria); border-radius: 12px; outline: none; font-weight: bold; background: white; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
         .input-codigo:focus { border-color: var(--secundaria); box-shadow: 0 0 0 4px rgba(37,99,235,0.15); }
         
-        /* POPUP DE RESULTADOS DE BUSCA POR TEXTO */
         .dropdown-busca { display: none; position: absolute; bottom: 100%; left: 0; width: 100%; background: white; border: 2px solid var(--secundaria); border-radius: 10px; max-height: 250px; overflow-y: auto; z-index: 500; box-shadow: 0 -10px 25px rgba(0,0,0,0.15); margin-bottom: 5px; }
         .opcao-busca { padding: 14px 20px; cursor: pointer; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; font-size: 16px; font-weight: 600; }
         .opcao-busca:hover, .opcao-busca.selecionada { background: #eff6ff; color: var(--secundaria); }
         .opcao-busca span.badge-codigo { font-family: monospace; color: #64748b; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
 
-        /* LISTA FISCAL DE CONTROLE DE NOTAS */
         .container-historico-notas { background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; height: 100px; overflow-y: auto; margin-bottom: 15px; }
         .container-historico-notas h4 { font-size: 12px; color: #64748b; text-transform: uppercase; margin-bottom: 6px; font-weight: bold; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; }
         .linha-nota-fiscal { display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 4px 0; border-bottom: 1px dashed #f1f5f9; }
@@ -85,10 +76,7 @@
 
         .fechamento-painel { background: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
 
-        /* DESIGN PREMIUM DO PAINEL DO PROPRIETÁRIO */
         .dashboard-area { padding: 30px; background: #f1f5f9; width: 100%; height: calc(100% - 65px); overflow-y: auto; }
-        .import-wrapper { background: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px; border-left: 6px solid var(--secundaria); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        .box-arquivo-unico { background: #f8fafc; border: 2px dashed #cbd5e1; padding: 15px; border-radius: 8px; text-align: center; margin-top: 10px; }
         
         .cards-resumo { display: flex; gap: 20px; margin-bottom: 25px; width: 100%; }
         .card { background: white; padding: 25px; border-radius: 12px; flex: 1; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); border-bottom: 4px solid var(--secundaria); }
@@ -113,7 +101,6 @@
 </head>
 <body>
 
-    <!-- ================= TELA 1: LOGIN ================= -->
     <div id="tela-login" class="tela ativa login-wrapper">
         <div class="login-box">
             <h2>Mercadinho Dois Irmãos</h2>
@@ -130,7 +117,6 @@
         </div>
     </div>
 
-    <!-- ================= TELA 2: FRENTE DE CAIXA ================= -->
     <div id="tela-pdv" class="tela">
         <div class="top-bar">
             <div>
@@ -183,7 +169,6 @@
         </div>
     </div>
 
-    <!-- ================= TELA 3: RETAGUARDA PREMIUM ================= -->
     <div id="tela-adm" class="tela">
         <div class="top-bar">
             <div><strong>📊 DASHBOARD DO PROPRIETÁRIO</strong> | Painel de Controle Gerencial</div>
@@ -194,17 +179,9 @@
         </div>
         <div class="dashboard-area">
             
-            <div class="import-wrapper">
-                <h3>🔄 Atualizar ou Importar Planilha do Mercado (Manual)</h3>
-                <p style="font-size: 14px; color: #64748b; margin-top: 5px;">A planilha principal (Plan1.xlsx) é baixada sozinha do seu repositório. Use este botão apenas se quiser forçar uma atualização manual no computador.</p>
-                <div class="box-arquivo-unico">
-                    <input type="file" id="excel-universal" accept=".xlsx, .xls" onchange="processarCargaPlanilhaExcel(event)">
-                </div>
-            </div>
-
             <div class="cards-resumo">
                 <div class="card"><h4>Faturamento Acumulado</h4><p id="dash-total" style="color:var(--sucesso);">R$ 0,00</p></div>
-                <div class="card"><h4>Produtos Cadastrados</h4><p id="dash-count">0</p></div>
+                <div class="card"><h4>Produtos Cadastrados Fixos</h4><p id="dash-count">0</p></div>
                 <div class="card"><h4>Transações Salvas</h4><p id="dash-vendas-qtd" style="color:var(--secundaria);">0</p></div>
             </div>
 
@@ -231,13 +208,11 @@
     </div>
 
     <script>
-        // CONFIGURAÇÕES SUPABASE
         const SUPABASE_URL = "SUA_URL_AQUI";
         const SUPABASE_KEY = "SUA_CHAVE_AQUI";
         let supabaseClient = null;
         try { if(SUPABASE_URL.indexOf("SUA_URL") === -1 && SUPABASE_URL.trim() !== "") { supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } } catch(e){}
 
-        // O SISTEMA INICIA VAZIO E SE AUTO PREENCHE LENDO O SEU GITHUB!
         let estoqueCloud = {}; 
 
         let cupomAtual = [];
@@ -258,20 +233,11 @@
                 if (e.key === 'F4') { e.preventDefault(); finalizarVenda(true); }
             });
             
-            // 1. TENTA RECUPERAR A MEMÓRIA INSTANTÂNEA PRIMEIRO
-            const backupLocal = localStorage.getItem('backup_estoque_mercado');
-            if (backupLocal) {
-                try {
-                    estoqueCloud = JSON.parse(backupLocal);
-                    registrarLog(`Estoque carregado rapidamente com ${Object.keys(estoqueCloud).length} itens.`, "sucesso");
-                    sincronizarDadosNuvem();
-                } catch(e) {}
-            }
-
-            // 2. MAGIA: BAIXA A PLANILHA Plan1.xlsx DIRETO DO SEU GITHUB DE FORMA INVISÍVEL
+            // LÓGICA DE BLINDAGEM: O CÓDIGO PUXA A PLANILHA INVISIVELMENTE TODA VEZ QUE ABRIR!
             try {
-                registrarLog("Aguarde, verificando atualizações da planilha no servidor...", "info");
-                // Baixa o arquivo "Plan1.xlsx" que está hospedado junto com o index.html na Vercel/Github
+                registrarLog("Aguarde, carregando estoque completo e fixo...", "info");
+                
+                // O segredo está aqui: Ele baixa a Planilha direto do GitHub e injeta na memória!
                 const resposta = await fetch('./Plan1.xlsx');
                 
                 if (resposta.ok) {
@@ -286,7 +252,6 @@
                         const linha = linhasContas[i];
                         const codigo = String(linha["Codigo"] || '').trim();
                         const nome = String(linha["Produto"] || '').trim();
-                        
                         let precoTexto = String(linha["Valor"] || '0').replace('R$', '').replace('.', '').replace(',', '.').trim();
                         const preco = Math.round(parseFloat(precoTexto) * 100) / 100;
 
@@ -298,52 +263,22 @@
 
                     if(contagem > 0) {
                         localStorage.setItem('backup_estoque_mercado', JSON.stringify(estoqueCloud));
-                        sincronizarDadosNuvem();
-                        registrarLog(`Sucesso! ${contagem} produtos foram extraídos silenciosamente da Planilha.`, "sucesso");
+                        document.getElementById('dash-count').innerText = contagem;
+                        registrarLog(`Sucesso Total! ${contagem} produtos foram fixados no sistema.`, "sucesso");
                     }
                 } else {
-                    if (Object.keys(estoqueCloud).length === 0) {
-                        registrarLog("ATENÇÃO: Planilha Plan1.xlsx não foi encontrada no GitHub.", "alerta");
+                    // Se estiver sem internet, ele puxa o último cache salvo
+                    const backupLocal = localStorage.getItem('backup_estoque_mercado');
+                    if(backupLocal) {
+                        estoqueCloud = JSON.parse(backupLocal);
+                        document.getElementById('dash-count').innerText = Object.keys(estoqueCloud).length;
+                        registrarLog("Estoque recuperado do modo offline (Sem internet).", "alerta");
                     }
                 }
             } catch(e) {
-                console.warn(e);
+                console.error(e);
             }
         };
-
-        // Função caso o seu Luiz queira carregar uma planilha manualmente via botão
-        function processarCargaPlanilhaExcel(event) {
-            const arquivo = event.target.files[0];
-            if (!arquivo) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const dadosBinarios = e.target.result;
-                    const livroExcel = XLSX.read(dadosBinarios, { type: 'binary', cellText: true, cellNF: false });
-                    const abaDados = livroExcel.Sheets[livroExcel.SheetNames[0]];
-                    const linhasContas = XLSX.utils.sheet_to_json(abaDados, { raw: false });
-                    
-                    let contagem = 0;
-                    for (let i = 0; i < linhasContas.length; i++) {
-                        const linha = linhasContas[i];
-                        const codigo = String(linha["Codigo"] || '').trim();
-                        const nome = String(linha["Produto"] || '').trim();
-                        let precoTexto = String(linha["Valor"] || '0').replace('R$', '').replace('.', '').replace(',', '.').trim();
-                        const preco = Math.round(parseFloat(precoTexto) * 100) / 100;
-                        if (codigo && nome && !isNaN(preco)) {
-                            estoqueCloud[codigo] = { nome: nome, preco: preco };
-                            contagem++;
-                        }
-                    }
-                    if(contagem > 0) {
-                        localStorage.setItem('backup_estoque_mercado', JSON.stringify(estoqueCloud));
-                        alert(`Sucesso! ${contagem} produtos atualizados.`);
-                        sincronizarDadosNuvem();
-                    }
-                } catch(err) { alert("Erro ao ler: " + err.message); }
-            };
-            reader.readAsBinaryString(arquivo);
-        }
 
         function manterFocoNoInput() {
             document.addEventListener('click', (e) => {
@@ -387,9 +322,7 @@
             document.getElementById('login-senha').value = '';
             document.getElementById('btn-painel-atalho').style.display = 'none';
             mostrarTela('tela-login');
-            cupomAtual = [];
-            renderizarCupom();
-            fecharDropdown();
+            cupomAtual = []; renderizarCupom(); fecharDropdown();
         }
 
         function registrarLog(msg, tipo = 'info') {
@@ -501,11 +434,10 @@
 
         function removerItemDoCupom(index) {
             const itemRemovido = cupomAtual[index];
-            if(confirm(`Deseja realmente remover o item "${itemRemovido.nome}" desta venda?`)) {
+            if(confirm(`Deseja remover o item "${itemRemovido.nome}" desta venda?`)) {
                 registrarLog(`REMOVIDO DO CUPOM: ${itemRemovido.qtd}x ${itemRemovido.nome}`, "erro");
                 cupomAtual.splice(index, 1);
-                renderizarCupom();
-                inputCodigo.focus();
+                renderizarCupom(); inputCodigo.focus();
             }
         }
 
@@ -518,11 +450,8 @@
 
         function cancelarCupom() {
             if(cupomAtual.length === 0) return;
-            if(confirm("Deseja realmente cancelar toda a compra atual?")) {
-                cupomAtual = [];
-                renderizarCupom();
-                registrarLog("COMPRA CANCELADA PELO OPERADOR.", "erro");
-                inputCodigo.focus();
+            if(confirm("Deseja cancelar a compra atual?")) {
+                cupomAtual = []; renderizarCupom(); registrarLog("COMPRA CANCELADA PELO OPERADOR.", "erro"); inputCodigo.focus();
             }
         }
 
@@ -533,9 +462,7 @@
             faturamentoDia += totalVenda;
             totalAtendimentos++;
 
-            if(supabaseClient) {
-                try { await supabaseClient.from('vendas').insert([{ forma_pagamento: formaPagto, total: totalVenda }]); } catch(err){}
-            }
+            if(supabaseClient) { try { await supabaseClient.from('vendas').insert([{ forma_pagamento: formaPagto, total: totalVenda }]); } catch(err){} }
 
             registrarLog(`VENDA CONCLUÍDA: R$ ${totalVenda.toFixed(2)} via ${formaPagto}`, "sucesso");
 
@@ -550,7 +477,7 @@
                     limparPosVenda();
                 }, 600);
             } else {
-                alert("Venda concluída com sucesso (sem emissão fiscal)!");
+                alert("Venda concluída com sucesso!");
                 limparPosVenda();
             }
         }
@@ -606,10 +533,12 @@
             const texto = filtro.trim().toLowerCase();
             const tabelaCorpo = document.getElementById('tabela-estoque-corpo');
             tabelaCorpo.innerHTML = '';
+            let renderizados = 0;
             
-            Object.keys(estoqueCloud).forEach(codigo => {
+            for(let codigo in estoqueCloud) {
                 const item = estoqueCloud[codigo];
                 if (!texto || codigo.includes(texto) || item.nome.toLowerCase().includes(texto)) {
+                    if (renderizados > 300) break;
                     tabelaCorpo.innerHTML += `
                         <tr>
                             <td><code style="font-family:monospace; font-weight:bold; color:var(--secundaria);">${codigo}</code></td>
@@ -617,8 +546,9 @@
                             <td><b style="color:var(--primaria)">R$ ${item.preco.toFixed(2)}</b></td>
                             <td><span class="badge-estoque">✔ Ativo</span></td>
                         </tr>`;
+                    renderizados++;
                 }
-            });
+            }
         }
     </script>
 </body>
