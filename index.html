@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -10,34 +9,54 @@
         :root { --primaria: #0f172a; --secundaria: #2563eb; --sucesso: #10b981; --alerta: #f59e0b; --erro: #ef4444; --fundo: #f8fafc; --texto: #1e293b; --fiscal: #7c3aed; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
         body { background: var(--fundo); color: var(--texto); height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        
         .tela { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; flex-direction: column; }
         .tela.ativa { display: flex; }
+        
         .login-wrapper { background: linear-gradient(135deg, #020617, #1e293b); justify-content: center; align-items: center; }
         .login-box { background: white; padding: 40px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); text-align: center; }
         .input-group { margin-bottom: 20px; text-align: left; }
         .input-group label { display: block; font-weight: 600; margin-bottom: 6px; color: #475569; font-size: 14px; }
-        .input-group input { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; }
+        .input-group input, .input-group select { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; }
         .btn-universal { width: 100%; padding: 15px; background: var(--primaria); color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; }
+        
         .top-bar { background: var(--primaria); color: white; padding: 0 25px; height: 65px; display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .status-caixa { background: var(--sucesso); color: white; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; }
         .pdv-container { display: flex; width: 100%; height: calc(100% - 65px); background: white; }
         .cupom-area { width: 45%; background: white; padding: 30px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; }
         .cupom-header { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 40px; font-weight: 600; padding-bottom: 12px; border-bottom: 2px solid var(--primaria); font-size: 14px; }
         .produtos-lista { flex-grow: 1; overflow-y: auto; margin-top: 10px; }
-        .item-cupom { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 40px; padding: 10px 0; border-bottom: 1px dashed #e2e8f0; font-size: 16px; align-items: center; }
+        .item-cupom { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 40px; padding: 10px 0; border-bottom: 1px dashed #e2e8f0; font-size: 15px; align-items: center; }
+        .badge-unidade { font-size: 11px; background: #e2e8f0; color: #475569; padding: 2px 4px; border-radius: 4px; margin-left: 4px; }
         .btn-remover { color: var(--erro); background: transparent; border: none; cursor: pointer; font-size: 16px; }
         .total-box { background: var(--primaria); color: white; padding: 25px; border-radius: 12px; text-align: center; margin-top: 20px; }
+        
         .operacao-area { width: 55%; padding: 30px; display: flex; flex-direction: column; background: #f8fafc; justify-content: space-between; }
         .terminal-log { background: #020617; color: #38bdf8; padding: 15px; border-radius: 8px; height: 110px; overflow-y: auto; font-family: monospace; font-size: 13px; margin-bottom: 15px; }
+        
+        /* NOVA ÁREA DA BALANÇA */
+        .area-balanca { background: #e2e8f0; padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; gap: 10px; align-items: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+        .area-balanca input { padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; }
+        
         .input-codigo { width: 100%; padding: 22px; font-size: 38px; text-align: center; border: 3px solid var(--primaria); border-radius: 12px; outline: none; font-weight: bold; }
         .dropdown-busca { display: none; position: absolute; bottom: 100%; left: 0; width: 100%; background: white; border: 2px solid var(--secundaria); max-height: 200px; overflow-y: auto; z-index: 500; }
         .opcao-busca { padding: 14px; cursor: pointer; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: bold; }
         .opcao-busca:hover { background: #eff6ff; }
         .fechamento-painel { background: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        
         .dashboard-area { padding: 30px; background: #f1f5f9; width: 100%; height: calc(100% - 65px); overflow-y: auto; }
-        .import-box { background: white; padding: 20px; border-radius: 8px; border-left: 5px solid var(--secundaria); margin-bottom: 20px; }
-        .tabela-dados { width: 100%; border-collapse: collapse; background: white; }
+        .tabela-dados { width: 100%; border-collapse: collapse; background: white; margin-top: 20px;}
         .tabela-dados th, .tabela-dados td { padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+
+        /* ============================================================== */
+        /* MÁGICA DA IMPRESSORA: OCULTA O SITE E MOSTRA SÓ O RECIBO LIMPO */
+        /* ============================================================== */
+        @media print {
+            body * { visibility: hidden; display: none !important; }
+            #recibo-impressao, #recibo-impressao * { visibility: visible; display: block !important; }
+            #recibo-impressao { position: absolute; left: 0; top: 0; width: 100%; max-width: 300px; padding: 0; margin: 0; font-family: monospace; color: black; background: white; }
+            @page { margin: 0; }
+        }
     </style>
 </head>
 <body>
@@ -70,21 +89,30 @@
         </div>
         <div class="pdv-container">
             <div class="cupom-area">
-                <div class="cupom-header"><span>Item</span><span style="text-align:center;">Qtd</span><span style="text-align:right;">Unit</span><span style="text-align:right;">Total</span><span></span></div>
+                <div class="cupom-header"><span>Item</span><span style="text-align:center;">Qtd/Peso</span><span style="text-align:right;">Unit</span><span style="text-align:right;">Total</span><span></span></div>
                 <div class="produtos-lista" id="lista-cupom"></div>
                 <div class="total-box"><h3>TOTAL A PAGAR</h3><p>R$ <span id="valor-total">0.00</span></p></div>
             </div>
             <div class="operacao-area">
-                <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Aguardando produtos...</div></div>
+                <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Sistema pronto para vendas e balança.</div></div>
+                
+                <!-- CALCULADORA DE BALANÇA -->
+                <div class="area-balanca">
+                    <span style="font-size: 24px;" title="Modo Balança">⚖️</span>
+                    <input type="number" id="peso-balanca" placeholder="Peso (ex: 0.450)" style="width: 140px;" step="0.001">
+                    <input type="text" id="codigo-balanca" placeholder="Cód. Produto" style="flex: 1;" onkeypress="if(event.key === 'Enter') adicionarDaBalanca()">
+                    <button class="btn-universal" style="width: auto; background: var(--secundaria); padding: 14px 20px;" onclick="adicionarDaBalanca()">Pesar Item</button>
+                </div>
+
                 <div style="position: relative;">
                     <div id="dropdown-sugestoes" class="dropdown-busca"></div>
-                    <input type="text" class="input-codigo" id="codigo-barras" placeholder="Bipe ou digite o nome..." oninput="filtrarPorNome(this.value)" onkeydown="navegarSugestoes(event)">
+                    <input type="text" class="input-codigo" id="codigo-barras" placeholder="Bipe o leitor ou digite..." oninput="filtrarPorNome(this.value)" onkeydown="navegarSugestoes(event)">
                 </div>
                 
                 <div class="fechamento-painel">
                     <div class="input-group" style="margin: 0;">
                         <label>Pagamento</label>
-                        <select id="forma-pagamento" style="width: 100%; padding: 14px; border-radius: 8px;"><option>Dinheiro</option><option>PIX</option><option>Cartão</option></select>
+                        <select id="forma-pagamento"><option>Dinheiro</option><option>PIX</option><option>Cartão</option></select>
                     </div>
                     <div class="input-group" style="margin: 0;">
                         <label>Valor Recebido</label>
@@ -93,7 +121,6 @@
                     <div style="grid-column: span 2; text-align:right; font-weight:bold; font-size:22px; color: var(--erro);" id="box-troco">Troco: R$ 0.00</div>
                     
                     <button class="btn-universal" onclick="finalizarVenda(false)" style="background: var(--sucesso);">FINALIZAR SEM NOTA</button>
-                    <!-- BOTÃO DE NOTA FISCAL AQUI -->
                     <button class="btn-universal" onclick="finalizarVenda(true)" style="background: var(--fiscal); font-size: 18px;">EMITIR NFC-e (F4)</button>
                 </div>
             </div>
@@ -107,13 +134,12 @@
             <button class="btn-universal" onclick="mostrarTela('tela-pdv')" style="background: var(--secundaria); width: auto; padding: 8px 15px;">Voltar ao Caixa</button>
         </div>
         <div class="dashboard-area">
-            <div class="import-box">
-                <h3>Carregar Planilha de Produtos (Plan1.xlsx)</h3>
-                <p>Use este botão para colocar todos os produtos no sistema instantaneamente.</p>
+            <div style="background: white; padding: 20px; border-radius: 8px; border-left: 5px solid var(--secundaria);">
+                <h3>Importação Forçada (Plan1.xlsx)</h3>
                 <input type="file" accept=".xlsx" onchange="carregarExcel(event)" style="margin-top: 10px;">
             </div>
-            <h3>Produtos no Sistema: <span id="contador-produtos">0</span></h3>
-            <table class="tabela-dados" style="margin-top: 20px;">
+            <h3 style="margin-top: 20px;">Estoque: <span id="contador-produtos">0</span> itens</h3>
+            <table class="tabela-dados">
                 <thead><tr><th>Código</th><th>Nome</th><th>Preço (R$)</th></tr></thead>
                 <tbody id="tabela-estoque-corpo"></tbody>
             </table>
@@ -121,16 +147,49 @@
     </div>
 
     <script>
-        let estoqueCloud = {};
+        // Memória híbrida: Se a internet cair, usa esses, senão busca o Plan1.xlsx
+        let estoqueCloud = {
+            "7894900010015": {"nome": "COCA COLA LATA 350ML", "preco": 4.5},
+            "119": {"nome": "TOMATE KG", "preco": 4.99},
+            "55": {"nome": "QUEIJO MUSSARELA KG", "preco": 46.99}
+        }; 
+
         let cupomAtual = [];
         let totalVenda = 0;
         let listaFiltrada = [];
 
-        window.onload = function() {
-            const backup = localStorage.getItem('estoque_mercado');
-            if (backup) { estoqueCloud = JSON.parse(backup); }
+        window.onload = async function() {
+            // Tenta carregar a planilha oficial do GitHub de forma invisível
+            try {
+                const res = await fetch('./Plan1.xlsx');
+                if (res.ok) {
+                    const buffer = await res.arrayBuffer();
+                    const wb = XLSX.read(new Uint8Array(buffer), {type: 'array'});
+                    const json = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+                    json.forEach(row => {
+                        if(row.Codigo && row.Produto && row.Valor) {
+                            estoqueCloud[String(row.Codigo)] = { nome: String(row.Produto), preco: parseFloat(String(row.Valor).replace('R$','').replace(',','.')) };
+                        }
+                    });
+                    localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
+                    registrarLog("Planilha oficial carregada do servidor.", "sucesso");
+                }
+            } catch(e) {
+                const backup = localStorage.getItem('estoque_mercado');
+                if (backup) { estoqueCloud = JSON.parse(backup); registrarLog("Estoque carregado da memória local.", "info"); }
+            }
+
+            document.getElementById('contador-produtos').innerText = Object.keys(estoqueCloud).length;
             document.addEventListener('keydown', (e) => { if (e.key === 'F4') { e.preventDefault(); finalizarVenda(true); } });
-            setInterval(() => { if(document.getElementById('tela-pdv').classList.contains('ativa') && document.activeElement.id !== 'valor-pago') document.getElementById('codigo-barras').focus(); }, 1000);
+            
+            // Foco contínuo no código de barras se não estiver digitando em outro lugar
+            setInterval(() => { 
+                const isPdv = document.getElementById('tela-pdv').classList.contains('ativa');
+                const ativo = document.activeElement.id;
+                if(isPdv && ativo !== 'valor-pago' && ativo !== 'peso-balanca' && ativo !== 'codigo-balanca') {
+                    document.getElementById('codigo-barras').focus(); 
+                }
+            }, 1000);
         };
 
         function mostrarTela(id) {
@@ -159,19 +218,17 @@
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function(evt) {
-                const data = new Uint8Array(evt.target.result);
-                const workbook = XLSX.read(data, {type: 'array'});
+                const workbook = XLSX.read(new Uint8Array(evt.target.result), {type: 'array'});
                 const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
                 let count = 0;
                 json.forEach(row => {
                     if(row.Codigo && row.Produto && row.Valor) {
-                        const preco = parseFloat(String(row.Valor).replace('R$','').replace(',','.'));
-                        estoqueCloud[String(row.Codigo)] = { nome: String(row.Produto), preco: preco };
+                        estoqueCloud[String(row.Codigo)] = { nome: String(row.Produto), preco: parseFloat(String(row.Valor).replace('R$','').replace(',','.')) };
                         count++;
                     }
                 });
                 localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-                alert(`${count} produtos carregados com sucesso!`);
+                alert(`${count} produtos importados com sucesso!`);
                 renderizarTabelaAdm();
             };
             reader.readAsArrayBuffer(file);
@@ -182,7 +239,7 @@
             document.getElementById('contador-produtos').innerText = Object.keys(estoqueCloud).length;
             let i = 0;
             for(let cod in estoqueCloud) {
-                if(i > 100) break; // Mostra só os 100 primeiros para não travar
+                if(i > 100) break; 
                 tbody.innerHTML += `<tr><td>${cod}</td><td>${estoqueCloud[cod].nome}</td><td>${estoqueCloud[cod].preco.toFixed(2)}</td></tr>`;
                 i++;
             }
@@ -197,6 +254,25 @@
                 drop.style.display = 'block';
                 listaFiltrada.forEach(c => drop.innerHTML += `<div class="opcao-busca" onclick="addCupom('${c}', 1)">${estoqueCloud[c].nome} - R$ ${estoqueCloud[c].preco.toFixed(2)}</div>`);
             } else { drop.style.display = 'none'; }
+        }
+
+        // LÓGICA DA CALCULADORA DE BALANÇA
+        function adicionarDaBalanca() {
+            let peso = parseFloat(document.getElementById('peso-balanca').value);
+            let cod = document.getElementById('codigo-balanca').value.trim();
+            
+            if (!peso || peso <= 0) return alert("Digite um peso válido em Kg! (Ex: 0.500)");
+            if (!cod || !estoqueCloud[cod]) return alert("Código do produto não encontrado!");
+
+            const p = estoqueCloud[cod];
+            cupomAtual.push({ nome: p.nome, qtd: peso, unit: p.preco, total: p.preco * peso });
+            
+            document.getElementById('peso-balanca').value = '';
+            document.getElementById('codigo-balanca').value = '';
+            document.getElementById('codigo-barras').focus();
+            
+            registrarLog(`Pesado: ${peso}kg de ${p.nome}`, 'sucesso');
+            renderizarCupom();
         }
 
         function navegarSugestoes(e) {
@@ -226,7 +302,17 @@
             const lista = document.getElementById('lista-cupom'); lista.innerHTML = ''; totalVenda = 0;
             cupomAtual.forEach((item, i) => {
                 totalVenda += item.total;
-                lista.innerHTML += `<div class="item-cupom"><span>${item.nome}</span><span style="text-align:center">${item.qtd}</span><span style="text-align:right">${item.unit.toFixed(2)}</span><span style="text-align:right; font-weight:bold;">${item.total.toFixed(2)}</span><button class="btn-remover" onclick="removerItem(${i})">❌</button></div>`;
+                // Detecta se é Unidade ou KG
+                let unidade = Number.isInteger(item.qtd) ? 'UN' : 'KG';
+                
+                lista.innerHTML += `
+                <div class="item-cupom">
+                    <span>${item.nome}</span>
+                    <span style="text-align:center">${item.qtd} <span class="badge-unidade">${unidade}</span></span>
+                    <span style="text-align:right">${item.unit.toFixed(2)}</span>
+                    <span style="text-align:right; font-weight:bold;">${item.total.toFixed(2)}</span>
+                    <button class="btn-remover" onclick="removerItem(${i})">❌</button>
+                </div>`;
             });
             document.getElementById('valor-total').innerText = totalVenda.toFixed(2); calcularTroco();
         }
@@ -238,11 +324,54 @@
             else { box.innerText = `Troco: R$ 0.00`; box.style.color = 'var(--erro)'; }
         }
 
+        // GERA O RECIBO INVISÍVEL PARA A IMPRESSORA TÉRMICA
+        function gerarReciboParaImpressao(formaPagto) {
+            let containerAntigo = document.getElementById('recibo-impressao');
+            if(containerAntigo) containerAntigo.remove();
+
+            let html = `
+            <div id="recibo-impressao">
+                <div style="text-align:center; font-weight:bold; font-size:16px; margin-bottom:5px;">MERCADINHO DOIS IRMÃOS</div>
+                <div style="text-align:center; font-size:12px; margin-bottom:10px;">${new Date().toLocaleString()}</div>
+                <div style="border-bottom: 1px dashed black; margin-bottom: 5px;"></div>
+                <table style="width:100%; font-size:12px; text-align:left; border-collapse: collapse;">
+                    <tr><th>Qtd</th><th>Item</th><th style="text-align:right;">R$ Total</th></tr>`;
+            
+            cupomAtual.forEach(i => {
+                let und = Number.isInteger(i.qtd) ? 'UN' : 'KG';
+                html += `<tr>
+                    <td style="padding-top:4px;">${i.qtd}${und}</td>
+                    <td style="padding-top:4px; padding-right:5px;">${i.nome}</td>
+                    <td style="padding-top:4px; text-align:right;">${i.total.toFixed(2)}</td>
+                </tr>`;
+            });
+
+            html += `
+                </table>
+                <div style="border-bottom: 1px dashed black; margin-top: 5px; margin-bottom: 5px;"></div>
+                <div style="font-size:16px; font-weight:bold; text-align:right;">TOTAL: R$ ${totalVenda.toFixed(2)}</div>
+                <div style="font-size:12px; text-align:right; margin-top:3px;">Pagamento: ${formaPagto}</div>
+                <div style="text-align:center; font-size:12px; margin-top:15px;">Obrigado pela preferência!</div>
+                <div style="text-align:center; font-size:10px; margin-top:5px; color:#666;">Volte Sempre!</div>
+            </div>`;
+
+            let divElement = document.createElement('div');
+            divElement.innerHTML = html;
+            document.body.appendChild(divElement.firstElementChild);
+        }
+
         function finalizarVenda(nfce) {
             if(cupomAtual.length === 0) return alert("Passe os produtos primeiro!");
-            alert("Venda Finalizada! O recibo será impresso agora.");
-            window.print(); // COMANDO PARA ABRIR A IMPRESSORA TÉRMICA
+            const formaPagto = document.getElementById('forma-pagamento').value;
+            
+            // Cria o HTML do recibo limpo
+            gerarReciboParaImpressao(formaPagto);
+            
+            // Abre a impressora (ela vai ler só o recibo graças ao @media print do CSS)
+            window.print(); 
+            
             cupomAtual = []; document.getElementById('valor-pago').value = ''; renderizarCupom();
+            document.getElementById('codigo-barras').focus();
         }
     </script>
 </body>
