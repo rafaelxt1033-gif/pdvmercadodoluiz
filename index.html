@@ -133,7 +133,7 @@
                     </div>
                 </div>
 
-                <!-- BIPADOR + SEQUENCIADOR EM ENTER -->
+                <!-- BIPADOR + SEQUENCIADOR -->
                 <div style="position: relative; display: flex; gap: 8px;">
                     <input type="number" id="input-qtd-manual" value="1" style="width: 80px; text-align: center; font-size: 24px; border: 3px solid var(--primaria); border-radius: 12px; font-weight: bold;" title="Quantidade para o próximo item" onkeydown="pularDaUnidadeProBipe(event)">
                     <div style="position: relative; flex: 1;">
@@ -161,7 +161,7 @@
         </div>
     </div>
 
-    <!-- PAINEL GERENCIAL (COM BOTÃO DE EXPORTAR PLANILHA EXCEL) -->
+    <!-- PAINEL GERENCIAL -->
     <div id="tela-adm" class="tela">
         <div class="top-bar">
             <div><strong>PAINEL GERENCIAL</strong></div>
@@ -172,7 +172,6 @@
                 <div style="background: white; padding: 20px; border-radius: 8px; border-left: 5px solid var(--secundaria); display: flex; flex-direction: column; justify-content: space-between;">
                     <h3>Gerenciamento de Planilha Oficial</h3>
                     <input type="file" accept=".xlsx" onchange="carregarExcel(event)" style="margin-top: 10px; margin-bottom: 10px;">
-                    <!-- NOVO BOTÃO DE EXPORTAR EXCEL OFICIAL ATUALIZADO -->
                     <button onclick="baixarPlanilhaExcelAtualizada()" style="padding: 12px; background: var(--primaria); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px;">💾 Baixar Nova Planilha Oficial (.xlsx)</button>
                 </div>
                 <div style="background: white; padding: 20px; border-radius: 8px; border-left: 5px solid var(--sucesso);">
@@ -279,11 +278,7 @@
             manterFocoNoInput();
         };
 
-        // ==========================================
-        // NOVO MOTOR DE EXPORTAÇÃO EXCEL OFICIAL COM OS PREÇOS NOVOS
-        // ==========================================
         function baixarPlanilhaExcelAtualizada() {
-            // Transforma o estoque em formato de linhas para o Excel
             let dadosExcel = [];
             for (let codigo in estoqueCloud) {
                 dadosExcel.push({
@@ -292,16 +287,10 @@
                     "Valor": estoqueCloud[codigo].preco
                 });
             }
-
-            // Cria a planilha real utilizando a biblioteca XLSX
-            let wb = XLSX.utils.book_new();
-            let ws = XLSX.utils.json_to_sheet(dadosExcel);
-            XLSX.utils.book_append_sheet(wb, ws, "Produtos");
-            
-            // Faz o download do arquivo Plan1.xlsx atualizado no computador do Seu Luiz
-            XLSX.writeFile(wb, "Plan1.xlsx");
+            let wb = XLSX.utils.book_new(); let ws = XLSX.utils.json_to_sheet(dadosExcel);
+            XLSX.utils.book_append_sheet(wb, ws, "Produtos"); XLSX.writeFile(wb, "Plan1.xlsx");
             registrarLog("Nova planilha Plan1.xlsx baixada com sucesso!", "sucesso");
-            alert("Sucesso! O arquivo 'Plan1.xlsx' foi baixado com todos os preços modificados. Substitua o arquivo antigo por este para tornar a mudança permanente!");
+            alert("Sucesso! Substitua o arquivo antigo por este para fixar as alterações.");
         }
 
         function pularDaUnidadeProBipe(e) { if (e.key === 'Enter') { e.preventDefault(); document.getElementById('codigo-barras').focus(); } }
@@ -321,8 +310,7 @@
                 try {
                     let importados = JSON.parse(evt.target.result);
                     for (let c in importados) { precosModificadosManualmente[c] = importados[c]; if (estoqueCloud[c]) estoqueCloud[c].preco = importados[c]; }
-                    localStorage.setItem('precos_modificados', JSON.stringify(precosModificadosManualmente));
-                    localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
+                    localStorage.setItem('precos_modificados', JSON.stringify(precosModificadosManualmente)); localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
                     alert("Preços sincronizados com sucesso!"); renderizarTabelaAdm();
                 } catch(err) { alert("Erro ao importar."); }
             };
@@ -343,7 +331,10 @@
                 if(!document.getElementById('edit-cod').contains(e.target) && !dropEdicao.contains(e.target)) dropEdicao.style.display = 'none';
 
                 const ativo = document.activeElement.id;
-                if (isPdv && !modalPreco && !modalBusca && !dropBarra.contains(e.target) && !dropBalanca.contains(e.target) && ativo !== 'valor-pago' && ativo !== 'forma-pagamento' && ativo !== 'peso-balanca' && ativo !== 'codigo-balanca' && ativo !== 'input-qtd-manual') {
+                
+                // CRUCIAL: Modificado aqui para NÃO roubar o foco se o usuário estiver usando Tab nativo pelos campos
+                if (isPdv && !modalPreco && !modalBusca && !dropBarra.contains(e.target) && !dropBalanca.contains(e.target) && 
+                    ativo !== 'valor-pago' && ativo !== 'forma-pagamento' && ativo !== 'peso-balanca' && ativo !== 'codigo-balanca' && ativo !== 'input-qtd-manual') {
                     document.getElementById('codigo-barras').focus();
                 }
             });
@@ -373,8 +364,8 @@
 
         function registrarLog(msg, tipo='info') {
             const log = document.getElementById('log-sistema');
-            const cor = tipo === 'erro' ? 'red' : tipo === 'alerta' ? 'orange' : tipo === 'sucesso' ? '#10b981' : '#38bdf8';
-            log.innerHTML = `<div style="color:${cor}">[SISTEMA] ${msg}</div>` + log.innerHTML;
+            const col = tipo === 'erro' ? 'red' : tipo === 'alerta' ? 'orange' : tipo === 'sucesso' ? '#10b981' : '#38bdf8';
+            log.innerHTML = `<div style="color:${col}">[SISTEMA] ${msg}</div>` + log.innerHTML;
         }
 
         function abrirModalBusca() { document.getElementById('modal-busca').classList.add('ativo'); document.getElementById('campo-consulta').value = ''; document.getElementById('resultado-busca').innerHTML = ''; setTimeout(() => document.getElementById('campo-consulta').focus(), 100); }
@@ -480,8 +471,10 @@
                 }
                 let qtd = parseFloat(document.getElementById('input-qtd-manual').value || 1); let cod = txt;
                 if(txt.includes('*')) { qtd = parseFloat(txt.split('*')[0]); cod = txt.split('*')[1]; }
-                if(estoqueCloud[cod]) { addCupom(cod, qtd); document.getElementById('input-qtd-manual').value = "1"; document.getElementById('input-qtd-manual').focus(); } 
-                else { registrarLog("Código não cadastrado: " + cod, "erro"); document.getElementById('codigo-barras').value = ''; }
+                if(estoqueCloud[cod]) { 
+                    addCupom(cod, qtd); 
+                    document.getElementById('input-qtd-manual').value = "1"; 
+                } else { registrarLog("Código não cadastrado: " + cod, "erro"); document.getElementById('codigo-barras').value = ''; }
             }
         }
 
@@ -489,6 +482,9 @@
             const p = estoqueCloud[cod]; cupomAtual.push({ cod: cod, nome: p.nome, qtd: qtd, unit: p.preco, total: p.preco * qtd });
             document.getElementById('codigo-barras').value = ''; document.getElementById('dropdown-sugestoes').style.display = 'none';
             registrarLog(`Adicionado: ${qtd}x ${p.nome}`, 'sucesso'); renderizarCupom();
+            
+            // CORRIGIDO: O FOCO AGORA SE MANTÉM LIVRE NO BIPADOR PARA NÃO ATRAPALHAR O TAB!
+            document.getElementById('codigo-barras').focus();
         }
 
         function filtrarNomeBalanca(val) {
@@ -558,6 +554,8 @@
             if(nfce) { gerarNFCe(formaPagto); setTimeout(() => { window.print(); }, 200); } 
             else { gerarCupomPDV(formaPagto); setTimeout(() => { window.print(); }, 100); }
             cupomAtual = []; document.getElementById('valor-pago').value = ''; renderizarCupom(); 
+            
+            // Retorna o foco inicial para a quantidade apenas ao iniciar um cliente totalmente do zero!
             setTimeout(() => { document.getElementById('input-qtd-manual').focus(); document.getElementById('input-qtd-manual').select(); }, 500);
         }
     </script>
