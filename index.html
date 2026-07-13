@@ -31,7 +31,30 @@
         .item-cupom { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 40px; padding: 10px 0; border-bottom: 1px dashed #e2e8f0; font-size: 15px; align-items: center; }
         .badge-unidade { font-size: 11px; background: #e2e8f0; color: #475569; padding: 2px 4px; border-radius: 4px; margin-left: 4px; font-weight: bold; }
         .btn-remover { color: var(--erro); background: transparent; border: none; cursor: pointer; font-size: 16px; }
-        .total-box { background: var(--primaria); color: white; padding: 25px; border-radius: 12px; text-align: center; margin-top: 20px; }
+        
+        /* ============================================================== */
+        /* NOVO DESIGN DO COMPONENTE DE TOTAL: FUNDO BRANCO E TEXTO VERMELHO */
+        /* ============================================================== */
+        .total-box { 
+            background: #ffffff; 
+            color: var(--erro); 
+            padding: 25px; 
+            border-radius: 12px; 
+            text-align: center; 
+            margin-top: 20px; 
+            border: 4px solid var(--erro);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.15);
+        }
+        .total-box h3 {
+            font-size: 16px;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            font-weight: 800;
+        }
+        .total-box p {
+            font-size: 42px;
+            font-weight: 900;
+        }
         
         .operacao-area { width: 55%; padding: 30px; display: flex; flex-direction: column; background: #f8fafc; justify-content: space-between; }
         .terminal-log { background: #020617; color: #38bdf8; padding: 15px; border-radius: 8px; height: 110px; overflow-y: auto; font-family: monospace; font-size: 13px; margin-bottom: 15px; }
@@ -106,6 +129,7 @@
             <div class="cupom-area">
                 <div class="cupom-header"><span>Item</span><span style="text-align:center;">Qtd/Peso</span><span style="text-align:right;">Unit</span><span style="text-align:right;">Total</span><span></span></div>
                 <div class="produtos-lista" id="lista-cupom"></div>
+                <!-- TOTAL ATUALIZADO EM VERMELHO E BRANCO -->
                 <div class="total-box"><h3>TOTAL A PAGAR</h3><p>R$ <span id="valor-total">0.00</span></p></div>
             </div>
             <div class="operacao-area">
@@ -165,7 +189,7 @@
         </div>
     </div>
 
-    <!-- MODAL BUSCA (CONSULTA DE PREÇO) -->
+    <!-- MODAL BUSCA -->
     <div id="modal-busca" class="modal-bg">
         <div class="modal-card">
             <h3 style="color: var(--primaria); margin-bottom: 10px;">Consultar Preço</h3>
@@ -175,7 +199,7 @@
         </div>
     </div>
 
-    <!-- MODAL ALTERAR PREÇO (COM FILTRO POR NOME AGORA!) -->
+    <!-- MODAL ALTERAR PREÇO -->
     <div id="modal-editar-preco" class="modal-bg">
         <div class="modal-card">
             <h3 style="color: var(--secundaria); margin-bottom: 5px;">Mudar Preço</h3>
@@ -311,7 +335,6 @@
         }
         function fecharModalPreco() { document.getElementById('modal-editar-preco').classList.remove('ativo'); document.getElementById('codigo-barras').focus(); }
         
-        // NOVO MOTOR DE BUSCA PARA ALTERAÇÃO DE PREÇOS (RESOLVE O PROBLEMA DAS FRUTAS!)
         function buscarParaEdicao(val) {
             let txt = val.toLowerCase().trim();
             let label = document.getElementById('edit-nome-prod');
@@ -320,7 +343,6 @@
             
             if(!txt) { drop.style.display = 'none'; label.innerText = ''; return; }
 
-            // Se for um código de barras exato (apenas números e grande)
             if(!isNaN(txt) && txt.length >= 3) {
                 if (estoqueCloud[txt]) {
                     document.getElementById('edit-cod-selecionado').value = txt;
@@ -331,7 +353,6 @@
                 }
             }
 
-            // Filtragem por nome de produto para achar itens sem código de barras
             let itensFiltrados = Object.keys(estoqueCloud).filter(c => estoqueCloud[c].nome.toLowerCase().includes(txt)).slice(0, 5);
             if(itensFiltrados.length > 0) {
                 drop.style.display = 'block';
@@ -348,11 +369,9 @@
         function selecionarProdutoParaPreco(cod) {
             document.getElementById('edit-cod').value = estoqueCloud[cod].nome;
             document.getElementById('edit-cod-selecionado').value = cod;
-            
             let label = document.getElementById('edit-nome-prod');
             label.innerText = `✅ Selecionado: ${estoqueCloud[cod].nome} (Preço: R$ ${estoqueCloud[cod].preco.toFixed(2)})`;
             label.style.color = "var(--sucesso)";
-            
             document.getElementById('dropdown-edicao-preco').style.display = 'none';
             document.getElementById('edit-preco').focus();
         }
@@ -361,11 +380,9 @@
             let cod = document.getElementById('edit-cod-selecionado').value.trim();
             let precoFormatado = parseFloat(document.getElementById('edit-preco').value.replace(',', '.'));
             let senha = document.getElementById('edit-senha').value;
-            
-            if (!cod || !estoqueCloud[cod]) return alert("Por favor, selecione um produto válido da lista primeiro!");
+            if (!cod || !estoqueCloud[cod]) return alert("Por favor, selecione um produto válido!");
             if (!precoFormatado || precoFormatado <= 0) return alert("Por favor, digite um preço válido!");
-            if (senha !== 'kd041022') return alert("Acesso Negado: Senha do Gerente incorreta!");
-            
+            if (senha !== 'kd041022') return alert("Senha do Gerente incorreta!");
             estoqueCloud[cod].preco = precoFormatado;
             localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
             registrarLog(`Preço alterado: ${estoqueCloud[cod].nome} para R$ ${precoFormatado.toFixed(2)}`, "alerta");
@@ -451,7 +468,10 @@
                 totalVenda += item.total; let unidade = Number.isInteger(item.qtd) ? 'UN' : 'KG';
                 lista.innerHTML += `<div class="item-cupom"><span>${item.nome}</span><span style="text-align:center">${item.qtd} <span class="badge-unidade">${unidade}</span></span><span style="text-align:right">${item.unit.toFixed(2)}</span><span style="text-align:right; font-weight:bold; color:var(--secundaria);">${item.total.toFixed(2)}</span><button class="btn-remover" onclick="removerItem(${i})">❌</button></div>`;
             });
-            document.getElementById('valor-total').innerText = totalVenda.toFixed(2); calcularTroco();
+            document.getElementById('valor-total').innerText = totalVenda.toFixed(2); 
+            
+            // DISPARA O CÁLCULO DE TROCO AUTOMATICAMENTE A CADA ITEM ADICIONADO
+            calcularTroco();
         }
 
         function calcularTroco() {
