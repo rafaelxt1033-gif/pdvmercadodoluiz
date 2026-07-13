@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mercadinho Dois Irmãos - PDV</title>
-    <!-- Bibliotecas Oficiais Obligatórias -->
+    <!-- Bibliotecas Oficiais Obrigatórias -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -49,11 +49,8 @@
         .opcao-busca { padding: 14px; cursor: pointer; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; }
         .opcao-busca:hover { background: #eff6ff; color: var(--secundaria); }
         
-        /* ================================================================= */
-        /* MELHORIA SOLICITADA: FORMA DE PAGAMENTO E VALOR RECEBIDO DESTAQUES */
-        /* ================================================================= */
         .fechamento-painel { 
-            background: #020617; /* Fundo Preto de Alto Contraste */
+            background: #020617; 
             padding: 25px; 
             border-radius: 12px; 
             display: grid; 
@@ -63,21 +60,21 @@
             border: 2px solid #1e293b;
         }
         .fechamento-painel label { 
-            font-size: 17px !important; /* Rótulos Maiores */
+            font-size: 17px !important; 
             font-weight: 900 !important; 
             text-transform: uppercase; 
             letter-spacing: 1.5px; 
             display: block;
             margin-bottom: 8px;
         }
-        .label-pagamento { color: #facc15 !important; } /* AMARELO NEON VIVO */
-        .label-recebido { color: #4ade80 !important; }  /* VERDE ELÉTRICO VIVO */
+        .label-pagamento { color: #facc15 !important; } 
+        .label-recebido { color: #4ade80 !important; }  
         
         .fechamento-painel input, .fechamento-painel select { 
             background: #1e293b !important; 
             color: #ffffff !important; 
             border: 3px solid #475569 !important; 
-            font-size: 28px !important; /* Texto interno gigante para digitação rápida */
+            font-size: 28px !important; 
             font-weight: 900 !important; 
             padding: 16px !important;
             border-radius: 10px !important;
@@ -163,7 +160,7 @@
                     </div>
                 </div>
                 
-                <!-- FECHAMENTO DE ALTO CONTRASTE MODIFICADO -->
+                <!-- FECHAMENTO -->
                 <div class="fechamento-painel">
                     <div class="input-group" style="margin: 0;">
                         <label class="label-pagamento">Forma de Pagamento</label>
@@ -268,17 +265,23 @@
         </div>
     </div>
 
-    <!-- MODAL EDITAR PREÇO -->
+    <!-- ========================================================== -->
+    /* NOVO MODAL EDITAR PRODUTO (PREÇO + CÓDIGO) */
+    <!-- ========================================================== -->
     <div id="modal-editar-preco" class="modal-bg">
         <div class="modal-card">
-            <h3 style="color: var(--secundaria); margin-bottom: 5px;">Mudar Preço</h3>
-            <p style="font-size:13px; color:#64748b; margin-bottom:15px;">Digite o nome ou bipe o produto</p>
+            <h3 style="color: var(--secundaria); margin-bottom: 5px;">Mudar Preço ou Código</h3>
+            <p style="font-size:13px; color:#64748b; margin-bottom:15px;">Digite o nome ou bipe o produto para alterar</p>
             <div class="input-group" style="position: relative;">
                 <label>Buscar Produto</label>
                 <input type="text" id="edit-cod" placeholder="Ex: Goiaba, Tomate ou Bipe o código..." oninput="buscarParaEdicao(this.value)" autocomplete="off">
                 <input type="hidden" id="edit-cod-selecionado">
                 <div id="dropdown-edicao-preco" class="dropdown-busca" style="top: 100%; bottom: auto; margin-top: 5px;"></div>
                 <div id="edit-nome-prod" style="font-size:13px; font-weight:bold; margin-top:8px; min-height:18px;"></div>
+            </div>
+            <div class="input-group">
+                <label>Código do Produto (Alterável)</label>
+                <input type="text" id="edit-codigo-novo" placeholder="Código de Barras">
             </div>
             <div class="input-group">
                 <label>Novo Preço (R$)</label>
@@ -290,7 +293,7 @@
             </div>
             <div style="display: flex; gap: 10px;">
                 <button class="btn-universal" style="background: var(--erro); padding:12px;" onclick="fecharModalPreco()">Cancelar</button>
-                <button class="btn-universal" style="background: var(--sucesso); padding:12px;" onclick="salvarNovoPreco()">Salvar Novo Preço</button>
+                <button class="btn-universal" style="background: var(--sucesso); padding:12px;" onclick="salvarNovoPreco()">Salvar Alterações</button>
             </div>
         </div>
     </div>
@@ -313,19 +316,21 @@
             const locais = localStorage.getItem('precos_modificados');
             if (locais) precosModificadosManualmente = JSON.parse(locais);
 
-            // Tenta carregar a memória local primeiro
             const estoqueIntegrado = localStorage.getItem('estoque_mercado');
             if (estoqueIntegrado && Object.keys(JSON.parse(estoqueIntegrado)).length > 10) {
                 estoqueCloud = JSON.parse(estoqueIntegrado);
             } else {
-                // Se o navegador perdeu a memória, faz o download automático do precos.json do seu GitHub!
                 await carregarEstoqueCompletoDaNuvem();
             }
 
-            // Aplica as modificações manuais caso existam em cache
+            // Garante o mapeamento correto de novos produtos cadastrados e códigos alterados
             for (let c in precosModificadosManualmente) {
-                if (estoqueCloud[c]) {
-                    estoqueCloud[c].preco = typeof precosModificadosManualmente[c] === 'object' ? precosModificadosManualmente[c].preco : precosModificadosManualmente[c];
+                if (typeof precosModificadosManualmente[c] === 'object' && precosModificadosManualmente[c] !== null) {
+                    estoqueCloud[c] = precosModificadosManualmente[c];
+                } else {
+                    if (estoqueCloud[c]) {
+                        estoqueCloud[c].preco = precosModificadosManualmente[c];
+                    }
                 }
             }
 
@@ -337,7 +342,6 @@
             manterFocoNoInput();
         };
 
-        // ENGENHARIA DE BUSCA E PROTEÇÃO CONTRA PERDA DE PREÇOS
         async function carregarEstoqueCompletoDaNuvem() {
             let repo = localStorage.getItem('cloud_repo') || 'rafaelzt1033-gif/pdvmercadoluiz';
             registrarLog("Buscando banco de produtos na nuvem do GitHub...", "alerta");
@@ -351,9 +355,9 @@
                         return;
                     }
                 }
-            } catch(e) { console.log("Carregando banco master de emergência embutido..."); }
+            } catch(e) { console.log("Carregando banco de contingência..."); }
 
-            // SE TUDO FALHAR (PRIMEIRA INICIALIZAÇÃO DA HISTÓRIA), O SISTEMA INJETA A PLANILHA AQUI DENTRO AUTOMATICAMENTE
+            // Base de contingência inicial
             estoqueCloud = {
                 "7896002109000": {"nome": "51 LATA 350ML", "preco": 4.5},
                 "7896002110792": {"nome": "51 LATAO 473ML", "preco": 5.99},
@@ -499,7 +503,7 @@
 
         function abrirModalPreco() { 
             document.getElementById('modal-editar-preco').classList.add('ativo'); document.getElementById('edit-cod').value = ''; document.getElementById('edit-cod-selecionado').value = ''; 
-            document.getElementById('edit-preco').value = ''; document.getElementById('edit-senha').value = ''; document.getElementById('edit-nome-prod').innerText = ''; setTimeout(() => document.getElementById('edit-cod').focus(), 100); 
+            document.getElementById('edit-codigo-novo').value = ''; document.getElementById('edit-preco').value = ''; document.getElementById('edit-senha').value = ''; document.getElementById('edit-nome-prod').innerText = ''; setTimeout(() => document.getElementById('edit-cod').focus(), 100); 
         }
         function fecharModalPreco() { document.getElementById('modal-editar-preco').classList.remove('ativo'); document.getElementById('codigo-barras').focus(); }
         
@@ -508,8 +512,8 @@
             if(!txt) { drop.style.display = 'none'; label.innerText = ''; return; }
             if(!isNaN(txt) && txt.length >= 3) {
                 if (estoqueCloud[txt]) {
-                    document.getElementById('edit-cod-selecionado').value = txt; label.innerText = `✅ ${estoqueCloud[txt].nome} (Preço: R$ ${estoqueCloud[txt].preco.toFixed(2)})`;
-                    label.style.color = "var(--sucesso)"; drop.style.display = 'none'; return;
+                    selecionarProdutoParaPreco(txt);
+                    return;
                 }
             }
             let itensFiltrados = Object.keys(estoqueCloud).filter(c => estoqueCloud[c].nome.toLowerCase().includes(txt)).slice(0, 5);
@@ -520,17 +524,54 @@
         }
 
         function selecionarProdutoParaPreco(cod) {
-            document.getElementById('edit-cod').value = estoqueCloud[cod].nome; document.getElementById('edit-cod-selecionado').value = cod;
-            let label = document.getElementById('edit-nome-prod'); label.innerText = `✅ Selecionado: ${estoqueCloud[cod].nome} (Preço: R$ ${estoqueCloud[cod].preco.toFixed(2)})`;
-            label.style.color = "var(--sucesso)"; document.getElementById('dropdown-edicao-preco').style.display = 'none'; document.getElementById('edit-preco').focus();
+            document.getElementById('edit-cod').value = estoqueCloud[cod].nome; 
+            document.getElementById('edit-cod-selecionado').value = cod;
+            document.getElementById('edit-codigo-novo').value = cod; // Coloca o código atual no campo editável
+            document.getElementById('edit-preco').value = estoqueCloud[cod].preco.toFixed(2);
+            
+            let label = document.getElementById('edit-nome-prod'); 
+            label.innerText = `✅ Selecionado: ${estoqueCloud[cod].nome}`;
+            label.style.color = "var(--sucesso)"; 
+            document.getElementById('dropdown-edicao-preco').style.display = 'none'; 
+            document.getElementById('edit-codigo-novo').focus();
         }
 
+        // ==========================================
+        // MOTOR DE ALTERAÇÃO DE CÓDIGOS E PREÇOS INTEGRADO
+        // ==========================================
         function salvarNovoPreco() {
-            let cod = document.getElementById('edit-cod-selecionado').value.trim(); let precoFormatado = parseFloat(document.getElementById('edit-preco').value.replace(',', '.')); let senha = document.getElementById('edit-senha').value;
-            if (!cod || !estoqueCloud[cod]) return alert("Selecione um produto válido!"); if (!precoFormatado || precoFormatado <= 0) return alert("Digite um preço válido!"); if (senha !== 'kd041022') return alert("Senha do Gerente incorreta!");
-            estoqueCloud[cod].preco = precoFormatado; precosModificadosManualmente[cod] = precoFormatado;
-            localStorage.setItem('precos_modificados', JSON.stringify(precosModificadosManualmente)); localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-            fecharModalPreco(); forcarSincronizacaoNuvemSilenciosa(); alert(`Preço alterado!`);
+            let codAntigo = document.getElementById('edit-cod-selecionado').value.trim(); 
+            let codNovo = document.getElementById('edit-codigo-novo').value.trim();
+            let precoFormatado = parseFloat(document.getElementById('edit-preco').value.replace(',', '.')); 
+            let senha = document.getElementById('edit-senha').value;
+
+            if (!codAntigo || !estoqueCloud[codAntigo]) return alert("Selecione um produto válido!"); 
+            if (!codNovo) return alert("O código não pode ficar em branco!");
+            if (isNaN(precoFormatado) || precoFormatado <= 0) return alert("Digite um preço válido!"); 
+            if (senha !== 'kd041022') return alert("Senha do Gerente incorreta!");
+
+            let nomeProduto = estoqueCloud[codAntigo].nome;
+
+            // Se o operador mudou o código de barras
+            if (codAntigo !== codNovo) {
+                // Apaga o registro antigo do estoque da memória
+                delete estoqueCloud[codAntigo];
+                
+                // Grava o novo registro na lista de "Modificados" para atualizar os outros caixas e a nuvem
+                precosModificadosManualmente[codAntigo] = null; // Envia comando de remoção para a nuvem
+            }
+
+            // Grava o novo registro na base local do caixa atual
+            estoqueCloud[codNovo] = { nome: nomeProduto, preco: precoFormatado };
+            localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
+
+            // Grava o novo na base de sincronização da nuvem
+            precosModificadosManualmente[codNovo] = { nome: nomeProduto, preco: precoFormatado };
+            localStorage.setItem('precos_modificados', JSON.stringify(precosModificadosManualmente));
+
+            fecharModalPreco(); 
+            forcarSincronizacaoNuvemSilenciosa(); 
+            alert(`Sucesso! O produto ${nomeProduto} foi atualizado na base.`);
         }
 
         async function carregarExcel(e) {
@@ -546,7 +587,7 @@
                     }
                 });
                 localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud)); alert(`${count} produtos carregados na base local!`); renderizarTabelaAdm();
-                forcarSincronizacaoNuvem(); // Dá a carga master de uma vez no precos.json do GitHub
+                forcarSincronizacaoNuvem(); 
             };
             reader.readAsArrayBuffer(file);
         }
