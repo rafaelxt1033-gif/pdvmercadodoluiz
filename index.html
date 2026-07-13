@@ -161,7 +161,7 @@
         </div>
     </div>
 
-    <!-- PAINEL GERENCIAL -->
+    <!-- PAINEL GERENCIAL (COM BOTÃO DE EXPORTAR PLANILHA EXCEL) -->
     <div id="tela-adm" class="tela">
         <div class="top-bar">
             <div><strong>PAINEL GERENCIAL</strong></div>
@@ -169,13 +169,15 @@
         </div>
         <div class="dashboard-area">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div style="background: white; padding: 20px; border-radius: 8px; border-left: 5px solid var(--secundaria);">
-                    <h3>Importação (Plan1.xlsx)</h3>
-                    <input type="file" accept=".xlsx" onchange="carregarExcel(event)" style="margin-top: 10px;">
+                <div style="background: white; padding: 20px; border-radius: 8px; border-left: 5px solid var(--secundaria); display: flex; flex-direction: column; justify-content: space-between;">
+                    <h3>Gerenciamento de Planilha Oficial</h3>
+                    <input type="file" accept=".xlsx" onchange="carregarExcel(event)" style="margin-top: 10px; margin-bottom: 10px;">
+                    <!-- NOVO BOTÃO DE EXPORTAR EXCEL OFICIAL ATUALIZADO -->
+                    <button onclick="baixarPlanilhaExcelAtualizada()" style="padding: 12px; background: var(--primaria); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px;">💾 Baixar Nova Planilha Oficial (.xlsx)</button>
                 </div>
                 <div style="background: white; padding: 20px; border-radius: 8px; border-left: 5px solid var(--sucesso);">
                     <h3>Sincronizar Preços Modificados</h3>
-                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                    <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
                         <button onclick="exportarPrecosModificados()" style="padding: 10px; background: var(--sucesso); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">1. Exportar Preços deste Caixa</button>
                         <button onclick="document.getElementById('import-sinc').click()" style="padding: 10px; background: var(--secundaria); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">2. Importar Preços no outro Caixa</button>
                         <input type="file" id="import-sinc" accept=".json" style="display: none;" onchange="importarPrecosModificados(event)">
@@ -278,22 +280,32 @@
         };
 
         // ==========================================
-        // ENGENHARIA DE FLUXO CONTÍNUO (ENTER)
+        // NOVO MOTOR DE EXPORTAÇÃO EXCEL OFICIAL COM OS PREÇOS NOVOS
         // ==========================================
-        function pularDaUnidadeProBipe(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                document.getElementById('codigo-barras').focus();
+        function baixarPlanilhaExcelAtualizada() {
+            // Transforma o estoque em formato de linhas para o Excel
+            let dadosExcel = [];
+            for (let codigo in estoqueCloud) {
+                dadosExcel.push({
+                    "Codigo": isNaN(codigo) ? codigo : Number(codigo),
+                    "Produto": estoqueCloud[codigo].nome,
+                    "Valor": estoqueCloud[codigo].preco
+                });
             }
+
+            // Cria a planilha real utilizando a biblioteca XLSX
+            let wb = XLSX.utils.book_new();
+            let ws = XLSX.utils.json_to_sheet(dadosExcel);
+            XLSX.utils.book_append_sheet(wb, ws, "Produtos");
+            
+            // Faz o download do arquivo Plan1.xlsx atualizado no computador do Seu Luiz
+            XLSX.writeFile(wb, "Plan1.xlsx");
+            registrarLog("Nova planilha Plan1.xlsx baixada com sucesso!", "sucesso");
+            alert("Sucesso! O arquivo 'Plan1.xlsx' foi baixado com todos os preços modificados. Substitua o arquivo antigo por este para tornar a mudança permanente!");
         }
 
-        function fecharVendaComEnter(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                // O caixa escolhe a finalização padrão da loja (NFC-e Fiscal) para disparar no Enter
-                finalizarVenda(true); 
-            }
-        }
+        function pularDaUnidadeProBipe(e) { if (e.key === 'Enter') { e.preventDefault(); document.getElementById('codigo-barras').focus(); } }
+        function fecharVendaComEnter(e) { if (e.key === 'Enter') { e.preventDefault(); finalizarVenda(true); } }
 
         function exportarPrecosModificados() {
             if(Object.keys(precosModificadosManualmente).length === 0) return alert("Nenhum preço modificado para exportar.");
@@ -461,24 +473,15 @@
 
         function navegarSugestoes(e) {
             if(e.key === 'Enter') {
-                e.preventDefault(); 
-                let txt = document.getElementById('codigo-barras').value.trim();
-                
-                // FLUXO DO ENTER: Se o operador der Enter com o campo vazio, salta direto para o fechamento (Valor Pago)
+                e.preventDefault(); let txt = document.getElementById('codigo-barras').value.trim();
                 if(!txt) {
                     if (cupomAtual.length === 0) return alert("Passe os produtos primeiro antes de avançar!");
-                    document.getElementById('valor-pago').focus();
-                    document.getElementById('valor-pago').select();
-                    return;
+                    document.getElementById('valor-pago').focus(); document.getElementById('valor-pago').select(); return;
                 }
-                
                 let qtd = parseFloat(document.getElementById('input-qtd-manual').value || 1); let cod = txt;
                 if(txt.includes('*')) { qtd = parseFloat(txt.split('*')[0]); cod = txt.split('*')[1]; }
-                
-                if(estoqueCloud[cod]) { 
-                    addCupom(cod, qtd); document.getElementById('input-qtd-manual').value = "1"; 
-                    document.getElementById('input-qtd-manual').focus(); // Mantém o ciclo focado na sequência
-                } else { registrarLog("Código não cadastrado: " + cod, "erro"); document.getElementById('codigo-barras').value = ''; }
+                if(estoqueCloud[cod]) { addCupom(cod, qtd); document.getElementById('input-qtd-manual').value = "1"; document.getElementById('input-qtd-manual').focus(); } 
+                else { registrarLog("Código não cadastrado: " + cod, "erro"); document.getElementById('codigo-barras').value = ''; }
             }
         }
 
@@ -555,8 +558,6 @@
             if(nfce) { gerarNFCe(formaPagto); setTimeout(() => { window.print(); }, 200); } 
             else { gerarCupomPDV(formaPagto); setTimeout(() => { window.print(); }, 100); }
             cupomAtual = []; document.getElementById('valor-pago').value = ''; renderizarCupom(); 
-            
-            // JOGA O FOCO AUTOMATICAMENTE NA UNIDADE PARA O PRÓXIMO CLIENTE DA FILA
             setTimeout(() => { document.getElementById('input-qtd-manual').focus(); document.getElementById('input-qtd-manual').select(); }, 500);
         }
     </script>
