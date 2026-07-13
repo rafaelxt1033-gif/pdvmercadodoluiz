@@ -166,9 +166,9 @@
         <div class="dashboard-area">
             <div class="import-wrapper">
                 <h3>🔄 Importador de Estoque Direto (Planilha Excel)</h3>
-                <p>Selecione um arquivo nativo do Excel (.xlsx ou .xls) contendo as colunas Código, Nome e Preço.</p>
+                <p>Selecione um arquivo nativo do Excel (.xlsx ou .xls) contendo as colunas de Código, Produto e Valor.</p>
                 <div class="box-arquivo-unico">
-                    <label>Selecionar Planilha do Excel (.xlsx ou .xls)</label>
+                    <label>Selecionar Planilha do Excel do Mercado (.xlsx ou .xls)</label>
                     <input type="file" id="excel-universal" accept=".xlsx, .xls" onchange="processarCargaPlanilhaExcel(event)">
                 </div>
             </div>
@@ -202,7 +202,6 @@
         } catch(e) { console.error("Erro driver:", e); }
         // ============================================================
 
-        // Banco local inicial padrão
         let estoqueCloud = {
             "7894900011517": { nome: "Refrigerante Coca-Cola 2L", preco: 11.90 },
             "78910001": { nome: "Arroz Agulhinha Tipo 1 5kg", preco: 27.50 },
@@ -399,10 +398,10 @@
         }
 
         function renderizarCupom() {
-            const fontRegex = document.getElementById('lista-cupom'); fontRegex.innerHTML = ''; totalVenda = 0;
+            const list = document.getElementById('lista-cupom'); list.innerHTML = ''; totalVenda = 0;
             cupomAtual.forEach(i => {
                 totalVenda += i.total;
-                fontRegex.innerHTML += `<div class="item-cupom"><span style="font-weight:600;">${i.nome}</span><span style="text-align:center; color:#64748b;">${i.qtd}</span><span style="text-align:right;">${i.unit.toFixed(2)}</span><span style="text-align:right; font-weight:700;">${i.total.toFixed(2)}</span></div>`;
+                list.innerHTML += `<div class="item-cupom"><span style="font-weight:600;">${i.nome}</span><span style="text-align:center; color:#64748b;">${i.qtd}</span><span style="text-align:right;">${i.unit.toFixed(2)}</span><span style="text-align:right; font-weight:700;">${i.total.toFixed(2)}</span></div>`;
             });
             document.getElementById('valor-total').innerText = totalVenda.toFixed(2);
             calcularTroco();
@@ -435,7 +434,7 @@
             renderizarCupom(); inputCodigo.focus();
         }
 
-        // IMPORTADOR DE PLANILHA EXCEL (.XLSX) COM TRATAMENTO CONTRA FIELD OVERFLOW
+        // IMPORTADOR MAPEADO POR NOME DE COLUNA INTELIGENTE (SOB MEDIDA PARA A PLANILHA DO CLIENTE)
         function processarCargaPlanilhaExcel(event) {
             const arquivo = event.target.files[0];
             if (!arquivo) return;
@@ -449,19 +448,18 @@
                     const nomePrimeiraAba = livroExcel.SheetNames[0];
                     const abaDados = livroExcel.Sheets[nomePrimeiraAba];
                     
-                    const linhasContas = XLSX.utils.sheet_to_json(abaDados, { header: 1 });
+                    // Converte os dados em Objetos JSON com os nomes das colunas da primeira linha
+                    const linhasContas = XLSX.utils.sheet_to_json(abaDados);
                     let pacotesDeUpload = [];
 
-                    // Loop pulando a primeira linha de cabeçalhos
-                    for (let i = 1; i < linhasContas.length; i++) {
-                        const colunas = linhasContas[i];
-                        if (!colunas || colunas.length < 3) continue;
-
-                        const codigo = String(colunas[0] || '').trim();
-                        const nome = String(colunas[1] || '').trim();
+                    for (let i = 0; i < linhasContas.length; i++) {
+                        const linha = linhasContas[i];
                         
-                        // Força o arredondamento preciso em 2 casas decimais (Corrige o Numeric Overflow)
-                        let precoBruto = parseFloat(String(colunas[2]).replace(',', '.'));
+                        // Mapeia usando exatamente os cabeçalhos reais da planilha: "Codigo", "Produto", "Valor"
+                        const codigo = String(linha["Codigo"] || '').trim();
+                        const nome = String(linha["Produto"] || '').trim();
+                        
+                        let precoBruto = parseFloat(String(linha["Valor"] || '0').replace(',', '.'));
                         const preco = Math.round(precoBruto * 100) / 100;
 
                         if (codigo && nome && !isNaN(preco)) {
@@ -476,11 +474,11 @@
                         } else {
                             pacotesDeUpload.forEach(p => { estoqueCloud[p.codigo] = {nome: p.nome, preco: p.preco} });
                         }
-                        alert(`Sucesso total! ${pacotesDeUpload.length} produtos lidos do Excel e sincronizados com a nuvem.`);
+                        alert(`Sucesso total! ${pacotesDeUpload.length} produtos da planilha do seu Luiz foram sincronizados.`);
                         await puxarEstoqueDoSupabase();
                         sincronizarDadosNuvem();
                     } else {
-                        alert("Nenhum produto válido foi identificado na planilha. Verifique a ordem das colunas.");
+                        alert("Não encontramos produtos válidos. Verifique se as colunas se chamam exatamente: Codigo, Produto e Valor.");
                     }
                 } catch(err) {
                     alert("Erro ao ler arquivo Excel: " + err.message);
