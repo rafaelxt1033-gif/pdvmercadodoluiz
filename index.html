@@ -307,6 +307,10 @@
         let indiceSelecionadoBalanca = -1;
         let indiceSelecionadoEdicao = -1;
 
+        window.onload = async function() {
+            document.getElementById('cloud-repo').value = localStorage.getItem('cloud_repo') || 'rafaelxt1033-gif/pdvmercadodoluiz';
+            document.getElementById('cloud-token').value = localStorage.getItem('cloud_token') || '';
+            
             const vendasSalvas = localStorage.getItem('vendas_realizadas');
             if (vendasSalvas) vendasRealizadas = JSON.parse(vendasSalvas);
 
