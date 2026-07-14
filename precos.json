@@ -4335,10 +4335,6 @@
     "nome": "FILE DE PEITO FRANGO PERDIGAO 1KG",
     "preco": 24.99
   },
-  "7891515563516": {
-    "nome": "FILE DE PEITO- SADIA 1K",
-    "preco": 21.99
-  },
   "7896419728870": {
     "nome": "FILE PEITO FRANGO LAR 1KG",
     "preco": 21.99
@@ -9242,5 +9238,9 @@
   "7896094910904": {
     "nome": "ZERO CAL ADOCANTE 100ML LIQ.",
     "preco": 9.25
+  },
+  "7893000482401": {
+    "nome": "FILE DE PEITO- SADIA 1K",
+    "preco": 21.99
   }
 }
