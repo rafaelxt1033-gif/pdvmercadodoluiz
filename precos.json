@@ -209,15 +209,15 @@
   },
   "55": {
     "nome": "QUEIJO MUSSARELA KG",
-    "preco": 46.99
+    "preco": 48.99
   },
   "56": {
     "nome": "QUEIJO COALHO KG",
-    "preco": 42.99
+    "preco": 44.99
   },
   "57": {
     "nome": "QUEIJO DE MANTEIGA KG",
-    "preco": 42.99
+    "preco": 44.99
   },
   "58": {
     "nome": "PRESUNTO SADIA/PERDIGAO KG",
@@ -305,7 +305,7 @@
   },
   "81": {
     "nome": "SAZON DIVERSOS SABORES UN",
-    "preco": 0.6
+    "preco": 0.5
   },
   "82": {
     "nome": "CUPIM BOVINO KG",
@@ -769,7 +769,7 @@
   },
   "7896013105619": {
     "nome": "AGUA SANITARIA OLIMPO 2L",
-    "preco": 4.99
+    "preco": 5.75
   },
   "7896221600180": {
     "nome": "AGUA SANT CLORITO 2L",
@@ -4334,6 +4334,10 @@
   "7891515614072": {
     "nome": "FILE DE PEITO FRANGO PERDIGAO 1KG",
     "preco": 24.99
+  },
+  "7891515563516": {
+    "nome": "FILE DE PEITO- SADIA 1K",
+    "preco": null
   },
   "7896419728870": {
     "nome": "FILE PEITO FRANGO LAR 1KG",
