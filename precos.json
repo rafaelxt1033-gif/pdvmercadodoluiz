@@ -8735,10 +8735,6 @@
     "nome": "TALCO BARLA 80GS",
     "preco": 4.99
   },
-  "95188874505": {
-    "nome": "TAMPICO FRUTAS CITRICAS 450ML",
-    "preco": 3.99
-  },
   "95188870347": {
     "nome": "TAMPICO FRUTAS CITRICOS 1L",
     "preco": 5.5
@@ -9258,5 +9254,9 @@
   "7896262304306": {
     "nome": "MENTOS MINT 37,5",
     "preco": 2.5
+  },
+  "095188874505": {
+    "nome": "TAMPICO FRUTAS CITRICAS 450ML",
+    "preco": 3.99
   }
 }
