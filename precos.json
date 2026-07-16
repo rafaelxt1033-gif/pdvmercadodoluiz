@@ -25,7 +25,7 @@
   },
   "7": {
     "nome": "BATATA INGRESA KG",
-    "preco": 6.99
+    "preco": 7.99
   },
   "8": {
     "nome": "BATATA DOCE",
@@ -53,7 +53,7 @@
   },
   "14": {
     "nome": "CEBOLA BRANCA KG",
-    "preco": 7.49
+    "preco": 9.5
   },
   "15": {
     "nome": "COCO SECO",
@@ -1149,7 +1149,7 @@
   },
   "5601216120053": {
     "nome": "Azeite de Oliva Andorinha Extra Virgem 250ml",
-    "preco": 22.99
+    "preco": 28.99
   },
   "7790070225580": {
     "nome": "AZEITE DE OLIVA COCINERO 250ML",
@@ -2393,7 +2393,7 @@
   },
   "7895144892832": {
     "nome": "CHICLE MENTOS 8,5G C.W BLUE RASPBERRY",
-    "preco": 2
+    "preco": 1.75
   },
   "7895144892825": {
     "nome": "CHICLE MENTOS 8,5G C.W FRESH MINT",
@@ -8477,19 +8477,19 @@
   },
   "7891000049891": {
     "nome": "SOPAO DE GALINHA CAIPIRA MAGGI 200G",
-    "preco": 11
+    "preco": 11.5
   },
   "7891000582107": {
     "nome": "SOPAO MAGGI CARNE COM LEGUMES 200G",
-    "preco": 11
+    "preco": 11.5
   },
   "7891000026182": {
     "nome": "SOPAO MAGGI COSTELA 200G",
-    "preco": 11
+    "preco": 11.5
   },
   "7891000582008": {
     "nome": "SOPAO MAGGI GALINHA C/ LEGUMES 200G",
-    "preco": 11
+    "preco": 11.5
   },
   "7898005513419": {
     "nome": "SORV- 3 CHOCOLATES STERBOM 2L",
@@ -8734,6 +8734,10 @@
   "7896806700069": {
     "nome": "TALCO BARLA 80GS",
     "preco": 4.99
+  },
+  "95188874505": {
+    "nome": "TAMPICO FRUTAS CITRICAS 450ML",
+    "preco": 3.99
   },
   "95188870347": {
     "nome": "TAMPICO FRUTAS CITRICOS 1L",
@@ -9250,13 +9254,5 @@
   "7898005510791": {
     "nome": "SOV-DUETO PEDACINHO DO CEU 1L",
     "preco": 14.49
-  },
-  "7896262304306": {
-    "nome": "MENTOS MINT 37,5",
-    "preco": 2.5
-  },
-  "095188874505": {
-    "nome": "TAMPICO FRUTAS CITRICAS 450ML",
-    "preco": 3.99
   }
 }
