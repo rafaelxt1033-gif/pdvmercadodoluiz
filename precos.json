@@ -1007,10 +1007,6 @@
     "nome": "AP BARB GILLETTE PRESTO FEM-UN",
     "preco": 3.75
   },
-  "70330729872": {
-    "nome": "APARELHO BIC ACQUA 3 LAMINAS",
-    "preco": 2.99
-  },
   "7702018118823": {
     "nome": "APARELHO DE BARBEAR PROBAK II",
     "preco": 2
@@ -9258,5 +9254,9 @@
   "095188874505": {
     "nome": "TAMPICO FRUTAS CITRICAS 450ML",
     "preco": 3.99
+  },
+  "070330729858": {
+    "nome": "APARELHO BIC ACQUA 3 LAMINAS",
+    "preco": 2.99
   }
 }
