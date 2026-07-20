@@ -4771,10 +4771,6 @@
     "nome": "FRUTISIS 150g",
     "preco": 4.5
   },
-  "7898286191498": {
-    "nome": "FUMO MARATA 36G",
-    "preco": 4.5
-  },
   "7898626560021": {
     "nome": "FUNIL MEDIO SORTIDO",
     "preco": 4.99
@@ -9262,5 +9258,9 @@
   "7500435154437": {
     "nome": "AP PRESTOBARBA",
     "preco": 3.5
+  },
+  "7898286191887": {
+    "nome": "FUMO MARATA 36G",
+    "preco": 4.5
   }
 }
