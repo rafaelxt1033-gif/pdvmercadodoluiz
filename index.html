@@ -161,7 +161,7 @@
                 <div class="total-box"><h3>TOTAL A PAGAR</h3><p>R$ <span id="valor-total">0.00</span></p></div>
             </div>
             <div class="operacao-area">
-                <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Sistema pronto para operation.</div></div>
+                <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Sistema pronto para operação.</div></div>
                 
                 <!-- BALANÇA -->
                 <div class="area-balanca">
@@ -340,9 +340,14 @@
             document.getElementById('cloud-repo').value = localStorage.getItem('cloud_repo') || 'rafaelxt1033-gif/pdvmercadodoluiz';
             document.getElementById('cloud-token').value = localStorage.getItem('cloud_token') || '';
             
-            // CORRIGIDO: Modificado para apontar estritamente para a chave 'vendas' onde residem os 113 registros reais
-            const vendasSalvas = localStorage.getItem('vendas');
-            if (vendasSalvas) vendasRealizadas = JSON.parse(vendasSalvas);
+            // FILTRO DE SEGURANÇA MÁXIMA: Verifica as duas chaves possíveis para nunca abrir em branco
+            const vendasSalvas = localStorage.getItem('vendas') || localStorage.getItem('vendas_realizadas');
+            if (vendasSalvas) {
+                vendasRealizadas = JSON.parse(vendasSalvas);
+                // Garante a migração interna imediata salvando em ambas as chaves
+                localStorage.setItem('vendas', JSON.stringify(vendasRealizadas));
+                localStorage.setItem('vendas_realizadas', JSON.stringify(vendasRealizadas));
+            }
 
             const locais = localStorage.getItem('precos_modificados');
             if (locais) precosModificadosManualmente = JSON.parse(locais);
@@ -415,7 +420,7 @@
                 let senha = prompt("Insira a Senha do Gerente para ver o Faturamento:");
                 if (senha === 'kd041022') {
                     faturamentoVisivel = true;
-                    btn.innerText = "👁️";
+                    btn.innerText = "👁";
                     atualizarDashboard();
                 } else if (senha !== null) {
                     alert("Senha incorreta!");
@@ -443,8 +448,9 @@
 
         function zerarVendas() {
             if(confirm("Deseja fechar o expediente e zerar o dashboard?")) {
-                // CORRIGIDO: Ajustado para limpar a chave correta 'vendas'
-                vendasRealizadas = []; localStorage.removeItem('vendas');
+                vendasRealizadas = []; 
+                localStorage.removeItem('vendas');
+                localStorage.removeItem('vendas_realizadas');
                 faturamentoVisivel = false;
                 document.getElementById('btn-olho-faturamento').innerText = "👁️‍🗨️";
                 atualizarDashboard(); registrarLog("Expediente zerado.", "alerta");
@@ -559,7 +565,7 @@
         function abrirModalBusca() { document.getElementById('modal-busca').classList.add('ativo'); document.getElementById('campo-consulta').value = ''; document.getElementById('resultado-busca').innerHTML = ''; setTimeout(() => document.getElementById('campo-consulta').focus(), 100); }
         function fecharModalBusca() { document.getElementById('modal-busca').classList.remove('ativo'); document.getElementById('codigo-barras').focus(); }
         
-        function ejecutarBusca(val) {
+        function executarBusca(val) {
             let res = document.getElementById('resultado-busca'); res.innerHTML = '';
             let t = val.toLowerCase().trim(); if(!t) return;
             Object.keys(estoqueCloud).forEach(c => {
@@ -797,19 +803,18 @@
             let divElement = document.createElement('div'); divElement.innerHTML = html; document.body.appendChild(divElement.firstElementChild);
         }
 
-        // CORRIGIDO: Vinculado aos dados contábeis oficiais extraídos do documento PDF enviado
         function gerarNFCe(formaPagto) {
             let containerAntigo = document.getElementById('recibo-impressao'); if(containerAntigo) containerAntigo.remove();
             let dataStr = new Date().toLocaleDateString('pt-BR'); let horaStr = new Date().toLocaleTimeString('pt-BR');
             let pago = parseFloat(document.getElementById('valor-pago').value || totalVenda);
             let troco = pago > totalVenda ? pago - totalVenda : 0;
             
-            let html = `<div id="recibo-impressao"><div class="txt-centro">CNPJ: 44.133.465/0001-96 MERCADINHO DOIS IRMAOS LTDA[cite: 2]<br>RUA PADRE CICERO, 375 FELIPE CAMARAO - NATAL - RN[cite: 2]<br>Fone: (84)98631-5330 I.E.: 20.591.002-5[cite: 2]<br>DOCUMENTO AUXILIAR DA NOTA FISCAL DE CONSUMIDOR ELETRÔNICA[cite: 2]</div><div class="linha-tracejada"></div><div># Descrição do Item / Qtd Un Vl Unit. Vl Total[cite: 2]</div><div class="linha-tracejada"></div><div style="margin-bottom:5px;">`;
+            let html = `<div id="recibo-impressao"><div class="txt-centro">CNPJ: 44.133.465/0001-96 MERCADINHO DOIS IRMAOS LTDA<br>RUA PADRE CICERO, 375 FELIPE CAMARAO - NATAL - RN<br>Fone: (84)98631-5330 I.E.: 20.591.002-5<br>DOCUMENTO AUXILIAR DA NOTA FISCAL DE CONSUMIDOR ELETRÔNICA</div><div class="linha-tracejada"></div><div># Descrição do Item / Qtd Un Vl Unit. Vl Total</div><div class="linha-tracejada"></div><div style="margin-bottom:5px;">`;
             cupomAtual.forEach((i, index) => {
                 let numItem = String(index + 1).padStart(3, '0'); let und = Number.isInteger(i.qtd) ? 'UN' : 'KG';
                 html += `<div style="margin-bottom:4px;"><div>${numItem} ${i.nome.toUpperCase()}</div><div class="flex-space" style="padding-left:15px;"><span>${i.qtd} ${und} X ${formatarMoeda(i.unit)}</span><span>${formatarMoeda(i.total)}</span></div></div>`;
             });
-            html += `</div><div class="linha-tracejada"></div><div class="flex-space"><span>QTD. TOTAL DE ITENS</span><span>${String(cupomAtual.length).padStart(3, '0')}</span></div><div class="flex-space"><span>VALOR TOTAL R$</span><span>${formatarMoeda(totalVenda)}</span></div><div class="flex-space"><span>FORMA DE PAGAMENTO</span><span>Valor Pago</span></div><div class="flex-space"><span>${formaPagto}</span><span>R$ ${formatarMoeda(pago)}</span></div><div class="flex-space"><span>VALOR TROCO R$</span><span>R$ ${formatarMoeda(troco)}</span></div><div class="linha-tracejada" style="margin-top:5px;"></div><div class="txt-centro" style="margin-top: 5px;">Consulte pela Chave de Acesso em<br>www.set.rn.gov.br/nfce/consulta[cite: 2]<br>2426 0744 1334 6500 0196 6500 1000 0057 0210 0038 4190[cite: 2]<br><strong>CONSUMIDOR NÃO IDENTIFICADO</strong>[cite: 2]<br>NFC-e nº 000005702 Série 001 ${dataStr} ${horaStr}[cite: 2]<br>Protocolo de Autorização: 224260250855527[cite: 2]<br>Data de Autorização ${dataStr} ${horaStr}[cite: 2]</div><div id="qrcode-recibo"></div></div>`;
+            html += `</div><div class="linha-tracejada"></div><div class="flex-space"><span>QTD. TOTAL DE ITENS</span><span>${String(cupomAtual.length).padStart(3, '0')}</span></div><div class="flex-space"><span>VALOR TOTAL R$</span><span>${formatarMoeda(totalVenda)}</span></div><div class="flex-space"><span>FORMA DE PAGAMENTO</span><span>Valor Pago</span></div><div class="flex-space"><span>${formaPagto}</span><span>R$ ${formatarMoeda(pago)}</span></div><div class="flex-space"><span>VALOR TROCO R$</span><span>R$ ${formatarMoeda(troco)}</span></div><div class="linha-tracejada" style="margin-top:5px;"></div><div class="txt-centro" style="margin-top: 5px;">Consulte pela Chave de Acesso em<br>www.set.rn.gov.br/nfce/consulta<br>2426 0744 1334 6500 0196 6500 1000 0057 0210 0038 4190<br><strong>CONSUMIDOR NÃO IDENTIFICADO</strong><br>NFC-e nº 000005702 Série 001 ${dataStr} ${horaStr}<br>Protocolo de Autorização: 224260250855527<br>Data de Autorização ${dataStr} ${horaStr}</div><div id="qrcode-recibo"></div></div>`;
             let divElement = document.createElement('div'); divElement.innerHTML = html; document.body.appendChild(divElement.firstElementChild);
             new QRCode(document.getElementById("qrcode-recibo"), { text: "https://www.set.rn.gov.br/nfce/consulta?p=24260744133465000196650010000057021000384190", width: 130, height: 130, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.L });
         }
@@ -842,8 +847,9 @@
             const formaPagto = document.getElementById('forma-pagamento').value;
             vendasRealizadas.push({ data: new Date().toLocaleString('pt-BR'), total: totalVenda, pagamento: formaPagto });
             
-            // CORRIGIDO: Modificado para persistir as vendas na chave correta 'vendas'
+            // Grava em ambas as chaves para nunca dessincronizar
             localStorage.setItem('vendas', JSON.stringify(vendasRealizadas));
+            localStorage.setItem('vendas_realizadas', JSON.stringify(vendasRealizadas));
             atualizarDashboard();
 
             if(nfce) { gerarNFCe(formaPagto); setTimeout(() => { window.print(); }, 200); } 
@@ -853,7 +859,6 @@
             setTimeout(() => { document.getElementById('input-qtd-manual').focus(); document.getElementById('input-qtd-manual').select(); }, 500);
         }
 
-        // CORRIGIDO: Vinculado com o CNPJ do Mercadinho Dois Irmãos LTDA
         function baixarRelatorioXMLContador() {
             if (vendasRealizadas.length === 0) return alert("Nenhuma venda realizada neste expediente!");
             
@@ -885,7 +890,30 @@
             document.body.removeChild(link);
         }
 
+        function baixarRelatorioContador() {
+            if (vendasRealizadas.length === 0) return alert("Nenhuma venda realizada neste expediente!");
+            let resumoPagamento = { "Dinheiro": 0, "PIX": 0, "Cartão": 0 };
+            let dadosDetalhados = [];
+            vendasRealizadas.forEach(v => {
+                if (resumoPagamento[v.pagamento] !== undefined) resumoPagamento[v.pagamento] += v.total;
+                dadosDetalhados.push({ "Data e Hora": v.data, "Forma de Pagamento": v.pagamento, "Total da Venda (R$)": v.total });
+            });
+            let dadosResumo = [
+                { "Métricas Contábeis": "Faturamento Bruto Total", "Valor (R$)": resumoPagamento["Dinheiro"] + resumoPagamento["PIX"] + resumoPagamento["Cartão"] },
+                { "Métricas Contábeis": "Total em Dinheiro", "Valor (R$)": resumoPagamento["Dinheiro"] },
+                { "Métricas Contábeis": "Total em PIX", "Valor (R$)": resumoPagamento["PIX"] },
+                { "Métricas Contábeis": "Total em Cartão", "Valor (R$)": resumoPagamento["Cartão"] }
+            ];
+            let wb = XLSX.utils.book_new();
+            let wsResumo = XLSX.utils.json_to_sheet(dadosResumo);
+            let wsDetalhes = XLSX.utils.json_to_sheet(dadosDetalhados);
+            XLSX.utils.book_append_sheet(wb, wsResumo, "Resumo Contábil");
+            XLSX.utils.book_append_sheet(wb, wsDetalhes, "Vendas Detalhadas");
+            XLSX.writeFile(wb, "Relatorio_Contador_Mercadinho.xlsx");
+        }
+
         const busterProdutosBackup = {"7896002109000": {"nome": "51 LATA 350ML", "preco": 4.5}, "7896002110792": {"nome": "51 LATAO 473ML", "preco": 5.99}, "1": {"nome": "ABACATE KG", "preco": 8.99}, "119": {"nome": "TOMATE KG", "preco": 4.99}, "7891000102640": {"nome": "AVEIA EM FLOCOS NESTLE 170G", "preco": 4.99}, "7894900027013": {"nome": "COCA COLA PET 2 LITROS", "preco": 11.99}};
     </script>
 </body>
 </html>
+
