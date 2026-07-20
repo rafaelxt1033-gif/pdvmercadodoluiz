@@ -1211,10 +1211,6 @@
     "nome": "BARBEADO AMARELO BIC",
     "preco": 1.5
   },
-  "70330729858": {
-    "nome": "BARBEADOR BIC INTENSITY 3 LAMINAS",
-    "preco": 3.5
-  },
   "70330713406": {
     "nome": "BARBEADOR BIC SUAVE UN",
     "preco": 2.5
@@ -9256,7 +9252,7 @@
     "preco": 3.99
   },
   "070330729858": {
-    "nome": "APARELHO BIC ACQUA 3 LAMINAS",
-    "preco": 2.99
+    "nome": "BARBEADOR BIC INTENSITY 3 LAMINAS",
+    "preco": 3.5
   }
 }
