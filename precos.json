@@ -49,11 +49,11 @@
   },
   "13": {
     "nome": "CEBOLA ROXA",
-    "preco": 8.99
+    "preco": 10.5
   },
   "14": {
     "nome": "CEBOLA BRANCA KG",
-    "preco": 7.49
+    "preco": 7.99
   },
   "15": {
     "nome": "COCO SECO",
@@ -5057,7 +5057,7 @@
   },
   "7891164020149": {
     "nome": "HAMBURGUER AURORA FAROESTE BOVINO",
-    "preco": 1.25
+    "preco": 1.35
   },
   "7891515989408": {
     "nome": "HAMBURGUER BOV PERDIGAO 56g",
@@ -5177,7 +5177,7 @@
   },
   "7898034920035": {
     "nome": "IOGURTE ISIS AMEIXA 480G",
-    "preco": 6.75
+    "preco": 6.99
   },
   "7898034920073": {
     "nome": "IOGURTE ISIS BANANA C/ MACA 170G",
@@ -5189,7 +5189,7 @@
   },
   "7898034920042": {
     "nome": "IOGURTE ISIS BANANA/MACA 480g",
-    "preco": 6.75
+    "preco": 6.99
   },
   "7898034924026": {
     "nome": "IOGURTE ISIS COOKIES DE COCO - 180g",
@@ -5205,15 +5205,15 @@
   },
   "7898034920028": {
     "nome": "IOGURTE ISIS MORANGO 170G",
-    "preco": 3.25
+    "preco": 3.5
   },
   "7898034920011": {
     "nome": "IOGURTE ISIS MORANGO 480g",
-    "preco": 6.75
+    "preco": 6.99
   },
   "7898034920165": {
     "nome": "IOGURTE ISIS SALADA DE FRUTA 480G",
-    "preco": 6.75
+    "preco": 6.99
   },
   "7898034920424": {
     "nome": "IOGURTE ISIS SALADA DE FRUTAS 120G",
@@ -7649,7 +7649,7 @@
   },
   "7898034920660": {
     "nome": "REQUEIJAO CREMOSO ISIS LIGHT 220g",
-    "preco": 8.99
+    "preco": 9.25
   },
   "7898217001445": {
     "nome": "REQUEIJAO CREMOSO SUPREMO 200 G",
@@ -9262,5 +9262,9 @@
   "7898286191887": {
     "nome": "FUMO MARATA 36G",
     "preco": 4.5
+  },
+  "7897274417015": {
+    "nome": "SABAO EM PO ABSOLUTO COCO 400G",
+    "preco": 1.75
   }
 }
