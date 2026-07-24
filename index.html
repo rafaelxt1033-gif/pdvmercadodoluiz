@@ -254,7 +254,6 @@
                 </div>
             </div>
 
-            <!-- MÓDULO DE SUPORTE INTEGRADO - BOTAO DO TIAGO E MAYCON -->
             <div class="suporte-container" style="margin-top: 25px; margin-bottom: 20px; padding: 20px; border-radius: 12px; background: #fdfdfd; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
                 <h5 style="margin: 0 0 10px 0; font-size: 16px; color: #1e293b; font-family: sans-serif; display: flex; align-items: center; gap: 8px;">
                     💬 Central de Ajuda & Suporte Oficial
@@ -264,7 +263,6 @@
                 </p>
                 
                 <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-                    <!-- CONTATO 1: TIAGO (NÍVEL 1) -->
                     <button onclick="abrirSuporte('tiago')" style="flex: 1; min-width: 220px; display: flex; align-items: center; gap: 10px; background: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: sans-serif; transition: background 0.2s; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                         <div style="font-size: 20px;">👨‍💼</div>
                         <div>
@@ -273,7 +271,6 @@
                         </div>
                     </button>
 
-                    <!-- CONTATO 2: MAYCON (NÍVEL 2) -->
                     <button onclick="abrirSuporte('maycon')" style="flex: 1; min-width: 220px; display: flex; align-items: center; gap: 10px; background: #128C7E; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: sans-serif; transition: background 0.2s; text-align: left; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                         <div style="font-size: 20px;">💻</div>
                         <div>
@@ -612,15 +609,43 @@
         function abrirModalBusca() { document.getElementById('modal-busca').classList.add('ativo'); document.getElementById('campo-consulta').value = ''; document.getElementById('resultado-busca').innerHTML = ''; setTimeout(() => document.getElementById('campo-consulta').focus(), 100); }
         function fecharModalBusca() { document.getElementById('modal-busca').classList.remove('ativo'); document.getElementById('codigo-barras').focus(); }
         
-        /* CORREÇÃO APLICADA: A função estava como 'ejecutarBusca', impedindo a busca por nome de rodar */
+        /* OTIMIZAÇÃO APLICADA: Busca de alta performance com limite de itens para evitar travamentos de tela */
         function executarBusca(val) {
-            let res = document.getElementById('resultado-busca'); res.innerHTML = '';
-            let t = val.toLowerCase().trim(); if(!t) return;
-            Object.keys(estoqueCloud).forEach(c => {
-                if(estoqueCloud[c].nome.toLowerCase().includes(t) || c.includes(t)) {
-                    res.innerHTML += `<div style="padding:10px; border-bottom:1px solid #eee; font-weight:bold;">📦 ${estoqueCloud[c].nome} <br> <span style="color:var(--secundaria)">Preço: R$ ${estoqueCloud[c].preco.toFixed(2)}</span> <small style="color:#666; float:right;">Cód: ${c}</small></div>`;
+            let res = document.getElementById('resultado-busca'); 
+            let t = val.toLowerCase().trim(); 
+            
+            if(!t) {
+                res.innerHTML = '';
+                return; 
+            }
+
+            let htmlFinal = '';
+            let contador = 0;
+            const maxResultados = 30;
+
+            const chaves = Object.keys(estoqueCloud);
+            for(let i = 0; i < chaves.length; i++) {
+                let c = chaves[i];
+                let produto = estoqueCloud[c];
+                
+                if (produto && produto.nome) {
+                    if(produto.nome.toLowerCase().includes(t) || c.includes(t)) {
+                        htmlFinal += `<div style="padding:10px; border-bottom:1px solid #eee; font-weight:bold;">📦 ${produto.nome} <br> <span style="color:var(--secundaria)">Preço: R$ ${produto.preco.toFixed(2)}</span> <small style="color:#666; float:right;">Cód: ${c}</small></div>`;
+                        contador++;
+                    }
                 }
-            });
+                
+                if (contador >= maxResultados) {
+                    htmlFinal += `<div style="padding:10px; text-align:center; color:#666; font-size:13px; font-style:italic;">Mostrando ${maxResultados} resultados... Digite mais letras para refinar.</div>`;
+                    break;
+                }
+            }
+
+            if (contador === 0) {
+                htmlFinal = `<div style="padding:15px; text-align:center; color:var(--erro); font-weight:bold;">Nenhum produto encontrado.</div>`;
+            }
+
+            res.innerHTML = htmlFinal;
         }
 
         function abrirModalPreco() { 
