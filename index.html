@@ -612,7 +612,8 @@
         function abrirModalBusca() { document.getElementById('modal-busca').classList.add('ativo'); document.getElementById('campo-consulta').value = ''; document.getElementById('resultado-busca').innerHTML = ''; setTimeout(() => document.getElementById('campo-consulta').focus(), 100); }
         function fecharModalBusca() { document.getElementById('modal-busca').classList.remove('ativo'); document.getElementById('codigo-barras').focus(); }
         
-        function ejecutarBusca(val) {
+        /* CORREÇÃO APLICADA: A função estava como 'ejecutarBusca', impedindo a busca por nome de rodar */
+        function executarBusca(val) {
             let res = document.getElementById('resultado-busca'); res.innerHTML = '';
             let t = val.toLowerCase().trim(); if(!t) return;
             Object.keys(estoqueCloud).forEach(c => {
@@ -956,12 +957,7 @@
             document.body.removeChild(link);
         }
 
-        /**
-         * Lógica para capturar diagnóstico do PDV e redirecionar para o WhatsApp correto
-         * @param {string} contato - 'tiago' ou 'maycon'
-         */
         function abrirSuporte(contato) {
-            // 1. Números formatados com DDI brasileiro (55)
             const contatos = {
                 tiago: "5584981549052",
                 maycon: "5584994649251"
@@ -970,11 +966,9 @@
             const numeroDestino = contatos[contato];
             if (!numeroDestino) return;
 
-            // 2. Coleta de dados de diagnóstico do sistema atual para agilizar a triagem
             const urlAtual = window.location.origin;
             const horaAtual = new Date().toLocaleString('pt-BR');
             
-            // Tenta coletar o tamanho do estoque e quantidade de vendas
             let totalItensEstoque = "Não identificado";
             try {
                 const est = localStorage.getItem('estoque_mercado');
@@ -987,7 +981,6 @@
                 if (vend) totalVendasHoje = JSON.parse(vend).length;
             } catch(e) {}
 
-            // 3. Montagem da mensagem estruturada
             let mensagem = `Olá! Preciso de Suporte no meu PDV.\n\n`;
             mensagem += `*--- DADOS DE DIAGNÓSTICO ---*\n`;
             mensagem += `📱 *Comércio:* ${document.title || "PDV Mercado"}\n`;
@@ -999,12 +992,10 @@
             mensagem += `*-----------------------------*\n\n`;
             mensagem += `_Por favor, descreva o problema abaixo ou envie uma foto do erro:_`;
 
-            // 4. Encode do texto para URL do WhatsApp
             const textoCodificado = encodeURIComponent(mensagem);
             const linkZap = `https://api.whatsapp.com/whatsapp://send?phone=${numeroDestino}&text=${textoCodificado}`;
             const linkWeb = `https://web.whatsapp.com/send?phone=${numeroDestino}&text=${textoCodificado}`;
 
-            // 5. Detecta se é mobile para abrir o app nativo ou a versão web no PC do caixa
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                 window.open(linkZap, '_blank');
             } else {
