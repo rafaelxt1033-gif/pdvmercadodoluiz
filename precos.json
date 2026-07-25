@@ -991,10 +991,6 @@
     "nome": "AMIDO DE MILHO MAIZENA 200G",
     "preco": 4.49
   },
-  "7894000010021": {
-    "nome": "AMIDO DE MILHO MAIZENA 500G",
-    "preco": 9.9
-  },
   "7896336012250": {
     "nome": "AMINDUS GRELHADITOS VERDINHO 24 G",
     "preco": 0.75
@@ -9266,5 +9262,9 @@
   "7897274417015": {
     "nome": "SABAO EM PO ABSOLUTO COCO 400G",
     "preco": 1.75
+  },
+  "7891150066106": {
+    "nome": "AMIDO DE MILHO MAIZENA 500G",
+    "preco": 9.9
   }
 }
