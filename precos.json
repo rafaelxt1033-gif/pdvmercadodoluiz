@@ -5355,6 +5355,10 @@
     "nome": "KIT FEIJOADA JB 250G",
     "preco": 5.99
   },
+  "7898286754662": {
+    "nome": "KIT FEIJOADA POTIGUAR 200G",
+    "preco": 4.99
+  },
   "7898965248550": {
     "nome": "KIT INFANTIL 5 PÇ",
     "preco": 13.99
@@ -9262,9 +9266,5 @@
   "7891150066106": {
     "nome": "AMIDO DE MILHO MAIZENA 500G",
     "preco": 9.9
-  },
-  "78921232467709": {
-    "nome": "KIT FEIJOADA POTIGUAR 200G",
-    "preco": 4.99
   }
 }
