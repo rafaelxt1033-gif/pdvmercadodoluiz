@@ -5357,7 +5357,7 @@
   },
   "7898286754662": {
     "nome": "KIT FEIJOADA POTIGUAR 200G",
-    "preco": 4.99
+    "preco": null
   },
   "7898965248550": {
     "nome": "KIT INFANTIL 5 PÇ",
@@ -6805,7 +6805,7 @@
   },
   "7898994748915": {
     "nome": "PASTEIS CROCANTES 150G",
-    "preco": 5.75
+    "preco": 6.25
   },
   "609963566648": {
     "nome": "PE DE BOTIJAO COD 137",
@@ -9269,6 +9269,10 @@
   },
   "7892123246709": {
     "nome": "KIT FEIJOADA SILVA 200G",
+    "preco": 4.99
+  },
+  "78921232467709": {
+    "nome": "KIT FEIJOADA POTIGUAR 200G",
     "preco": 4.99
   }
 }
