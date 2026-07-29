@@ -1995,10 +1995,6 @@
     "nome": "CAFE SAO BRAZ ALMOFADA 250G",
     "preco": 14.99
   },
-  "7891000416266": {
-    "nome": "CAFE SOLUVEL NESCAFE ORIGINAL 40G SACHE",
-    "preco": 6.5
-  },
   "7896045108763": {
     "nome": "CAFE SOLUVEL SANTA CLARA EX/FOR 40G",
     "preco": 6.99
@@ -9298,5 +9294,9 @@
   "7622300873554": {
     "nome": "BISCOITO ORE CHOCOLATE 90G",
     "preco": 4.25
+  },
+  "7891000307120": {
+    "nome": "CAFE SOLUVEL NESCAFE ORIGINAL 40G SACHE",
+    "preco": 6.5
   }
 }
