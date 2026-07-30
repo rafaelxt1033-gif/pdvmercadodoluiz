@@ -6347,10 +6347,6 @@
     "nome": "MUCILON DE ARROZ 180G",
     "preco": 6.99
   },
-  "7891000319505": {
-    "nome": "MUCILON MULTICEREAIS 180G",
-    "preco": 6.99
-  },
   "7891000438466": {
     "nome": "MUCILON MULTICEREAIS 600G",
     "preco": 21.99
@@ -9298,5 +9294,9 @@
   "070330703629": {
     "nome": "BARBEADO AMARELO BIC",
     "preco": 1.75
+  },
+  "7891000368183": {
+    "nome": "MUCILON MULTICEREAIS 180G",
+    "preco": 6.99
   }
 }
