@@ -1203,10 +1203,6 @@
     "nome": "BANDEJA MULTIUSO - ICASA",
     "preco": 9.9
   },
-  "70330703629": {
-    "nome": "BARBEADO AMARELO BIC",
-    "preco": 1.5
-  },
   "70330713406": {
     "nome": "BARBEADOR BIC SUAVE UN",
     "preco": 2.5
@@ -9298,5 +9294,9 @@
   "7891000307120": {
     "nome": "CAFE SOLUVEL NESCAFE ORIGINAL 40G SACHE",
     "preco": 6.5
+  },
+  "070330703629": {
+    "nome": "BARBEADO AMARELO BIC",
+    "preco": 1.75
   }
 }
