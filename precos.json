@@ -8619,10 +8619,6 @@
     "nome": "SUCO PO MARATA CAJU 45g",
     "preco": 1
   },
-  "95188870507": {
-    "nome": "SUCO TAMPICO CITRICO 1500ML",
-    "preco": 7.49
-  },
   "95188878572": {
     "nome": "SUCO TAMPICO CITRICO 2L",
     "preco": 9.9
@@ -9330,5 +9326,9 @@
   "7908467200236": {
     "nome": "FITA ADESIVA LARGA UN",
     "preco": 4.99
+  },
+  "095188870507": {
+    "nome": "SUCO TAMPICO CITRICO 1500ML",
+    "preco": 7.49
   }
 }
