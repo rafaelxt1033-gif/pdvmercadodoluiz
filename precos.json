@@ -4312,7 +4312,7 @@
     "preco": 24.99
   },
   "7891515563516": {
-    "nome": "FILE DE PEITO- SADIA 1K",
+    "nome": "FILÉ DE PEITO SADIA 1KG",
     "preco": 21.99
   },
   "7896419728870": {
@@ -9402,5 +9402,9 @@
   "7898639109224": {
     "nome": "TESOURA CABO DE MEL",
     "preco": 11.99
+  },
+  "7898096280009": {
+    "nome": "LANCHINHO MIRASSOL 250G",
+    "preco": 7.99
   }
 }
