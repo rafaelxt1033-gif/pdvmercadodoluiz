@@ -69,7 +69,7 @@
   },
   "18": {
     "nome": "LIMAO KG",
-    "preco": 5.99
+    "preco": 6.99
   },
   "19": {
     "nome": "LARANJA KG",
@@ -4312,7 +4312,7 @@
     "preco": 24.99
   },
   "7891515563516": {
-    "nome": "FILÉ DE PEITO SADIA 1KG",
+    "nome": "FILE DE PEITO- SADIA 1K",
     "preco": 21.99
   },
   "7896419728870": {
@@ -6001,7 +6001,7 @@
   },
   "7898117960088": {
     "nome": "MANGUZA REI DE OURO 400G",
-    "preco": 2.75
+    "preco": 2.25
   },
   "7898937809031": {
     "nome": "MANTEIGA DA TERRA 500G",
@@ -9402,9 +9402,5 @@
   "7898639109224": {
     "nome": "TESOURA CABO DE MEL",
     "preco": 11.99
-  },
-  "7898096280009": {
-    "nome": "LANCHINHO MIRASSOL 250G",
-    "preco": 7.99
   }
 }
