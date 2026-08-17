@@ -3,9 +3,93 @@
     "nome": "ABACATE KG",
     "preco": 8.99
   },
+  "6": {
+    "nome": "BANANA UN",
+    "preco": 0.5
+  },
+  "7": {
+    "nome": "BATATA INGRESA KG",
+    "preco": 5.99
+  },
+  "8": {
+    "nome": "BATATA DOCE",
+    "preco": 5.99
+  },
+  "11": {
+    "nome": "CENOURA KG",
+    "preco": 8.99
+  },
+  "12": {
+    "nome": "CHUCHU KG",
+    "preco": 4.99
+  },
+  "13": {
+    "nome": "CEBOLA ROXA",
+    "preco": 7.99
+  },
+  "14": {
+    "nome": "CEBOLA BRANCA KG",
+    "preco": 6.99
+  },
+  "18": {
+    "nome": "LIMAO KG",
+    "preco": 6.99
+  },
+  "19": {
+    "nome": "LARANJA KG",
+    "preco": 2.99
+  },
+  "22": {
+    "nome": "MARACUJA KG",
+    "preco": 12.99
+  },
+  "23": {
+    "nome": "PIMENTAO KG",
+    "preco": 7.99
+  },
+  "32": {
+    "nome": "COSTELA DO PEITO",
+    "preco": 28.49
+  },
+  "34": {
+    "nome": "CARNE CHARQUE CAICO",
+    "preco": 49.9
+  },
+  "40": {
+    "nome": "LOMBO BOVINO KG",
+    "preco": 28.99
+  },
+  "44": {
+    "nome": "LINGUIÇA TOSCANA AURORA KG",
+    "preco": 21.99
+  },
+  "45": {
+    "nome": "LINGUIÇA DE FRANGO AURORA KG",
+    "preco": 19.99
+  },
+  "50": {
+    "nome": "CANJINHA DORSO MAURICEA KG",
+    "preco": 4.99
+  },
+  "64": {
+    "nome": "OVOS BRANCO EXTRA BJ COM 15UN",
+    "preco": 10
+  },
+  "67": {
+    "nome": "SABAO EM BARRA MINUANO UN",
+    "preco": 3
+  },
+  "80": {
+    "nome": "OVOS BRANCO BJ COM 20UN",
+    "preco": 12.5
+  },
+  "82": {
+    "nome": "CUPIM BOVINO KG",
+    "preco": 42.99
+  },
   "119": {
     "nome": "TOMATE KG",
-    "preco": 4.99
+    "preco": 5.99
   },
   "7896002109000": {
     "nome": "51 LATA 350ML",
@@ -24,19 +108,679 @@
     "preco": 11.99
   },
   "7891515563516": {
-    "nome": "FILÉ DE PEITO SADIA 1KG",
+    "nome": "FILE DE PEITO- SADIA 1K",
     "preco": 21.99
   },
   "7893000482401": {
     "nome": "FILE DE PEITO- SADIA 1K",
     "preco": 21.99
   },
-  "7898096280009": {
-    "nome": "LANCHINHO MIRASSOL 250G",
+  "7896013105619": {
+    "nome": "AGUA SANITARIA OLIMPO 2L",
+    "preco": 5.75
+  },
+  "7894650003787": {
+    "nome": "Inset Baygon M Tudo 300ml",
+    "preco": 16.99
+  },
+  "17898366932970": {
+    "nome": "FARDO FLOKAO 20X400G",
+    "preco": 22.99
+  },
+  "074468769793": {
+    "nome": "BOLO SARDINHA 300G",
+    "preco": 5.5
+  },
+  "7898005510791": {
+    "nome": "SOV-DUETO PEDACINHO DO CEU 1L",
+    "preco": 14.49
+  },
+  "7896262304306": {
+    "nome": "MENTOS MINT 37,5",
+    "preco": 2.5
+  },
+  "7895144892832": {
+    "nome": "CHICLE MENTOS 8,5G C.W BLUE RASPBERRY",
+    "preco": 2
+  },
+  "5601216120053": {
+    "nome": "Azeite de Oliva Andorinha Extra Virgem 250ml",
+    "preco": 22.99
+  },
+  "7891000049891": {
+    "nome": "SOPAO DE GALINHA CAIPIRA MAGGI 200G",
+    "preco": 11
+  },
+  "7891000582107": {
+    "nome": "SOPAO MAGGI CARNE COM LEGUMES 200G",
+    "preco": 11
+  },
+  "7891000026182": {
+    "nome": "SOPAO MAGGI COSTELA 200G",
+    "preco": 11
+  },
+  "7891000582008": {
+    "nome": "SOPAO MAGGI GALINHA C/ LEGUMES 200G",
+    "preco": 11
+  },
+  "095188874505": {
+    "nome": "TAMPICO FRUTAS CITRICAS 450ML",
+    "preco": 3.99
+  },
+  "7898080640376": {
+    "nome": "LEITE EM PO ITALAC INTEGRAL 200G",
+    "preco": 8.49
+  },
+  "7896248100816": {
+    "nome": "OLEO DE SOJA SIOL 500ML",
+    "preco": 5.75
+  },
+  "7891107101621": {
+    "nome": "OLEO DE SOJA SOYA 900ML",
+    "preco": 8.99
+  },
+  "7897886900011": {
+    "nome": "ACUCAR  ALEGRE  1KG",
+    "preco": 3.49
+  },
+  "7898376590286": {
+    "nome": "BISC. REAL SABOR SOBERANO DOCE 200G",
+    "preco": 2.49
+  },
+  "7898376590040": {
+    "nome": "BOLACHA RAINHA DOCE 300G",
+    "preco": 4.99
+  },
+  "7898376590200": {
+    "nome": "BOLACHA DELICIA REAL SABOR 200G",
+    "preco": 2.5
+  },
+  "7898376590095": {
+    "nome": "BOLACHA SALGADA PRINCESA 200G",
+    "preco": 2.5
+  },
+  "7898376590019": {
+    "nome": "BOLACHA SALGADA POP 200G",
+    "preco": 2.75
+  },
+  "400141876058": {
+    "nome": "FARINHA ORIGINAL DE BREJINHO 1KG",
+    "preco": 5.99
+  },
+  "7813202893842": {
+    "nome": "FARINHA SABOROSA DE BREJINHO 1KG",
+    "preco": 5.99
+  },
+  "7702018118823": {
+    "nome": "APARELHO DE BARBEAR PROBAK II",
+    "preco": 2.5
+  },
+  "070330729858": {
+    "nome": "BARBEADOR BIC INTENSITY 3 LAMINAS",
+    "preco": 3.5
+  },
+  "7899090183310": {
+    "nome": "GUARDANAPO DE PAPEL SERIDO 22/20",
+    "preco": 1.75
+  },
+  "AP PRESTOBARBA GILLETTE UN": {
+    "nome": "7500435154437",
+    "preco": 3.5
+  },
+  "7500435154437": {
+    "nome": "AP PRESTOBARBA",
+    "preco": 3.5
+  },
+  "7898286191887": {
+    "nome": "FUMO MARATA 36G",
+    "preco": 4.5
+  },
+  "7891164020149": {
+    "nome": "HAMBURGUER AURORA FAROESTE BOVINO",
+    "preco": 1.35
+  },
+  "7898034920011": {
+    "nome": "IOGURTE ISIS MORANGO 480g",
+    "preco": 6.99
+  },
+  "7898034920042": {
+    "nome": "IOGURTE ISIS BANANA/MACA 480g",
+    "preco": 6.99
+  },
+  "7898034920035": {
+    "nome": "IOGURTE ISIS AMEIXA 480G",
+    "preco": 6.99
+  },
+  "7898034920165": {
+    "nome": "IOGURTE ISIS SALADA DE FRUTA 480G",
+    "preco": 6.99
+  },
+  "7898034920028": {
+    "nome": "IOGURTE ISIS MORANGO 170G",
+    "preco": 3.5
+  },
+  "7898034920660": {
+    "nome": "REQUEIJAO CREMOSO ISIS LIGHT 220g",
+    "preco": 9.25
+  },
+  "7897274417015": {
+    "nome": "SABAO EM PO ABSOLUTO COCO 400G",
+    "preco": 1.75
+  },
+  "7891515554316": {
+    "nome": "HAMBURGUER DE FRANGO SADIA UN",
+    "preco": 1.35
+  },
+  "7893000488526": {
+    "nome": "FRANGO A PASSARINHO SADIA 1KG",
+    "preco": 14.99
+  },
+  "7898912405029": {
+    "nome": "OVOS BRANCO EXTRA AVIPEC COM 30UN",
+    "preco": 17.99
+  },
+  "7898258740594": {
+    "nome": "FEIJAO PRETO DN MARIQ 1KG",
     "preco": 7.99
   },
-  "7898117960088": {
-    "nome": "MANGUZA REI DE OURO 400G",
-    "preco": 2.75
+  "7898258740662": {
+    "nome": "FEIJAO DN MARIQ- CARIOCA1KG",
+    "preco": 10
+  },
+  "7890981345671": {
+    "nome": "KIT FEIJOADA ESPECIAL 300G",
+    "preco": 7.25
+  },
+  "7896005276464": {
+    "nome": "MACARRAO PARAFUSO BRANDINI 500G",
+    "preco": 4.39
+  },
+  "7896213006778": {
+    "nome": "MAC PARAFUSO VITARELLA 400G",
+    "preco": 4.75
+  },
+  "7896213006686": {
+    "nome": "MACARRAO VITARELLA FINO 400G",
+    "preco": 3.25
+  },
+  "7896213005924": {
+    "nome": "BISC RECH CHOCOLATE VITARELA 120G",
+    "preco": 2.29
+  },
+  "7891150066106": {
+    "nome": "AMIDO DE MILHO MAIZENA 500G",
+    "preco": 9.9
+  },
+  "78921232467709": {
+    "nome": "KIT FEIJOADA POTIGUAR 200G",
+    "preco": 4.99
+  },
+  "7892123246709": {
+    "nome": "KIT FEIJOADA SILVA 200G",
+    "preco": 4.99
+  },
+  "7898994748915": {
+    "nome": "PASTEIS CROCANTES 150G",
+    "preco": 6.25
+  },
+  "7898375910474": {
+    "nome": "PASTILHA SANITARIA EUCALIPTO",
+    "preco": 1.99
+  },
+  "7898375910498": {
+    "nome": "PASTILHA SANITARIA FLORAL",
+    "preco": 1.99
+  },
+  "7898375910467": {
+    "nome": "PASTILHA SANITARIA LAVANDA",
+    "preco": 1.99
+  },
+  "7898375910481": {
+    "nome": "PASTILHA SANITARIA TALCO",
+    "preco": 1.99
+  },
+  "7898962794401": {
+    "nome": "PAPEL MAX PURE 6 ROLOS F/DUPLA",
+    "preco": 16.5
+  },
+  "7622300873554": {
+    "nome": "BISCOITO ORE CHOCOLATE 90G",
+    "preco": 4.25
+  },
+  "7897517209643": {
+    "nome": "DUETO MILHO ERVILHA SACHE 170GR",
+    "preco": 3.99
+  },
+  "7896001004511": {
+    "nome": "ESPONJA DE LIMPEZA BRILHUS",
+    "preco": 1
+  },
+  "7891000307120": {
+    "nome": "CAFE SOLUVEL NESCAFE ORIGINAL 40G SACHE",
+    "preco": 6.5
+  },
+  "7891024132005": {
+    "nome": "CREME DENTAL COLGATE TRIPLA AÇAO 90G",
+    "preco": 6.5
+  },
+  "070330703629": {
+    "nome": "BARBEADO AMARELO BIC",
+    "preco": 1.75
+  },
+  "7891000368183": {
+    "nome": "MUCILON MULTICEREAIS 180G",
+    "preco": 6.99
+  },
+  "7896264671031": {
+    "nome": "MACARRAO NINHO ESTRELA 400G",
+    "preco": 4.99
+  },
+  "7896221806469": {
+    "nome": "PO DESCOLANTE ARGAN 20G",
+    "preco": 5.99
+  },
+  "7908324402865": {
+    "nome": "SABAO MINUANO NEUTRO 900G",
+    "preco": 13.99
+  },
+  "7897274417367": {
+    "nome": "SABAO ABSOLUTO ANIL 800G",
+    "preco": 8.99
+  },
+  "7898952148016": {
+    "nome": "Algodao Nevoa 25 g",
+    "preco": 1.9
+  },
+  "7898302290914": {
+    "nome": "LINGUA BOVINA KG",
+    "preco": 24.99
+  },
+  "7898286561338": {
+    "nome": "FRANGO A PASSARINHO TEMPERADO BOM/TODO 1KG",
+    "preco": 14.99
+  },
+  "7897489800015": {
+    "nome": "OVOS CODORNA LIRIO DO MATO",
+    "preco": 6.99
+  },
+  "7898387120380": {
+    "nome": "LEITE LONGA NATIVILLE 1LT",
+    "preco": 6.99
+  },
+  "7891000368268": {
+    "nome": "SOPAO GALINHA/LEGUMES MAGGI 200G",
+    "preco": 11
+  },
+  "7893000980006": {
+    "nome": "MARGARINA DELINE CREMOSA C/SAL 500G",
+    "preco": 6.75
+  },
+  "7891910030101": {
+    "nome": "AÇUCAR UNIAO DEMERARA 1KG",
+    "preco": 6.75
+  },
+  "7896607100877": {
+    "nome": "PITU LIMAO E MEL 350ML",
+    "preco": 5.5
+  },
+  "7897518225239": {
+    "nome": "CATCHUP TRADICIONAL SADIO 380G",
+    "preco": 5.75
+  },
+  "7891152802108": {
+    "nome": "MACARRAO IMPERADOR 400G",
+    "preco": 3.5
+  },
+  "7898910048013": {
+    "nome": "LEITE DE COCO INDIANO 500ML",
+    "preco": 7.99
+  },
+  "7891024035191": {
+    "nome": "SABONETE PROTEX COMPLETE 12/85G",
+    "preco": 4.25
+  },
+  "7509546678832": {
+    "nome": "SABONETE PROTEX CARVAO/DETOX 85G",
+    "preco": 4.25
+  },
+  "7908467200236": {
+    "nome": "FITA ADESIVA LARGA UN",
+    "preco": 4.99
+  },
+  "7896224803069": {
+    "nome": "CAFE SANTA CLARA 100G",
+    "preco": 6.5
+  },
+  "7896045109074": {
+    "nome": "CAFE SANTA CLARA EXTRA FORTE 250G",
+    "preco": 14.99
+  },
+  "7896045116126": {
+    "nome": "CAFE SANTA CLARA GRANULADO 40G",
+    "preco": 5.75
+  },
+  "095188870507": {
+    "nome": "SUCO TAMPICO CITRICO 1500ML",
+    "preco": 7.49
+  },
+  "040141148803": {
+    "nome": "NAFTALINA CATARINA",
+    "preco": 3.25
+  },
+  "7899751101912": {
+    "nome": "TESOURA 7/2 ORIGINAL",
+    "preco": 9.9
+  },
+  "7908635105431": {
+    "nome": "TESOURA PONTA RETA",
+    "preco": 5.99
+  },
+  "691254103038": {
+    "nome": "ORNAMENTO P/CABELO",
+    "preco": 2
+  },
+  "691254103076": {
+    "nome": "ORNAMENTO P/CABELO",
+    "preco": 2
+  },
+  "7898119105494": {
+    "nome": "BORRACHA P/GRAFITE UN",
+    "preco": 1.5
+  },
+  "7898119108655": {
+    "nome": "APONTADOR C/DEPOSITO",
+    "preco": 1.5
+  },
+  "7898622353924": {
+    "nome": "PULVERIZADOR MULTIUSO 500ML",
+    "preco": 9.99
+  },
+  "7898922922172": {
+    "nome": "PAO DE FORMA INTEGRAL 400G",
+    "preco": 7.5
+  },
+  "7898922922288": {
+    "nome": "PAO DE FORMA LEITE 400G",
+    "preco": 7.5
+  },
+  "7898922922189": {
+    "nome": "PAO DE FORMA CASARAO 400G",
+    "preco": 7.5
+  },
+  "7898922922080": {
+    "nome": "BISNAGUINHA  350G",
+    "preco": 7.5
+  },
+  "7899887988005": {
+    "nome": "BOLACHA MONARCA 250G",
+    "preco": 5.99
+  },
+  "7899547981216": {
+    "nome": "SUSPIRO BOM SABOR (LIMAO) 70G",
+    "preco": 5.25
+  },
+  "7896022203870": {
+    "nome": "LASANHA PRE-COZIDA GALO 200GS",
+    "preco": 7.99
+  },
+  "7898034922350": {
+    "nome": "IOGURTE NATURAL Parcialmente Desnatado ISIS 150g",
+    "preco": 4.25
+  },
+  "7898034920240": {
+    "nome": "FRUTISIS 150g",
+    "preco": 4.99
+  },
+  "7898037640510": {
+    "nome": "BEBIDA ISSIS UVA E MACA 350ML",
+    "preco": 2.9
+  },
+  "7898037640190": {
+    "nome": "BEBIDA ISSIS FRUTAS CITRICAS 350ML",
+    "preco": 2.9
+  },
+  "7898034920998": {
+    "nome": "POLPA ISSIS MORANGO BJ 540",
+    "preco": 6.75
+  },
+  "7898034920288": {
+    "nome": "POLPA ISIS SALADA DE FRUTAS BJ 540G",
+    "preco": 6.75
+  },
+  "7898034921001": {
+    "nome": "POLPA ISIS BANANA C/ MACA BJ 540G",
+    "preco": 6.75
+  },
+  "7898037640527": {
+    "nome": "BEBIDA MISTA ISSIS UVA E MACA 1L",
+    "preco": 4.99
+  },
+  "7898037640220": {
+    "nome": "BEBIDA MISTA ISSIS F/ CITRICAS 1L",
+    "preco": 4.99
+  },
+  "7898034920905": {
+    "nome": "ISINHO BANANA/MAÇA 70G",
+    "preco": 1.15
+  },
+  "7898034920899": {
+    "nome": "ISINHO MORANGO 70G",
+    "preco": 1.15
+  },
+  "7898034920264": {
+    "nome": "ISINHO TUTTI FRUITI 70G",
+    "preco": 1.15
+  },
+  "7898034920912": {
+    "nome": "ISINHO SALADA DE FRUTAS 70G",
+    "preco": 1.15
+  },
+  "7898376590064": {
+    "nome": "BISC-DOCE REALITO REAL SABOR 300G",
+    "preco": 4.9
+  },
+  "7898376590217": {
+    "nome": "BISC-TARECOS REAL SABOR  250G",
+    "preco": 5.75
+  },
+  "7898376590132": {
+    "nome": "BOLINHOS DE GOMA REAL SABOR 200G",
+    "preco": 5.25
+  },
+  "7898924826195": {
+    "nome": "ALCOOL 70 TOP CLEAR 1LT",
+    "preco": 9.9
+  },
+  "7891134001710": {
+    "nome": "SABONETE ALMA DE FLORES 130G",
+    "preco": 6.5
+  },
+  "7898643880416": {
+    "nome": "GOIABA CRISTALIZADA 200G",
+    "preco": 4.99
+  },
+  "7893000017832": {
+    "nome": "MORTADELA SADIA/PERDIGAO KG",
+    "preco": 12.99
+  },
+  "7891155003663": {
+    "nome": "COPO AMERICANO UN",
+    "preco": 1.5
+  },
+  "7898215155195": {
+    "nome": "LEITE INTEGRAL LEITBOM 1L",
+    "preco": 6.75
+  },
+  "7891035617959": {
+    "nome": "SBP MULTI INSETICIDA CITRONELA  450ML",
+    "preco": 17.5
+  },
+  "7897042009121": {
+    "nome": "CR.TRAT.SKALA 12EM1 1000G",
+    "preco": 13.99
+  },
+  "7897042019328": {
+    "nome": "CREME SKALA MORANGO 1KG",
+    "preco": 13.99
+  },
+  "7897042012312": {
+    "nome": "CR SKALA SOU MAIS CACHOS 1KG",
+    "preco": 13.99
+  },
+  "7897042016907": {
+    "nome": "CREME PENTEAR SKALA GLICOLICO 1KG",
+    "preco": 13.99
+  },
+  "7897042012800": {
+    "nome": "CREME SKALA BANANA C/BACURI 1KG",
+    "preco": 13.99
+  },
+  "7897042007066": {
+    "nome": "CREME SKALA KERATINA  1kg",
+    "preco": 13.99
+  },
+  "7897042019311": {
+    "nome": "CREME SKALA UVA 1kg",
+    "preco": 13.99
+  },
+  "7897042012725": {
+    "nome": "CREME SKALA POTAO DESMAIADO 1 KG",
+    "preco": 13.99
+  },
+  "7897042006021": {
+    "nome": "CREME SKALA LAMA NEGRA 1KG",
+    "preco": 13.99
+  },
+  "7897042019304": {
+    "nome": "CREME SKALA MELANCIA 1000G",
+    "preco": 13.99
+  },
+  "7897042008407": {
+    "nome": "CREME SKALA EXTRE LISO 1000G",
+    "preco": 13.99
+  },
+  "7897042020690": {
+    "nome": "CREME PENTEAR SKALA AÇAI 1K",
+    "preco": 13.99
+  },
+  "7898919411917": {
+    "nome": "OLEO PAIXAO AMENDOA COM AVELA 100ML",
+    "preco": 13.99
+  },
+  "7896235354031": {
+    "nome": "OLEO PAIXAO CORPO FRAMBOESA NEGRA 100ML",
+    "preco": 13.99
+  },
+  "7896235354048": {
+    "nome": "OLEO DE CORPO PAIXAO FLOR DE BAUNILHA 100ML",
+    "preco": 13.99
+  },
+  "7896235354024": {
+    "nome": "OLEO PAIXAO IRRESSISTIVEL 100ML",
+    "preco": 13.99
+  },
+  "7898919411931": {
+    "nome": "OLEO PAIXAO TENTADORA 100ML",
+    "preco": 13.99
+  },
+  "7895144603223": {
+    "nome": "MENTOS TUTTI FRUTTI 14UN",
+    "preco": 2.5
+  },
+  "7898301663023": {
+    "nome": "PENEIRA C/ CABO 18CM SBRISSA",
+    "preco": 8.99
+  },
+  "7898301663054": {
+    "nome": "PENEIRA C/CABO 15CM",
+    "preco": 6.5
+  },
+  "7891151900201": {
+    "nome": "NAFTALINA MIX 30G",
+    "preco": 3.49
+  },
+  "042882497301": {
+    "nome": "SABONETE LIQ-MIX AROEIRA 500ML",
+    "preco": 9.9
+  },
+  "7898573201886": {
+    "nome": "SABONETE LIQ-MIX MORANGO 500ML",
+    "preco": 9.9
+  },
+  "7898573201893": {
+    "nome": "SABONETE LIQ-MIX ERVA DOCE 500ML",
+    "preco": 9.9
+  },
+  "7898639109224": {
+    "nome": "TESOURA CABO DE MEL",
+    "preco": 11.99
+  },
+  "7897518225253": {
+    "nome": "MOSTARDA SADIO 190G",
+    "preco": 6.25
+  },
+  "7891522472733": {
+    "nome": "MANTEIGA DA TERRA JM 500G",
+    "preco": 11
+  },
+  "7898371005563": {
+    "nome": "COPOBRAS DESCARTAVEL TRANSPARENTE C/100",
+    "preco": 4.99
+  },
+  "7897517206284": {
+    "nome": "EXTRATO DE TOMATE FUGINI 300G",
+    "preco": 2.99
+  },
+  "7891232021191": {
+    "nome": "PRENDEDOR DE ROUPAS JM",
+    "preco": 1.75
+  },
+  "7890055600026": {
+    "nome": "BOLINHO BANDEJA C/ 10",
+    "preco": 6.5
+  },
+  "7500435154772": {
+    "nome": "PRESTOBARBA GILLETTE 3 LAMINA",
+    "preco": 6.5
+  },
+  "7891008125214": {
+    "nome": "CHOCOLATE BRANCO GAROTO 80G",
+    "preco": 8.99
+  },
+  "7891008123975": {
+    "nome": "CHOCOLATE AO LEITE GAROTO 80G",
+    "preco": 8.99
+  },
+  "7896106900053": {
+    "nome": "ACUCAR TRITURADO DUMEL 1KG",
+    "preco": 3.75
+  },
+  "7898258740532": {
+    "nome": "FEIJAO MACASSAR BRANCO1KG",
+    "preco": 7.99
+  },
+  "7898258740648": {
+    "nome": "FEIJAO MACASSAR VERMELHO 1KG",
+    "preco": 7.99
+  },
+  "7898208480242": {
+    "nome": "ASA DE FRANGO CONGELADA KG",
+    "preco": 13.99
+  },
+  "7896224813082": {
+    "nome": "CAFE SANTA CLARA CLASSICO 250G",
+    "preco": 15.99
+  },
+  "7894900531008": {
+    "nome": "AGUA CRYSTAL C/G 500ML",
+    "preco": 2.5
+  },
+  "7891024132371": {
+    "nome": "CR.DENTAL COLGATE T.PROTECAO 180G",
+    "preco": 12.5
+  },
+  "7891000369340": {
+    "nome": "FARINHA LACTEA ORIGINAL 160G",
+    "preco": 6.25
   }
 }
