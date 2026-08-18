@@ -3,593 +3,206 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mercadinho Dois Irmãos - PDV</title>
+  <title>PDV Mercadinho do Luiz</title>
   <style>
-    :root {
-      --primary: #1e293b;
-      --secondary: #0f172a;
-      --accent: #2563eb;
-      --success: #16a34a;
-      --warning: #ca8a04;
-      --danger: #dc2626;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text: #0f172a;
-      --border: #e2e8f0;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    /* Header */
-    header {
-      background-color: var(--primary);
-      color: #fff;
-      padding: 10px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .nav-tabs button {
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      color: #fff;
-      padding: 8px 16px;
-      margin-left: 5px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .nav-tabs button.active {
-      background: var(--accent);
-    }
-
-    /* Main Container */
-    main {
-      flex: 1;
-      display: flex;
-      overflow: hidden;
-    }
-
-    .view {
-      display: none;
-      width: 100%;
-      height: 100%;
-      padding: 20px;
-      overflow-y: auto;
-    }
-
-    .view.active {
-      display: flex;
-    }
-
-    /* Layout Caixa */
-    #view-caixa {
-      gap: 20px;
-    }
-
-    .left-panel {
-      flex: 2;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .right-panel {
-      flex: 1;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .display-total {
-      background: var(--secondary);
-      color: #00ff66;
-      font-size: 2.5rem;
-      font-weight: bold;
-      padding: 15px;
-      border-radius: 8px;
-      text-align: right;
-    }
-
-    .input-group {
-      display: flex;
-      gap: 10px;
-    }
-
-    input, select, button {
-      padding: 10px;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      font-size: 1rem;
-    }
-
-    input[type="text"], input[type="number"] {
-      flex: 1;
-    }
-
-    .btn {
-      background-color: var(--accent);
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .btn-success { background-color: var(--success); }
-    .btn-danger { background-color: var(--danger); }
-    .btn-warning { background-color: var(--warning); }
-
-    /* Tabela de Itens */
-    .table-container {
-      flex: 1;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow-y: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
-    }
-
-    th {
-      background: var(--bg);
-    }
-
-    /* Dashboard & Gerencial */
-    #view-dashboard {
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .grid-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-
-    .status-bar {
-      background: #000;
-      color: #00ff00;
-      font-family: monospace;
-      padding: 5px 10px;
-      font-size: 0.85rem;
-    }
-
-    /* Modais */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5);
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-
-    .modal-content {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      width: 550px;
-      max-width: 90%;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-height: 80vh;
-    }
-
-    .search-results {
-      max-height: 300px;
-      overflow-y: auto;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      margin-top: 10px;
-    }
+    * { box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { margin: 0; padding: 20px; background-color: #f4f6f8; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .btn { padding: 10px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    .btn-sync { background-color: #28a745; color: white; }
+    .btn-add { background-color: #007bff; color: white; }
+    .container { display: flex; gap: 20px; }
+    .panel { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .produtos-panel { flex: 2; }
+    .carrinho-panel { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    input[type="text"] { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px; border-bottom: 1px solid #ddd; text-align: left; }
+    th { background-color: #f8f9fa; }
+    .total-box { font-size: 1.5em; font-weight: bold; color: #333; margin-top: 15px; text-align: right; }
+    .status-badge { font-size: 0.85em; padding: 4px 8px; background: #e2e3e5; border-radius: 4px; }
   </style>
 </head>
 <body>
 
-  <header>
+  <div class="header">
+    <h1>PDV Mercadinho do Luiz</h1>
     <div>
-      <h2>Dois Irmãos PDV</h2>
-      <small>CAIXA 01 | Operador: Eduardo</small>
+      <span id="status-qtd" class="status-badge">0 produtos carregados</span>
+      <button class="btn btn-sync" onclick="sincronizarProdutosDoGithub()">Sincronizar do GitHub</button>
     </div>
-    <div class="nav-tabs">
-      <button class="active" onclick="switchTab('caixa')">Caixa (F1)</button>
-      <button onclick="switchTab('dashboard')">Painel Gerencial / Dashboard</button>
-    </div>
-  </header>
-
-  <div class="status-bar" id="sys-status">
-    [SISTEMA] Buscando banco de produtos na nuvem do GitHub... Sistema pronto para operação.
   </div>
 
-  <main>
-    <section id="view-caixa" class="view active">
-      <div class="left-panel">
-        <div class="input-group">
-          <input type="text" id="barcode-input" placeholder="Digite o nome ou bipe o código de barras..." autofocus>
-          <input type="number" id="qty-input" value="1" min="1" style="width: 80px;" placeholder="Qtd">
-          <button class="btn" onclick="addItem()">Adicionar</button>
-          <button class="btn" style="background-color: #0284c7;" onclick="openSearchModal()">🔍 Buscar Produto</button>
-        </div>
+  <div class="container">
+    <div class="panel produtos-panel">
+      <input type="text" id="campo-busca" placeholder="Buscar por código de barras ou nome do produto..." oninput="filtrarProdutos()">
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Produto</th>
+            <th>Preço</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody id="lista-produtos">
+          </tbody>
+      </table>
+    </div>
 
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Código</th>
-                <th>Descrição</th>
-                <th>Qtd/Peso</th>
-                <th>Unit. (R$)</th>
-                <th>Total (R$)</th>
-              </tr>
-            </thead>
-            <tbody id="cart-table">
-            </tbody>
-          </table>
-        </div>
-
-        <div style="display: flex; gap: 10px;">
-          <button class="btn btn-warning" onclick="openModal('modal-preco')">Preço / Mudar Preço</button>
-          <button class="btn btn-danger" onclick="cancelSale()">Cancelar Compra</button>
-        </div>
-      </div>
-
-      <div class="right-panel">
-        <h3>TOTAL A PAGAR</h3>
-        <div class="display-total" id="display-total">R$ 0.00</div>
-
-        <hr>
-
-        <h4>⚖ Forma de Pagamento (F3)</h4>
-        <select id="payment-method">
-          <option value="dinheiro">Dinheiro</option>
-          <option value="pix">PIX</option>
-          <option value="cartao">Cartão</option>
-        </select>
-
-        <label>Valor Recebido (R$)</label>
-        <input type="number" id="amount-received" placeholder="0.00" oninput="calculateChange()">
-
-        <div>
-          <strong>Troco: </strong><span id="display-change">R$ 0.00</span>
-        </div>
-
-        <hr>
-
-        <button class="btn btn-success" style="padding: 15px;" onclick="finishSale(false)">FINALIZAR SEM NOTA (F2)</button>
-        <button class="btn" style="padding: 15px; background-color: #0284c7;" onclick="finishSale(true)">EMITIR NFC-e (F4)</button>
-      </div>
-    </section>
-
-    <section id="view-dashboard" class="view">
-      <h2>📊 Dashboard de Vendas (Expediente Atual)</h2>
-      
-      <div class="grid-cards">
-        <div class="card">
-          <h4>TOTAL VENDIDO</h4>
-          <h2 id="dash-total-sold">R$ 0.00</h2>
-        </div>
-        <div class="card">
-          <h4>👁‍🗨 QTD. DE COMPRAS</h4>
-          <h2 id="dash-total-orders">0</h2>
-        </div>
-      </div>
-
-      <div style="display: flex; gap: 10px; margin-top: 10px;">
-        <button class="btn" onclick="alert('Exportando Relatório (.xlsx)...')">📥 Baixar Relatório Contador (.xlsx)</button>
-        <button class="btn" onclick="alert('Exportando XMLs (.xml)...')">📄 Baixar XML Contador (.xml)</button>
-        <button class="btn btn-danger" onclick="clearDay()">🗑 Zerar Caixa do Dia</button>
-      </div>
-
-      <hr>
-
-      <h3>➕ Cadastrar Novo Produto Interno</h3>
-      <div class="card" style="display: flex; flex-direction: column; gap: 10px; max-width: 500px;">
-        <input type="text" id="new-prod-code" placeholder="Código do Produto">
-        <input type="text" id="new-prod-name" placeholder="Nome do Produto">
-        <input type="number" id="new-prod-price" step="0.01" placeholder="Preço (R$)">
-        <button class="btn btn-success" onclick="saveNewProduct()">Salvar Produto no Sistema</button>
-      </div>
-
-      <hr>
-
-      <h3>☁ Sincronização em Nuvem (GitHub)</h3>
-      <p><small>Repositório: <strong>rafaelxt1033-gif/pdvmercadodoluiz</strong></small></p>
-      <div style="display: flex; gap: 10px; margin-top: 5px;">
-        <button class="btn" onclick="alert('Dados salvos na nuvem!')">Salvar Dados</button>
-        <button class="btn btn-warning" onclick="alert('Enviando base completa...')">⚡ Forçar Envio Base Completa</button>
-      </div>
-
-      <hr>
-
-      <h3>💬 Central de Ajuda & Suporte Oficial</h3>
-      <p><small>Selecione o profissional ideal para resolver sua solicitação. O sistema enviará automaticamente os dados de diagnóstico do seu caixa.</small></p>
-      <div style="display: flex; gap: 10px; margin-top: 10px;">
-        <button class="btn" onclick="alert('Redirecionando para Tiago Rafael...')">👨‍💼 Falar com Tiago Rafael<br><small>Dúvidas e Uso do Sistema</small></button>
-        <button class="btn" onclick="alert('Redirecionando para Maycon Vinícius...')">💻 Falar com Maycon Vinícius<br><small>Problemas Técnicos e Bugs</small></button>
-      </div>
-
-      <hr>
-
-      <h3>Lista de Produtos Integrados: <span id="prod-count">2316</span> itens</h3>
-      <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-        <button class="btn" onclick="alert('Selecione o arquivo .xlsx')">📥 Importar Planilha Emergencial</button>
-        <button class="btn" onclick="alert('Baixando backup oficial...')">💾 Baixar Backup Oficial (.xlsx)</button>
-      </div>
-    </section>
-  </main>
-
-  <div class="modal" id="modal-busca">
-    <div class="modal-content">
-      <h3>🔍 Pesquisar na Lista de Produtos</h3>
-      <input type="text" id="search-product-input" placeholder="Digite o código ou nome do produto..." oninput="filterProducts()">
-      
-      <div class="search-results">
+    <div class="panel carrinho-panel">
+      <div>
+        <h2>Venda Atual</h2>
         <table>
           <thead>
             <tr>
-              <th>Código</th>
-              <th>Nome / Descrição</th>
-              <th>Preço</th>
-              <th>Ação</th>
+              <th>Item</th>
+              <th>Qtd</th>
+              <th>Subtotal</th>
             </tr>
           </thead>
-          <tbody id="search-results-body">
-          </tbody>
+          <tbody id="itens-carrinho">
+            </tbody>
         </table>
       </div>
-
-      <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
-        <button class="btn btn-danger" onclick="closeModal('modal-busca')">Fechar</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal" id="modal-preco">
-    <div class="modal-content">
-      <h3>Consultar / Mudar Preço</h3>
-      <input type="text" id="search-mod-code" placeholder="Digite o nome ou bipe o produto">
-      <input type="text" id="mod-prod-code" placeholder="Código do Produto (Alterável)">
-      <input type="number" id="mod-prod-price" step="0.01" placeholder="Novo Preço (R$)">
-      <input type="password" id="mod-manager-pass" placeholder="Senha do Gerente">
-      <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px;">
-        <button class="btn btn-danger" onclick="closeModal('modal-preco')">Cancelar</button>
-        <button class="btn btn-success" onclick="closeModal('modal-preco'); alert('Alteração salva!');">Salvar Alterações</button>
+      <div>
+        <div class="total-box">Total: R$ <span id="total-valor">0,00</span></div>
+        <button class="btn btn-add" style="width: 100%; margin-top: 15px; padding: 15px;" onclick="finalizarVenda()">Finalizar Venda</button>
       </div>
     </div>
   </div>
 
   <script>
-    // Base de Dados Simulada (2316 itens integrados)
-    const dbProducts = {
-      "789100000001": { name: "Arroz 5kg", price: 26.90 },
-      "789100000002": { name: "Feijão Carioca 1kg", price: 7.50 },
-      "789100000003": { name: "Óleo de Soja 900ml", price: 6.80 },
-      "789100000004": { name: "Leite Integral 1L", price: 4.99 }
-    };
+    const URL_GITHUB_CSV = 'https://raw.githubusercontent.com/rafaelxt1033-gif/pdvmercadodoluiz/principal/Plano1.csv';
+    let todosProdutos = [];
+    let carrinho = [];
 
-    let cart = [];
-    let salesTotal = 0;
-    let salesCount = 0;
+    // Inicialização do sistema
+    document.addEventListener('DOMContentLoaded', () => {
+      carregarProdutosLocais();
+    });
 
-    function switchTab(tab) {
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      document.querySelectorAll('.nav-tabs button').forEach(b => b.classList.remove('active'));
-      
-      if(tab === 'caixa') {
-        document.getElementById('view-caixa').classList.add('active');
-        document.querySelectorAll('.nav-tabs button')[0].classList.add('active');
+    // 1. Carrega produtos salvos no navegador ou sincroniza se vazio
+    function carregarProdutosLocais() {
+      const salvos = localStorage.getItem('produtos_pdv');
+      if (salvos) {
+        todosProdutos = JSON.parse(salvos);
+        atualizarInterface(todosProdutos);
       } else {
-        document.getElementById('view-dashboard').classList.add('active');
-        document.querySelectorAll('.nav-tabs button')[1].classList.add('active');
+        sincronizarProdutosDoGithub();
       }
     }
 
-    function addItem() {
-      const input = document.getElementById('barcode-input');
-      const qtyInput = document.getElementById('qty-input');
-      const query = input.value.trim();
-      const qty = parseFloat(qtyInput.value) || 1;
+    // 2. Busca o arquivo CSV completo direto da raiz do GitHub sem Cache
+    async function sincronizarProdutosDoGithub() {
+      try {
+        const urlSemCache = `${URL_GITHUB_CSV}?t=${new Date().getTime()}`;
+        const resposta = await fetch(urlSemCache);
+        if (!resposta.ok) throw new Error('Erro ao conectar ao GitHub.');
 
-      if(!query) return;
+        const textoCSV = await resposta.text();
+        todosProdutos = parseCSV(textoCSV);
 
-      let prod = dbProducts[query];
-      
-      if(!prod) {
-        // Busca por nome se não achar por código
-        const foundKey = Object.keys(dbProducts).find(k => dbProducts[k].name.toLowerCase().includes(query.toLowerCase()));
-        if(foundKey) prod = dbProducts[foundKey];
+        localStorage.setItem('produtos_pdv', JSON.stringify(todosProdutos));
+        atualizarInterface(todosProdutos);
+        alert(`Sucesso! ${todosProdutos.length} produtos foram atualizados.`);
+      } catch (erro) {
+        console.error('Falha na sincronização:', erro);
+        alert('Erro ao carregar os dados do GitHub.');
       }
+    }
 
-      if(prod) {
-        cart.push({
-          code: query,
-          name: prod.name,
-          qty: qty,
-          unitPrice: prod.price,
-          totalPrice: prod.price * qty
-        });
-        updateCartTable();
-        input.value = '';
-        qtyInput.value = '1';
-        input.focus();
+    // 3. Converte CSV para Objeto em JavaScript tratando aspas e vírgulas
+    function parseCSV(csvText) {
+      const linhas = csvText.trim().split('\n');
+      const produtos = [];
+
+      for (let i = 1; i < linhas.length; i++) {
+        if (!linhas[i].trim()) continue;
+        
+        // Remove aspas e separa por colunas
+        const colunas = linhas[i].split('","').map(col => col.replace(/^"|"$/g, '').trim());
+
+        if (colunas.length >= 4) {
+          produtos.push({
+            codigo: colunas[0],
+            produto: colunas[1],
+            quantidade: parseFloat(colunas[2].replace(',', '.')) || 0,
+            valor: parseFloat(colunas[3].replace(',', '.')) || 0
+          });
+        }
+      }
+      return produtos;
+    }
+
+    // 4. Renderiza os produtos na tabela da tela
+    function atualizarInterface(lista) {
+      document.getElementById('status-qtd').innerText = `${lista.length} produtos carregados`;
+      const tbody = document.getElementById('lista-produtos');
+      tbody.innerHTML = '';
+
+      // Exibe até 50 itens por performance durante a busca
+      lista.slice(0, 50).forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${p.codigo}</td>
+          <td>${p.produto}</td>
+          <td>R$ ${p.valor.toFixed(2).replace('.', ',')}</td>
+          <td><button class="btn btn-add" onclick="adicionarAoCarrinho('${p.codigo}')">+</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // 5. Filtro de busca por nome ou código de barras
+    function filtrarProdutos() {
+      const termo = document.getElementById('campo-busca').value.toLowerCase().trim();
+      const filtrados = todosProdutos.filter(p => 
+        p.produto.toLowerCase().includes(termo) || p.codigo.includes(termo)
+      );
+      atualizarInterface(filtrados);
+    }
+
+    // 6. Controle do Carrinho
+    function adicionarAoCarrinho(codigo) {
+      const produto = todosProdutos.find(p => p.codigo === codigo);
+      if (!produto) return;
+
+      const itemExistente = carrinho.find(item => item.codigo === codigo);
+      if (itemExistente) {
+        itemExistente.qtd += 1;
       } else {
-        alert('Produto não encontrado! Tente cadastrar no Dashboard.');
+        carrinho.push({ ...produto, qtd: 1 });
       }
+      atualizarCarrinho();
     }
 
-    // Função para adicionar produto selecionado via busca direto no carrinho
-    function addDirectToCart(code) {
-      const prod = dbProducts[code];
-      if(prod) {
-        cart.push({
-          code: code,
-          name: prod.name,
-          qty: 1,
-          unitPrice: prod.price,
-          totalPrice: prod.price
-        });
-        updateCartTable();
-        closeModal('modal-busca');
-      }
-    }
-
-    function updateCartTable() {
-      const tbody = document.getElementById('cart-table');
+    function atualizarCarrinho() {
+      const tbody = document.getElementById('itens-carrinho');
       tbody.innerHTML = '';
       let total = 0;
 
-      cart.forEach((item, index) => {
-        total += item.totalPrice;
-        tbody.innerHTML += `
-          <tr>
-            <td>${index + 1}</td>
-            <td>${item.code}</td>
-            <td>${item.name}</td>
-            <td>${item.qty}</td>
-            <td>R$ ${item.unitPrice.toFixed(2)}</td>
-            <td>R$ ${item.totalPrice.toFixed(2)}</td>
-          </tr>
+      carrinho.forEach(item => {
+        const subtotal = item.valor * item.qtd;
+        total += subtotal;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.produto}</td>
+          <td>${item.qtd}</td>
+          <td>R$ ${subtotal.toFixed(2).replace('.', ',')}</td>
         `;
+        tbody.appendChild(tr);
       });
 
-      document.getElementById('display-total').innerText = `R$ ${total.toFixed(2)}`;
+      document.getElementById('total-valor').innerText = total.toFixed(2).replace('.', ',');
     }
 
-    function calculateChange() {
-      const total = cart.reduce((acc, item) => acc + item.totalPrice, 0);
-      const received = parseFloat(document.getElementById('amount-received').value) || 0;
-      const change = received - total;
-      document.getElementById('display-change').innerText = `R$ ${change > 0 ? change.toFixed(2) : '0.00'}`;
+    function finalizarVenda() {
+      if (carrinho.length === 0) return alert('O carrinho está vazio!');
+      alert('Venda finalizada com sucesso!');
+      carrinho = [];
+      atualizarCarrinho();
     }
-
-    function finishSale(isNfce) {
-      if(cart.length === 0) {
-        alert('Carrinho vazio!');
-        return;
-      }
-
-      const total = cart.reduce((acc, item) => acc + item.totalPrice, 0);
-      salesTotal += total;
-      salesCount++;
-
-      document.getElementById('dash-total-sold').innerText = `R$ ${salesTotal.toFixed(2)}`;
-      document.getElementById('dash-total-orders').innerText = salesCount;
-
-      alert(isNfce ? 'NFC-e emitida com sucesso!' : 'Venda finalizada com sucesso!');
-      
-      cancelSale();
-    }
-
-    function cancelSale() {
-      cart = [];
-      updateCartTable();
-      document.getElementById('amount-received').value = '';
-      document.getElementById('display-change').innerText = 'R$ 0.00';
-    }
-
-    function clearDay() {
-      if(confirm('Tem certeza que deseja zerar o caixa do dia?')) {
-        salesTotal = 0;
-        salesCount = 0;
-        document.getElementById('dash-total-sold').innerText = 'R$ 0.00';
-        document.getElementById('dash-total-orders').innerText = '0';
-      }
-    }
-
-    function saveNewProduct() {
-      const code = document.getElementById('new-prod-code').value;
-      const name = document.getElementById('new-prod-name').value;
-      const price = parseFloat(document.getElementById('new-prod-price').value);
-
-      if(code && name && price) {
-        dbProducts[code] = { name, price };
-        alert('Produto cadastrado com sucesso!');
-        document.getElementById('new-prod-code').value = '';
-        document.getElementById('new-prod-name').value = '';
-        document.getElementById('new-prod-price').value = '';
-      } else {
-        alert('Preencha todos os campos do produto!');
-      }
-    }
-
-    // Controles do Modal de Busca
-    function openSearchModal() {
-      openModal('modal-busca');
-      document.getElementById('search-product-input').value = '';
-      filterProducts();
-      setTimeout(() => document.getElementById('search-product-input').focus(), 100);
-    }
-
-    function filterProducts() {
-      const query = document.getElementById('search-product-input').value.toLowerCase();
-      const tbody = document.getElementById('search-results-body');
-      tbody.innerHTML = '';
-
-      Object.keys(dbProducts).forEach(code => {
-        const prod = dbProducts[code];
-        if(code.includes(query) || prod.name.toLowerCase().includes(query)) {
-          tbody.innerHTML += `
-            <tr>
-              <td>${code}</td>
-              <td>${prod.name}</td>
-              <td>R$ ${prod.price.toFixed(2)}</td>
-              <td>
-                <button class="btn btn-success" style="padding: 4px 8px; font-size: 0.85rem;" onclick="addDirectToCart('${code}')">+ Add</button>
-              </td>
-            </tr>
-          `;
-        }
-      });
-    }
-
-    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-    // Atalhos de Teclado
-    window.addEventListener('keydown', (e) => {
-      if(e.key === 'F1') { e.preventDefault(); switchTab('caixa'); }
-      if(e.key === 'F2') { e.preventDefault(); finishSale(false); }
-      if(e.key === 'F4') { e.preventDefault(); finishSale(true); }
-    });
   </script>
 </body>
 </html>
