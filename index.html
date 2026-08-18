@@ -134,7 +134,7 @@
                     <input type="number" id="input-qtd-manual" value="1" style="width: 80px; text-align: center; font-size: 24px; border: 3px solid var(--primaria); border-radius: 12px; font-weight: bold;" onkeydown="pularDaUnidadeProBipe(event)">
                     <div style="position: relative; flex: 1;">
                         <div id="dropdown-sugestoes" class="dropdown-busca" style="bottom: 100%; margin-bottom: 5px; width: 100%;"></div>
-                        <input type="text" class="input-codigo" id="codigo-barras" placeholder="Digite o nome ou código..." oninput="filtrarPorNome(this.value)" onkeydown="navegarSugestoes(event)" autocomplete="off" autofocus>
+                        <input type="text" class="input-codigo" id="codigo-barras" placeholder="Bipe ou digite (Ex: 5*Código)..." oninput="filtrarPorNome(this.value)" onkeydown="navegarSugestoes(event)" autocomplete="off" autofocus>
                     </div>
                 </div>
                 
@@ -369,7 +369,27 @@
                 if (e.key === 'F2') { e.preventDefault(); finalizarVenda(false); }
                 if (e.key === 'F3') { e.preventDefault(); document.getElementById('forma-pagamento').focus(); }
             });
+
+            manterFocoNoInput();
         };
+
+        // ==========================================
+        // MANTER FOCO PERPÉTUO NO LEITOR (BIPE)
+        // ==========================================
+        function manterFocoNoInput() {
+            document.addEventListener('click', (e) => {
+                const isPdv = document.getElementById('tela-pdv').classList.contains('ativa');
+                const modalAberto = document.querySelector('.modal-bg.ativo');
+                const inputBipe = document.getElementById('codigo-barras');
+                
+                const ignoraIDs = ['valor-pago', 'forma-pagamento', 'cliente-selecionado', 'peso-balanca', 'codigo-balanca', 'input-qtd-manual'];
+                const clicouEmInputOuBtn = e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.tagName === 'SELECT';
+
+                if (isPdv && !modalAberto && !ignoraIDs.includes(e.target.id) && !clicouEmInputOuBtn) {
+                    if (inputBipe) inputBipe.focus();
+                }
+            });
+        }
 
         // ==========================================
         // SINCRONIZAÇÃO EM NUVEM (GITHUB)
@@ -723,12 +743,49 @@
             let label = document.getElementById('edit-nome-prod'); label.innerText = `✅ Selecionado: ${estoqueCloud[cod].nome}`; label.style.color = "var(--sucesso)"; document.getElementById('dropdown-edicao-preco').style.display = 'none'; document.getElementById('edit-codigo-novo').focus();
         }
 
+        // ==========================================
+        // LEITOR DE BIPE DIRETO + DIGITAÇÃO MANUAL
+        // ==========================================
         function navegarSugestoes(e) {
             const drop = document.getElementById('dropdown-sugestoes'); const opcoes = drop.querySelectorAll('.opcao-busca');
+            
+            // Navegação de setas na lista suspensa
             if (drop.style.display === 'block' && opcoes.length > 0) {
                 if (e.key === 'ArrowDown') { e.preventDefault(); if (indiceSelecionadoSugestoes < opcoes.length - 1) { if (indiceSelecionadoSugestoes >= 0) opcoes[indiceSelecionadoSugestoes].classList.remove('selecionada'); indiceSelecionadoSugestoes++; opcoes[indiceSelecionadoSugestoes].classList.add('selecionada'); opcoes[indiceSelecionadoSugestoes].scrollIntoView({ block: 'nearest' }); } return;
                 } else if (e.key === 'ArrowUp') { e.preventDefault(); if (indiceSelecionadoSugestoes > 0) { if (indiceSelecionadoSugestoes >= 0) opcoes[indiceSelecionadoSugestoes].classList.remove('selecionada'); indiceSelecionadoSugestoes--; opcoes[indiceSelecionadoSugestoes].classList.add('selecionada'); opcoes[indiceSelecionadoSugestoes].scrollIntoView({ block: 'nearest' }); } return;
                 } else if (e.key === 'Enter' && indiceSelecionadoSugestoes >= 0) { e.preventDefault(); let qtdAtiva = parseFloat(document.getElementById('input-qtd-manual').value || 1); addCupom(listaFiltrada[indiceSelecionadoSugestoes], qtdAtiva); document.getElementById('input-qtd-manual').value = "1"; return; }
+            }
+
+            // Ação ao apertar Enter / Bipe do Leitor
+            if (e.key === 'Enter') {
+                e.preventDefault(); 
+                let txt = document.getElementById('codigo-barras').value.trim();
+                
+                // Se o campo estiver vazio, avança para o pagamento
+                if(!txt) { 
+                    if (cupomAtual.length === 0) return alert("Passe os produtos!"); 
+                    document.getElementById('valor-pago').focus(); 
+                    document.getElementById('valor-pago').select(); 
+                    return; 
+                }
+
+                let qtd = parseFloat(document.getElementById('input-qtd-manual').value || 1); 
+                let cod = txt;
+                
+                // Suporte para multiplicar quantidade: Exemplo (5*789...)
+                if(txt.includes('*')) { 
+                    qtd = parseFloat(txt.split('*')[0]); 
+                    cod = txt.split('*')[1]; 
+                }
+
+                // Lança o produto imediatamente pelo código de barras
+                if(estoqueCloud[cod]) { 
+                    addCupom(cod, qtd); 
+                    document.getElementById('input-qtd-manual').value = "1"; 
+                } else { 
+                    registrarLog("Código não encontrado: " + cod, "erro"); 
+                    document.getElementById('codigo-barras').value = ''; 
+                }
             }
         }
 
@@ -835,7 +892,7 @@
             document.getElementById('cliente-selecionado').value = ''; 
             document.getElementById('forma-pagamento').value = 'Dinheiro'; 
             renderizarCupom(); 
-            setTimeout(() => { document.getElementById('input-qtd-manual').focus(); document.getElementById('input-qtd-manual').select(); }, 500);
+            setTimeout(() => { document.getElementById('codigo-barras').focus(); }, 500);
         }
     </script>
 </body>
