@@ -357,7 +357,16 @@
             const locais = localStorage.getItem('precos_modificados');
             if (locais) precosModificadosManualmente = JSON.parse(locais);
 
-            // Sincroniza diretamente do GitHub na abertura
+            // Carrega primeiro o cache local para garantir estoque instantâneo
+            const local = localStorage.getItem('estoque_mercado');
+            if (local) {
+                try {
+                    estoqueCloud = JSON.parse(local);
+                    document.getElementById('contador-produtos').innerText = Object.keys(estoqueCloud).length;
+                } catch(e) {}
+            }
+
+            // Tenta atualizar do GitHub em segundo plano
             await carregarEstoqueCompletoDaNuvem();
 
             for (let c in precosModificadosManualmente) {
@@ -398,20 +407,24 @@
         }
 
         // ==========================================
-        // BUSCA COMPLETA SEM ERRO 404 (TESTA BRANCHES)
+        // BUSCA SEGURA SEM ERRO 429 E COM BACKUP
         // ==========================================
         async function carregarEstoqueCompletoDaNuvem() {
             let repo = localStorage.getItem('cloud_repo') || 'rafaelxt1033-gif/pdvmercadodoluiz';
-            const timestamp = new Date().getTime();
-            registrarLog("Sincronizando com a raiz do GitHub...", "alerta");
+            registrarLog("Sincronizando produtos do Plano1.csv...", "alerta");
             
             let novoEstoque = {};
             const branches = ['principal', 'main'];
 
             for (let branch of branches) {
                 try {
-                    // 1. Tenta carregar o Plano1.csv na branch ativa
-                    let resCsv = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/Plano1.csv?t=${timestamp}`);
+                    let resCsv = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/Plano1.csv`);
+                    
+                    if (resCsv.status === 429) {
+                        registrarLog("Aviso: Limite temporário do GitHub (429). Mantendo banco local.", "alerta");
+                        break;
+                    }
+
                     if (resCsv.ok) {
                         let text = await resCsv.text();
                         let linhas = text.trim().split('\n');
@@ -427,21 +440,14 @@
                                 }
                             }
                         }
-                    }
 
-                    // 2. Tenta carregar o precos.json na mesma branch
-                    let resJson = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/precos.json?t=${timestamp}`);
-                    if (resJson.ok) {
-                        let d = await resJson.json();
-                        Object.assign(novoEstoque, d);
-                    }
-
-                    if (Object.keys(novoEstoque).length > 0) {
-                        estoqueCloud = novoEstoque;
-                        localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-                        registrarLog(`Sucesso! ${Object.keys(estoqueCloud).length} produtos carregados via branch '${branch}'.`, 'sucesso');
-                        renderizarTabelaAdm();
-                        return;
+                        if (Object.keys(novoEstoque).length > 0) {
+                            estoqueCloud = novoEstoque;
+                            localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
+                            registrarLog(`Sucesso! ${Object.keys(estoqueCloud).length} produtos carregados (${branch}).`, 'sucesso');
+                            renderizarTabelaAdm();
+                            return;
+                        }
                     }
                 } catch(e) {
                     console.error(`Erro na branch ${branch}:`, e);
@@ -451,9 +457,9 @@
             const local = localStorage.getItem('estoque_mercado');
             if (local) {
                 estoqueCloud = JSON.parse(local);
-                registrarLog(`Aviso: Usando ${Object.keys(estoqueCloud).length} produtos locais.`, 'alerta');
+                registrarLog(`Usando base local com ${Object.keys(estoqueCloud).length} produtos.`, 'info');
             } else {
-                registrarLog("Erro 404: Arquivos não encontrados no GitHub.", "erro");
+                registrarLog("Aguarde a liberação da conexão para carregar.", "erro");
             }
             renderizarTabelaAdm();
         }
