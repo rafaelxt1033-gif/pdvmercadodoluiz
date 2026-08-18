@@ -388,7 +388,6 @@
                 const modalAberto = document.querySelector('.modal-bg.ativo');
                 const inputBipe = document.getElementById('codigo-barras');
                 
-                // Elementos que não devem forçar o foco de volta
                 const ignoraIDs = ['valor-pago', 'forma-pagamento', 'cliente-selecionado', 'peso-balanca', 'codigo-balanca', 'input-qtd-manual'];
                 const clicouEmInputOuBtn = e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.tagName === 'SELECT';
 
@@ -399,7 +398,7 @@
         }
 
         // ==========================================
-        // BUSCA COMPLETA E CORRETA DO GITHUB (CSV/JSON)
+        // BUSCA COMPLETA SEM ERRO 404 (TESTA BRANCHES)
         // ==========================================
         async function carregarEstoqueCompletoDaNuvem() {
             let repo = localStorage.getItem('cloud_repo') || 'rafaelxt1033-gif/pdvmercadodoluiz';
@@ -407,47 +406,55 @@
             registrarLog("Sincronizando com a raiz do GitHub...", "alerta");
             
             let novoEstoque = {};
+            const branches = ['principal', 'main'];
 
-            try {
-                // 1. Tenta carregar do Plano1.csv (Seus produtos completos)
-                let resCsv = await fetch(`https://raw.githubusercontent.com/${repo}/principal/Plano1.csv?t=${timestamp}`);
-                if (resCsv.ok) {
-                    let text = await resCsv.text();
-                    let linhas = text.trim().split('\n');
-                    for (let i = 1; i < linhas.length; i++) {
-                        if (!linhas[i].trim()) continue;
-                        let cols = linhas[i].split('","').map(c => c.replace(/^"|"$/g, '').trim());
-                        if (cols.length >= 4) {
-                            let cod = cols[0];
-                            let nome = cols[1];
-                            let preco = parseFloat(cols[3].replace(',', '.')) || 0;
-                            if (cod && nome && preco > 0) {
-                                novoEstoque[cod] = { nome: nome, preco: preco };
+            for (let branch of branches) {
+                try {
+                    // 1. Tenta carregar o Plano1.csv na branch ativa
+                    let resCsv = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/Plano1.csv?t=${timestamp}`);
+                    if (resCsv.ok) {
+                        let text = await resCsv.text();
+                        let linhas = text.trim().split('\n');
+                        for (let i = 1; i < linhas.length; i++) {
+                            if (!linhas[i].trim()) continue;
+                            let cols = linhas[i].split('","').map(c => c.replace(/^"|"$/g, '').trim());
+                            if (cols.length >= 4) {
+                                let cod = cols[0];
+                                let nome = cols[1];
+                                let preco = parseFloat(cols[3].replace(',', '.')) || 0;
+                                if (cod && nome && preco > 0) {
+                                    novoEstoque[cod] = { nome: nome, preco: preco };
+                                }
                             }
                         }
                     }
-                }
 
-                // 2. Se houver o precos.json, mescla para garantir alterações recentes
-                let resJson = await fetch(`https://raw.githubusercontent.com/${repo}/principal/precos.json?t=${timestamp}`);
-                if (resJson.ok) {
-                    let d = await resJson.json();
-                    Object.assign(novoEstoque, d);
-                }
+                    // 2. Tenta carregar o precos.json na mesma branch
+                    let resJson = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/precos.json?t=${timestamp}`);
+                    if (resJson.ok) {
+                        let d = await resJson.json();
+                        Object.assign(novoEstoque, d);
+                    }
 
-                if (Object.keys(novoEstoque).length > 0) {
-                    estoqueCloud = novoEstoque;
-                    localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-                    registrarLog(`Sucesso! ${Object.keys(estoqueCloud).length} produtos sincronizados.`, 'sucesso');
-                    renderizarTabelaAdm();
-                    return;
+                    if (Object.keys(novoEstoque).length > 0) {
+                        estoqueCloud = novoEstoque;
+                        localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
+                        registrarLog(`Sucesso! ${Object.keys(estoqueCloud).length} produtos carregados via branch '${branch}'.`, 'sucesso');
+                        renderizarTabelaAdm();
+                        return;
+                    }
+                } catch(e) {
+                    console.error(`Erro na branch ${branch}:`, e);
                 }
-            } catch(e) {
-                console.error(e);
             }
 
             const local = localStorage.getItem('estoque_mercado');
-            if (local) estoqueCloud = JSON.parse(local);
+            if (local) {
+                estoqueCloud = JSON.parse(local);
+                registrarLog(`Aviso: Usando ${Object.keys(estoqueCloud).length} produtos locais.`, 'alerta');
+            } else {
+                registrarLog("Erro 404: Arquivos não encontrados no GitHub.", "erro");
+            }
             renderizarTabelaAdm();
         }
 
