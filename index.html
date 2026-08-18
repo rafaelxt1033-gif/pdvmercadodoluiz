@@ -134,7 +134,7 @@
                     <input type="number" id="input-qtd-manual" value="1" style="width: 80px; text-align: center; font-size: 24px; border: 3px solid var(--primaria); border-radius: 12px; font-weight: bold;" onkeydown="pularDaUnidadeProBipe(event)">
                     <div style="position: relative; flex: 1;">
                         <div id="dropdown-sugestoes" class="dropdown-busca" style="bottom: 100%; margin-bottom: 5px; width: 100%;"></div>
-                        <input type="text" class="input-codigo" id="codigo-barras" placeholder="Bipe ou digite (Ex: 5*Código)..." oninput="filtrarPorNome(this.value)" onkeydown="navegarSugestoes(event)" autocomplete="off">
+                        <input type="text" class="input-codigo" id="codigo-barras" placeholder="Bipe ou digite (Ex: 5*Código)..." oninput="filtrarPorNome(this.value)" onkeydown="navegarSugestoes(event)" autocomplete="off" autofocus>
                     </div>
                 </div>
                 
@@ -191,8 +191,6 @@
                         <h2 style="font-size: 38px; color: #1d4ed8;" id="dash-qtd">0</h2>
                     </div>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: center;">
-                        <button onclick="baixarRelatorioContador()" style="padding: 18px; background: var(--secundaria); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px;">📥 Baixar Relatório Contador</button>
-                        <button onclick="baixarRelatorioXMLContador()" style="padding: 18px; background: var(--fiscal); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px;">📄 Baixar XML Contador</button>
                         <button onclick="zerarVendas()" style="padding: 18px; background: var(--erro); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px;">🗑️ Zerar Caixa do Dia</button>
                     </div>
                 </div>
@@ -377,11 +375,31 @@
                 if (e.key === 'F2') { e.preventDefault(); finalizarVenda(false); }
                 if (e.key === 'F3') { e.preventDefault(); document.getElementById('forma-pagamento').focus(); }
             });
+
             manterFocoNoInput();
         };
 
         // ==========================================
-        // BUSCA COMPLETA E CORRETA DO GITHUB (NUBE/CSV/JSON)
+        // MANTER FOCO PERPÉTUO NO LEITOR (BIPE)
+        // ==========================================
+        function manterFocoNoInput() {
+            document.addEventListener('click', (e) => {
+                const isPdv = document.getElementById('tela-pdv').classList.contains('ativa');
+                const modalAberto = document.querySelector('.modal-bg.ativo');
+                const inputBipe = document.getElementById('codigo-barras');
+                
+                // Elementos que não devem forçar o foco de volta
+                const ignoraIDs = ['valor-pago', 'forma-pagamento', 'cliente-selecionado', 'peso-balanca', 'codigo-balanca', 'input-qtd-manual'];
+                const clicouEmInputOuBtn = e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.tagName === 'SELECT';
+
+                if (isPdv && !modalAberto && !ignoraIDs.includes(e.target.id) && !clicouEmInputOuBtn) {
+                    if (inputBipe) inputBipe.focus();
+                }
+            });
+        }
+
+        // ==========================================
+        // BUSCA COMPLETA E CORRETA DO GITHUB (CSV/JSON)
         // ==========================================
         async function carregarEstoqueCompletoDaNuvem() {
             let repo = localStorage.getItem('cloud_repo') || 'rafaelxt1033-gif/pdvmercadodoluiz';
@@ -428,7 +446,6 @@
                 console.error(e);
             }
 
-            // Fallback se estiver offline
             const local = localStorage.getItem('estoque_mercado');
             if (local) estoqueCloud = JSON.parse(local);
             renderizarTabelaAdm();
@@ -594,26 +611,10 @@
         function pularDaUnidadeProBipe(e) { if (e.key === 'Enter') { e.preventDefault(); document.getElementById('codigo-barras').focus(); } }
         function fecharVendaComEnter(e) { if (e.key === 'Enter') { e.preventDefault(); finalizarVenda(true); } }
 
-        function manterFocoNoInput() {
-            document.addEventListener('click', (e) => {
-                const dropBarra = document.getElementById('dropdown-sugestoes'); const dropBalanca = document.getElementById('dropdown-balanca'); const dropEdicao = document.getElementById('dropdown-edicao-preco');
-                const isPdv = document.getElementById('tela-pdv').classList.contains('ativa'); const modalPreco = document.getElementById('modal-editar-preco').classList.contains('ativo'); const modalBusca = document.getElementById('modal-busca').classList.contains('ativo'); const modalCli = document.getElementById('modal-editar-cliente').classList.contains('ativo');
-                
-                if(!document.getElementById('peso-balanca').contains(e.target) && !document.getElementById('codigo-balanca').contains(e.target) && !dropBalanca.contains(e.target)) dropBalanca.style.display = 'none';
-                if(!document.getElementById('codigo-barras').contains(e.target) && !dropBarra.contains(e.target)) dropBarra.style.display = 'none';
-                if(!document.getElementById('edit-cod').contains(e.target) && !dropEdicao.contains(e.target)) dropEdicao.style.display = 'none';
-                if (document.getElementById('peso-balanca').contains(e.target) || document.getElementById('codigo-balanca').contains(e.target) || dropBalanca.contains(e.target)) { return; }
-
-                const ativo = document.activeElement.id;
-                if (isPdv && !modalPreco && !modalBusca && !modalCli && !dropBarra.contains(e.target) && !dropBalanca.contains(e.target) && ativo !== 'valor-pago' && ativo !== 'forma-pagamento' && ativo !== 'cliente-selecionado' && ativo !== 'peso-balanca' && ativo !== 'codigo-balanca' && ativo !== 'input-qtd-manual') {
-                    document.getElementById('codigo-barras').focus();
-                }
-            });
-        }
-
         function mostrarTela(id) {
             document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa')); document.getElementById(id).classList.add('ativa');
             if (id === 'tela-adm') { renderizarTabelaAdm(); renderizarTabelaClientes(); }
+            if (id === 'tela-pdv') { document.getElementById('codigo-barras').focus(); }
         }
 
         function fazerLogin() {
