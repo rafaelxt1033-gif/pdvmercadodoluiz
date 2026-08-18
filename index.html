@@ -211,10 +211,12 @@
                 <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid var(--fiscal);">
                     <h3>☁️ Sincronização em Nuvem (GitHub)</h3>
                     <div class="input-group" style="margin-top: 15px; margin-bottom: 10px;">
-                        <input type="text" id="cloud-repo" placeholder="Repositório (Ex: rafaelxt1033-gif/pdvmercadodoluiz)">
+                        <label>Repositório</label>
+                        <input type="text" id="cloud-repo" placeholder="Ex: rafaelxt1033-gif/pdvmercadodoluiz">
                     </div>
                     <div class="input-group" style="margin-bottom: 15px;">
-                        <input type="password" id="cloud-token" placeholder="Token GitHub (ghp_...)">
+                        <label>Token GitHub (Para salvar alterações)</label>
+                        <input type="password" id="cloud-token" placeholder="Cole aqui seu Token (ghp_...)">
                     </div>
                     <div style="display: flex; gap: 10px;">
                         <button onclick="salvarConfiguracaoNuvem()" class="btn-universal" style="background: var(--fiscal); padding: 12px; font-size:14px;">Salvar Dados</button>
@@ -344,7 +346,6 @@
         let indiceSelecionadoEdicao = -1;
         let timeoutBusca = null;
 
-        // Canal de comunicação local entre abas/janelas
         const canalSincronizacao = new BroadcastChannel('pdv_dois_irmaos_sync');
 
         canalSincronizacao.onmessage = (event) => {
@@ -385,7 +386,6 @@
             await carregarEstoqueCompletoDaNuvem();
             atualizarDashboard();
             
-            // Loop de sincronização em segundo plano no Caixa 2 a cada 15 segundos
             setInterval(() => {
                 carregarEstoqueCompletoDaNuvem(true);
             }, 15000);
@@ -414,9 +414,6 @@
             });
         }
 
-        // ==========================================
-        // SINCRONIZAÇÃO EM NUVEM (GITHUB API)
-        // ==========================================
         async function carregarEstoqueCompletoDaNuvem(silencioso = false) {
             let repo = localStorage.getItem('cloud_repo') || 'rafaelxt1033-gif/pdvmercadodoluiz';
             if(!silencioso) registrarLog("Sincronizando produtos da nuvem...", "alerta");
@@ -517,9 +514,6 @@
             carregarEstoqueCompletoDaNuvem();
         }
 
-        // ==========================================
-        // RELATÓRIOS PARA O CONTADOR (EXCEL E XML)
-        // ==========================================
         function exportarRelatorioContador() {
             if (vendasRealizadas.length === 0) {
                 return alert("Nenhuma venda registrada até o momento.");
@@ -577,9 +571,6 @@
             registrarLog("Arquivo XML Fiscal gerado com sucesso!", "sucesso");
         }
 
-        // ==========================================
-        // IMPORTADOR DIRECTO DE PLANILHAS (EXCEL/CSV)
-        // ==========================================
         function importarArquivoProdutos(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -651,9 +642,6 @@
             document.getElementById('contador-produtos').innerText = count;
         }
 
-        // ==========================================
-        // GESTÃO DE CLIENTES & OPERAÇÕES
-        // ==========================================
         function atualizarSelectClientes() {
             const select = document.getElementById('cliente-selecionado');
             select.innerHTML = '<option value="">Consumidor Final (Sem Vínculo)</option>';
@@ -844,9 +832,6 @@
             let label = document.getElementById('edit-nome-prod'); label.innerText = `✅ Selecionado: ${estoqueCloud[cod].nome}`; label.style.color = "var(--sucesso)"; document.getElementById('dropdown-edicao-preco').style.display = 'none'; document.getElementById('edit-codigo-novo').focus();
         }
 
-        // ==========================================
-        // LEITOR DE BIPE DIRETO + DIGITAÇÃO MANUAL
-        // ==========================================
         function navegarSugestoes(e) {
             const drop = document.getElementById('dropdown-sugestoes'); const opcoes = drop.querySelectorAll('.opcao-busca');
             
@@ -973,7 +958,12 @@
             let html = `<div id="recibo-impressao"><div class="txt-centro">CNPJ: 44.133.465/0001-96 MERCADINHO DOIS IRMAOS LTDA<br>RUA PADRE CICERO, 375 FELIPE CAMARAO - NATAL - RN<br>Fone: (84)98631-5330 I.E.: 20.591.002-5<br>DOCUMENTO AUXILIAR DA NOTA FISCAL DE CONSUMIDOR ELETRÔNICA</div><div class="linha-tracejada"></div><div># Descrição do Item / Qtd Un Vl Unit. Vl Total</div><div class="linha-tracejada"></div><div style="margin-bottom:5px;">`;
             cupomAtual.forEach((i, index) => { let numItem = String(index + 1).padStart(3, '0'); let und = Number.isInteger(i.qtd) ? 'UN' : 'KG'; html += `<div style="margin-bottom:4px;"><div>${numItem} ${i.nome.toUpperCase()}</div><div class="flex-space" style="padding-left:15px;"><span>${i.qtd} ${und} X ${formatarMoeda(i.unit)}</span><span>${formatarMoeda(i.total)}</span></div></div>`; });
             html += `</div><div class="linha-tracejada"></div><div class="flex-space"><span>QTD. TOTAL DE ITENS</span><span>${String(cupomAtual.length).padStart(3, '0')}</span></div><div class="flex-space"><span>VALOR TOTAL R$</span><span>${formatarMoeda(totalVenda)}</span></div><div class="flex-space"><span>FORMA DE PAGAMENTO</span><span>Valor Pago</span></div><div class="flex-space"><span>${formaPagto}</span><span>R$ ${formatarMoeda(pago)}</span></div><div class="flex-space"><span>VALOR TROCO R$</span><span>R$ ${formatarMoeda(troco)}</span></div><div class="linha-tracejada" style="margin-top:5px;"></div><div class="txt-centro" style="margin-top: 5px;">Consulte pela Chave de Acesso em<br>www.set.rn.gov.br/nfce/consulta<br>2426 0744 1334 6500 0196 6500 1000 0057 0210 0038 4190<br><strong>CONSUMIDOR NÃO IDENTIFICADO</strong><br>NFC-e nº 000005702 Série 001 ${dataStr} ${horaStr}<br>Protocolo de Autorização: 224260250855527<br>Data de Autorização ${dataStr} ${horaStr}</div><div id="qrcode-recibo"></div></div>`;
-            let divElement = document.createElement('div'); divElement.innerHTML = html; document.body.appendChild(divElement.firstElementChild);
+            let divElement = document.getElementById('recibo-impressao');
+            if (!divElement) {
+                let tempDiv = document.createElement('div');
+                tempDiv.innerHTML = html;
+                document.body.appendChild(tempDiv.firstElementChild);
+            }
             new QRCode(document.getElementById("qrcode-recibo"), { text: "https://www.set.rn.gov.br/nfce/consulta?p=24260744133465000196650010000057021000384190", width: 130, height: 130, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.L });
         }
 
