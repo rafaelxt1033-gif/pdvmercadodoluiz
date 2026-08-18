@@ -215,8 +215,8 @@
                         <input type="text" id="cloud-repo" placeholder="Ex: rafaelxt1033-gif/pdvmercadodoluiz">
                     </div>
                     <div class="input-group" style="margin-bottom: 15px;">
-                        <label>Token GitHub (Para salvar alterações)</label>
-                        <input type="password" id="cloud-token" placeholder="Cole aqui seu Token (ghp_...)">
+                        <label>Token GitHub (Obrigatório se o repositório for Privado)</label>
+                        <input type="password" id="cloud-token" placeholder="Cole seu Token (ghp_...)">
                     </div>
                     <div style="display: flex; gap: 10px;">
                         <button onclick="salvarConfiguracaoNuvem()" class="btn-universal" style="background: var(--fiscal); padding: 12px; font-size:14px;">Salvar Dados</button>
@@ -385,10 +385,6 @@
 
             await carregarEstoqueCompletoDaNuvem();
             atualizarDashboard();
-            
-            setInterval(() => {
-                carregarEstoqueCompletoDaNuvem(true);
-            }, 15000);
 
             document.addEventListener('keydown', (e) => { 
                 if (e.key === 'F4') { e.preventDefault(); finalizarVenda(true); }
@@ -415,57 +411,81 @@
         }
 
         // ==========================================
-        // LEITOR ROBUSTO COM REGEX E SYNC COMPLETO
+        // CARREGAMENTO DUPLO: PUBLICO OU API REST (PRIVADO)
         // ==========================================
         async function carregarEstoqueCompletoDaNuvem(silencioso = false) {
             let repo = localStorage.getItem('cloud_repo') || 'rafaelxt1033-gif/pdvmercadodoluiz';
+            let token = localStorage.getItem('cloud_token') || '';
             if(!silencioso) registrarLog("Sincronizando banco completo da nuvem...", "alerta");
             
             let novoEstoque = {};
-            const branches = ['principal', 'main'];
+            let csvText = "";
 
+            // MÉTODOS DE BUSCA DO CSV
+            const branches = ['principal', 'main', 'master'];
+
+            // TENTATIVA 1: VIA LINK PÚBLICO
             for (let branch of branches) {
                 try {
                     let resCsv = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/Plano1.csv?t=${new Date().getTime()}`);
                     if (resCsv.ok) {
-                        let text = await resCsv.text();
-                        let linhas = text.split(/\r?\n/);
-                        
-                        for (let i = 1; i < linhas.length; i++) {
-                            let linha = linhas[i].trim();
-                            if (!linha) continue;
+                        csvText = await resCsv.text();
+                        break;
+                    }
+                } catch(e) {}
+            }
 
-                            let cols = linha.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || linha.split(',');
-                            
-                            if (cols && cols.length >= 2) {
-                                let cod = cols[0].replace(/^"|"$/g, '').trim();
-                                let nome = cols[1].replace(/^"|"$/g, '').trim().toUpperCase();
-                                
-                                let precoBruto = cols[3] || cols[2] || "0";
-                                let preco = parseFloat(precoBruto.replace(/^"|"$/g, '').replace(',', '.')) || 0;
-
-                                if (cod && nome) {
-                                    novoEstoque[cod] = { nome: nome, preco: preco };
-                                }
-                            }
-                        }
-
-                        let totalItens = Object.keys(novoEstoque).length;
-                        if (totalItens > 0) {
-                            estoqueCloud = novoEstoque;
-                            localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-                            
-                            if(!silencioso) registrarLog(`Sincronizado! Total exato: ${totalItens} produtos.`, 'sucesso');
-                            renderizarTabelaAdm();
-                            return;
-                        }
+            // TENTATIVA 2: VIA API REST (SE FOR PRIVADO E TIVER TOKEN)
+            if (!csvText && token) {
+                try {
+                    let apiRes = await fetch(`https://api.github.com/repos/${repo}/contents/Plano1.csv`, {
+                        headers: { 'Authorization': `token ${token}` }
+                    });
+                    if (apiRes.ok) {
+                        let jsonRes = await apiRes.json();
+                        // Decodifica Base64 retornado pela API do GitHub
+                        csvText = decodeURIComponent(escape(atob(jsonRes.content)));
                     }
                 } catch(e) {
-                    console.error(`Erro na leitura da branch ${branch}:`, e);
+                    console.error("Erro na busca via API GitHub:", e);
                 }
             }
 
-            if (!silencioso) registrarLog("Falha ao sincronizar com o GitHub. Verifique a conexão.", "erro");
+            // PROCESSA O TEXTO DO CSV
+            if (csvText) {
+                let linhas = csvText.split(/\r?\n/);
+                
+                for (let i = 1; i < linhas.length; i++) {
+                    let linha = linhas[i].trim();
+                    if (!linha) continue;
+
+                    let cols = linha.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || linha.split(',');
+                    
+                    if (cols && cols.length >= 2) {
+                        let cod = cols[0].replace(/^"|"$/g, '').trim();
+                        let nome = cols[1].replace(/^"|"$/g, '').trim().toUpperCase();
+                        
+                        let precoBruto = cols[3] || cols[2] || "0";
+                        let preco = parseFloat(precoBruto.replace(/^"|"$/g, '').replace(',', '.')) || 0;
+
+                        if (cod && nome) {
+                            novoEstoque[cod] = { nome: nome, preco: preco };
+                        }
+                    }
+                }
+
+                let totalItens = Object.keys(novoEstoque).length;
+                if (totalItens > 0) {
+                    estoqueCloud = novoEstoque;
+                    localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
+                    
+                    if(!silencioso) registrarLog(`Sincronizado! Total exato: ${totalItens} produtos.`, 'sucesso');
+                    renderizarTabelaAdm();
+                    return;
+                }
+            }
+
+            if (!silencioso) registrarLog("Erro 404: Se o repositório for Privado, informe o Token no ADM.", "erro");
         }
 
         async function salvarAlteracaoNoGitHub() {
@@ -473,7 +493,7 @@
             let token = localStorage.getItem('cloud_token') || '';
 
             if (!token) {
-                registrarLog("Alteração salva localmente. Informe o Token do GitHub no ADM para sincronizar caixas.", "alerta");
+                registrarLog("Alteração salva localmente. Informe o Token do GitHub para atualizar a nuvem.", "alerta");
                 return;
             }
 
