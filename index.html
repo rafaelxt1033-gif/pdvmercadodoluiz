@@ -138,7 +138,6 @@
                     </div>
                 </div>
                 
-                <!-- PAINEL DE FECHAMENTO COM FIADO -->
                 <div class="fechamento-painel">
                     <div class="input-group" style="margin: 0; grid-column: span 2;">
                         <label style="color: #cbd5e1 !important;">Vincular Cliente (Fidelidade/Fiado)</label>
@@ -411,7 +410,7 @@
         }
 
         // ==========================================
-        // CARREGAMENTO DUPLO: PUBLICO OU API REST (PRIVADO)
+        // CARREGAMENTO SEGURO COM AUTENTICAÇÃO BEARER
         // ==========================================
         async function carregarEstoqueCompletoDaNuvem(silencioso = false) {
             let repo = localStorage.getItem('cloud_repo') || 'rafaelxt1033-gif/pdvmercadodoluiz';
@@ -421,13 +420,16 @@
             let novoEstoque = {};
             let csvText = "";
 
-            // MÉTODOS DE BUSCA DO CSV
-            const branches = ['principal', 'main', 'master'];
+            const headers = {};
+            if (token) {
+                headers['Authorization'] = `Bearer ${token.trim()}`;
+            }
 
-            // TENTATIVA 1: VIA LINK PÚBLICO
+            // TENTATIVA 1: VIA LINK RAW (COM TOKEN SE O REPO FOR PRIVADO)
+            const branches = ['principal', 'main', 'master'];
             for (let branch of branches) {
                 try {
-                    let resCsv = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/Plano1.csv?t=${new Date().getTime()}`);
+                    let resCsv = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/Plano1.csv?t=${new Date().getTime()}`, { headers });
                     if (resCsv.ok) {
                         csvText = await resCsv.text();
                         break;
@@ -435,23 +437,24 @@
                 } catch(e) {}
             }
 
-            // TENTATIVA 2: VIA API REST (SE FOR PRIVADO E TIVER TOKEN)
+            // TENTATIVA 2: VIA API REST DE CONTEÚDO (MÍDIA RAW)
             if (!csvText && token) {
                 try {
                     let apiRes = await fetch(`https://api.github.com/repos/${repo}/contents/Plano1.csv`, {
-                        headers: { 'Authorization': `token ${token}` }
+                        headers: { 
+                            'Authorization': `Bearer ${token.trim()}`,
+                            'Accept': 'application/vnd.github.v3.raw'
+                        }
                     });
                     if (apiRes.ok) {
-                        let jsonRes = await apiRes.json();
-                        // Decodifica Base64 retornado pela API do GitHub
-                        csvText = decodeURIComponent(escape(atob(jsonRes.content)));
+                        csvText = await apiRes.text();
                     }
                 } catch(e) {
-                    console.error("Erro na busca via API GitHub:", e);
+                    console.error("Erro na API do GitHub:", e);
                 }
             }
 
-            // PROCESSA O TEXTO DO CSV
+            // PROCESSA O CONTEÚDO CSV
             if (csvText) {
                 let linhas = csvText.split(/\r?\n/);
                 
@@ -479,13 +482,13 @@
                     estoqueCloud = novoEstoque;
                     localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
                     
-                    if(!silencioso) registrarLog(`Sincronizado! Total exato: ${totalItens} produtos.`, 'sucesso');
+                    if(!silencioso) registrarLog(`Sucesso! ${totalItens} produtos carregados da nuvem.`, 'sucesso');
                     renderizarTabelaAdm();
                     return;
                 }
             }
 
-            if (!silencioso) registrarLog("Erro 404: Se o repositório for Privado, informe o Token no ADM.", "erro");
+            if (!silencioso) registrarLog("Erro de Leitura. Verifique se o Token foi colado no ADM.", "erro");
         }
 
         async function salvarAlteracaoNoGitHub() {
@@ -493,7 +496,7 @@
             let token = localStorage.getItem('cloud_token') || '';
 
             if (!token) {
-                registrarLog("Alteração salva localmente. Informe o Token do GitHub para atualizar a nuvem.", "alerta");
+                registrarLog("Alteração salva localmente. Informe o Token do GitHub no ADM para atualizar a nuvem.", "alerta");
                 return;
             }
 
@@ -505,7 +508,7 @@
 
                 const url = `https://api.github.com/repos/${repo}/contents/Plano1.csv`;
                 
-                let getRes = await fetch(url, { headers: { 'Authorization': `token ${token}` } });
+                let getRes = await fetch(url, { headers: { 'Authorization': `Bearer ${token.trim()}` } });
                 let sha = "";
                 if (getRes.ok) {
                     let getData = await getRes.json();
@@ -517,11 +520,11 @@
                 let putRes = await fetch(url, {
                     method: 'PUT',
                     headers: {
-                        'Authorization': `token ${token}`,
+                        'Authorization': `Bearer ${token.trim()}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        message: 'Atualização automática de preços pelo PDV',
+                        message: 'Atualização de preços via PDV',
                         content: contentEncoded,
                         sha: sha,
                         branch: 'principal'
@@ -529,17 +532,17 @@
                 });
 
                 if (putRes.ok) {
-                    registrarLog("Preço sincronizado com sucesso no GitHub!", "sucesso");
+                    registrarLog("Preço atualizado com sucesso no GitHub!", "sucesso");
                 }
             } catch (err) {
-                console.error("Erro ao enviar para o GitHub:", err);
+                console.error("Erro ao salvar no GitHub:", err);
             }
         }
 
         function salvarConfiguracaoNuvem() {
             localStorage.setItem('cloud_repo', document.getElementById('cloud-repo').value.trim());
             localStorage.setItem('cloud_token', document.getElementById('cloud-token').value.trim());
-            alert("Configurações da Nuvem salvas!");
+            alert("Configurações salvas!");
             carregarEstoqueCompletoDaNuvem();
         }
 
