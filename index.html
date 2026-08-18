@@ -3,1013 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mercadinho Dois Irmãos - PDV</title>
-    <!-- Bibliotecas externas: QR Code para NFC-e e XLSX para exportação -->
+    <title>Mercadinho Dois Irmãos - PDV Integrado</title>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
     <style>
-        :root {
-            --primaria: #0f172a;
-            --secundaria: #2563eb;
-            --fundo: #f1f5f9;
-            --cards: #ffffff;
-            --texto: #1e293b;
-            --erro: #ef4444;
-            --sucesso: #10b981;
-            --alerta: #f59e0b;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--fundo); color: var(--texto); overflow-x: hidden; }
-
-        /* TELAS */
-        .tela { display: none; width: 100vw; min-height: 100vh; }
-        .tela.ativa { display: flex; flex-direction: column; }
-
-        /* TELA LOGIN */
-        #tela-login { align-items: center; justify-content: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
-        .box-login { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); width: 100%; max-width: 400px; text-align: center; }
-        .box-login h1 { font-size: 22px; margin-bottom: 20px; color: var(--primaria); }
+        :root { --primaria: #0f172a; --secundaria: #2563eb; --sucesso: #10b981; --alerta: #f59e0b; --erro: #ef4444; --fundo: #f8fafc; --texto: #1e293b; --fiscal: #7c3aed; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: var(--fundo); color: var(--texto); height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        
+        .tela { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; flex-direction: column; }
+        .tela.ativa { display: flex; }
+        
+        .login-wrapper { background: linear-gradient(135deg, #020617, #1e293b); justify-content: center; align-items: center; }
+        .login-box { background: white; padding: 40px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); text-align: center; }
         .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 5px; }
-        .input-group input, .input-group select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 15px; outline: none; }
-        .btn { width: 100%; padding: 12px; background: var(--secundaria); color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn:hover { opacity: 0.9; }
+        .input-group label { display: block; font-weight: 600; margin-bottom: 6px; color: #475569; font-size: 14px; }
+        .input-group input, .input-group select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; }
+        .btn-universal { width: 100%; padding: 15px; background: var(--primaria); color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-universal:hover { filter: brightness(1.1); }
+        
+        .top-bar { background: var(--primaria); color: white; padding: 0 25px; height: 65px; display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .pdv-container { display: flex; width: 100%; height: calc(100% - 65px); background: white; }
+        .cupom-area { width: 45%; background: white; padding: 30px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; }
+        .cupom-header { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 40px; font-weight: 600; padding-bottom: 12px; border-bottom: 2px solid var(--primaria); font-size: 14px; }
+        .produtos-lista { flex-grow: 1; overflow-y: auto; margin-top: 10px; }
+        .item-cupom { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 40px; padding: 10px 0; border-bottom: 1px dashed #e2e8f0; font-size: 15px; align-items: center; }
+        .badge-unidade { font-size: 11px; background: #e2e8f0; color: #475569; padding: 2px 4px; border-radius: 4px; margin-left: 4px; font-weight: bold; }
+        .btn-remover { color: var(--erro); background: transparent; border: none; cursor: pointer; font-size: 16px; }
+        
+        .total-box { background: #ffffff; color: var(--erro); padding: 25px; border-radius: 12px; text-align: center; margin-top: 20px; border: 4px solid var(--erro); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.15); }
+        .total-box h3 { font-size: 16px; letter-spacing: 1px; margin-bottom: 5px; font-weight: 800; }
+        .total-box p { font-size: 42px; font-weight: 900; }
+        
+        .operacao-area { width: 55%; padding: 30px; display: flex; flex-direction: column; background: #f8fafc; justify-content: space-between; }
+        .terminal-log { background: #020617; color: #38bdf8; padding: 15px; border-radius: 8px; height: 110px; overflow-y: auto; font-family: monospace; font-size: 13px; margin-bottom: 15px; }
+        .area-balanca { background: #e2e8f0; padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; gap: 10px; align-items: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+        .area-balanca input { padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; }
+        .input-codigo { width: 100%; padding: 22px; font-size: 38px; text-align: center; border: 3px solid var(--primaria); border-radius: 12px; outline: none; font-weight: bold; }
+        .dropdown-busca { display: none; position: absolute; left: 0; width: 100%; background: white; border: 2px solid var(--secundaria); border-radius: 8px; max-height: 250px; overflow-y: auto; z-index: 999; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .opcao-busca { padding: 14px; cursor: pointer; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; }
+        .opcao-busca:hover, .opcao-busca.selecionada { background: #eff6ff; color: var(--secundaria); }
+        
+        .fechamento-painel { background: #0f172a; padding: 25px; border-radius: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .fechamento-painel label { font-size: 17px !important; font-weight: 900 !important; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 8px; }
+        .label-pagamento { color: #facc15 !important; } 
+        .label-recebido { color: #4ade80 !important; }  
+        
+        .fechamento-painel input, .fechamento-painel select { background: #1e293b !important; color: #ffffff !important; border: 3px solid #475569 !important; font-size: 28px !important; font-weight: 900 !important; padding: 16px !important; border-radius: 10px !important; }
+        .fechamento-painel input:focus, .fechamento-painel select:focus { border-color: #38bdf8 !important; }
+        #box-troco { color: #38bdf8 !important; font-size: 36px !important; text-shadow: 0 2px 8px rgba(0,0,0,0.8); font-weight: 900; }
+        
+        .dashboard-area { padding: 30px; background: #f1f5f9; width: 100%; height: calc(100% - 65px); overflow-y: auto; }
+        .tabela-dados { width: 100%; border-collapse: collapse; background: white; margin-top: 10px;}
+        .tabela-dados th, .tabela-dados td { padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+        
+        .modal-bg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+        .modal-bg.ativo { display: flex; }
+        .modal-card { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 440px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
 
-        /* HEADER */
-        header { background: var(--primaria); color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
-        header h2 { font-size: 18px; }
-        .header-actions { display: flex; gap: 10px; align-items: center; }
-        .btn-sm { padding: 6px 12px; font-size: 13px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; }
-        .btn-adm { background: #3b82f6; color: white; }
-        .btn-sair { background: var(--erro); color: white; }
+        .container-faturamento-olho { display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 5px; }
+        .btn-olho-faturamento { background: transparent; border: none; cursor: pointer; font-size: 26px; display: flex; align-items: center; justify-content: center; padding: 5px; border-radius: 50%; transition: background 0.2s; }
+        .btn-olho-faturamento:hover { background: rgba(0, 0, 0, 0.05); }
 
-        /* PDV CONTAINER */
-        .pdv-container { display: grid; grid-template-columns: 1fr 420px; gap: 15px; padding: 15px; flex: 1; height: calc(100vh - 55px); }
-        .pdv-esquerda { display: flex; flex-direction: column; gap: 12px; }
-        .pdv-direita { background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; }
-
-        /* CARDS E ENTRADAS */
-        .card { background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .grid-3 { display: grid; grid-template-columns: 100px 1fr 120px; gap: 10px; }
-
-        .pos-relativa { position: relative; }
-        .dropdown-sugestoes { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #cbd5e1; border-top: none; max-height: 200px; overflow-y: auto; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.15); display: none; border-radius: 0 0 6px 6px; }
-        .opcao-busca { padding: 10px; border-bottom: 1px solid #f1f5f9; cursor: pointer; display: flex; justify-content: space-between; font-size: 14px; }
-        .opcao-busca:hover, .opcao-busca.selecionada { background: #e2e8f0; font-weight: bold; }
-
-        /* TABELA CUPOM */
-        .cupom-header { display: grid; grid-template-columns: 1fr 60px 70px 80px 30px; font-weight: bold; font-size: 13px; color: #64748b; padding-bottom: 8px; border-bottom: 2px solid #e2e8f0; }
-        .cupom-lista { flex: 1; overflow-y: auto; margin-top: 10px; margin-bottom: 10px; max-height: 320px; }
-        .item-cupom { display: grid; grid-template-columns: 1fr 60px 70px 80px 30px; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #f1f5f9; align-items: center; }
-        .badge-unidade { background: #e2e8f0; font-size: 10px; padding: 2px 4px; border-radius: 3px; font-weight: bold; }
-        .btn-remover { background: none; border: none; cursor: pointer; font-size: 14px; }
-
-        /* TOTALIZADORES PDV */
-        .total-box { background: #0f172a; color: #38bdf8; padding: 15px; border-radius: 8px; text-align: right; font-size: 28px; font-weight: bold; margin-bottom: 10px; }
-        .troco-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 10px; border-radius: 6px; text-align: right; font-size: 18px; font-weight: bold; color: var(--secundaria); margin-bottom: 10px; }
-
-        /* LOG SISTEMA */
-        .log-box { background: #1e293b; color: #94a3b8; font-family: monospace; font-size: 12px; padding: 10px; border-radius: 6px; height: 100px; overflow-y: auto; margin-top: auto; }
-
-        /* TELA ADM */
-        .adm-content { padding: 20px; max-width: 1200px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 20px; }
-        .dash-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
-        .dash-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .dash-card h3 { font-size: 13px; color: #64748b; margin-bottom: 5px; }
-        .dash-card p { font-size: 24px; font-weight: bold; color: var(--primaria); }
-
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
-        th { background: #f8fafc; font-weight: bold; color: #475569; }
-
-        /* MODAL */
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
-        .modal.ativo { display: flex; }
-        .modal-body { background: white; padding: 25px; border-radius: 10px; width: 100%; max-width: 500px; position: relative; }
-
-        /* IMPRESSÃO */
         @media print {
-            body * { visibility: hidden; }
-            #recibo-impressao, #recibo-impressao * { visibility: visible; }
-            #recibo-impressao {
-                position: absolute; left: 0; top: 0; width: 78mm; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #000; background: #fff; padding: 2mm;
-            }
-            .linha-tracejada { border-bottom: 1px dashed #000; margin: 5px 0; }
-            .txt-centro { text-align: center; }
-            .txt-direita { text-align: right; }
+            body * { visibility: hidden; display: none !important; }
+            #recibo-impressao, #recibo-impressao * { visibility: visible; display: block !important; }
+            #recibo-impressao { position: absolute; left: 0; top: 0; width: 100%; max-width: 80mm; margin: 0; padding: 0 2mm; font-family: Arial, Helvetica, sans-serif !important; color: #000 !important; font-weight: bold !important; background: white; font-size: 12px; line-height: 1.25; }
+            .txt-centro { text-align: center; } .txt-direita { text-align: right; }
+            .linha-tracejada { border-top: 1px dashed #000; margin: 4px 0; width: 100%; }
             .flex-space { display: flex; justify-content: space-between; }
-            #qrcode-recibo { display: flex; justify-content: center; margin-top: 10px; }
+            #qrcode-recibo { margin: 8px auto 0 auto; display: flex; justify-content: center; }
+            #qrcode-recibo img { width: 130px; height: 130px; }
+            @page { margin: 0; }
         }
     </style>
 </head>
 <body>
 
-    <!-- TELA DE LOGIN -->
-    <div id="tela-login" class="tela ativa">
-        <div class="box-login">
-            <h1>🛒 Mercadinho Dois Irmãos</h1>
+    <div id="tela-login" class="tela ativa login-wrapper">
+        <div class="login-box">
+            <h2>Dois Irmãos PDV</h2>
             <div class="input-group">
                 <label>Usuário</label>
-                <input type="text" id="login-usuario" placeholder="Ex: eduardo ou caixa" value="caixa">
+                <input type="text" id="login-usuario" placeholder="caixa ou eduardo">
             </div>
             <div class="input-group">
                 <label>Senha</label>
-                <input type="password" id="login-senha" placeholder="Senha" value="123">
+                <input type="password" id="login-senha" placeholder="••••••••" onkeypress="if(event.key === 'Enter') fazerLogin()">
             </div>
-            <button class="btn" onclick="fazerLogin()">Entrar no Caixa</button>
+            <button class="btn-universal" onclick="fazerLogin()">Acessar Sistema</button>
         </div>
     </div>
 
-    <!-- TELA PDV -->
     <div id="tela-pdv" class="tela">
-        <header>
-            <h2>🛒 PDV - Mercadinho Dois Irmãos | Caixa: <span id="caixa-nome-status">Caixa</span></h2>
-            <div class="header-actions">
-                <button class="btn-sm btn-adm" id="btn-painel-atalho" onclick="mostrarTela('tela-adm')">⚙️ Painel ADM</button>
-                <button class="btn-sm btn-sair" onclick="sair()">🚪 Sair</button>
+        <div class="top-bar">
+            <div><strong>CAIXA 01</strong> | Operador: <span id="caixa-nome-status">Eduardo</span></div>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn-universal" onclick="abrirModalBusca()" style="background: var(--sucesso); padding: 8px; width: auto;">Cons. Preço</button>
+                <button class="btn-universal" onclick="abrirModalPreco()" style="background: var(--secundaria); padding: 8px; width: auto;">Mudar Preço</button>
+                <button class="btn-universal" id="btn-painel-atalho" onclick="mostrarTela('tela-adm')" style="background: var(--alerta); padding: 8px; display: none; width: auto;">Painel ADM</button>
+                <button class="btn-universal" onclick="cancelarCupom()" style="background: var(--erro); padding: 8px; width: auto;">Cancelar Compra</button>
+                <button class="btn-universal" onclick="sair()" style="background: #475569; padding: 8px; width: auto;">Sair</button>
             </div>
-        </header>
-
+        </div>
+        
         <div class="pdv-container">
-            <!-- Esquerda: Entradas de Produtos -->
-            <div class="pdv-esquerda">
-                <div class="card grid-3">
-                    <div class="input-group">
-                        <label>QTD</label>
-                        <input type="number" id="input-qtd-manual" value="1" min="0.001" step="any" onkeydown="pularDaUnidadeProBipe(event)">
-                    </div>
-                    <div class="input-group pos-relativa">
-                        <label>Código ou Nome do Produto (F8 para Buscar)</label>
-                        <input type="text" id="codigo-barras" placeholder="Bipe o código ou digite o nome..." oninput="filtrarPorNome(this.value)" onkeydown="navegarSugestoes(event)" autocomplete="off">
-                        <div id="dropdown-sugestoes" class="dropdown-sugestoes"></div>
-                    </div>
-                    <div class="input-group" style="align-self: flex-end;">
-                        <button class="btn" style="background: var(--alerta); padding: 12px;" onclick="abrirModalBusca()">🔍 Buscar (F8)</button>
-                    </div>
-                </div>
-
-                <div class="card grid-3">
-                    <div class="input-group">
-                        <label>Peso (KG)</label>
-                        <input type="number" id="peso-balanca" step="0.001" placeholder="0.000">
-                    </div>
-                    <div class="input-group pos-relativa">
-                        <label>Produto de Balança / Peso</label>
-                        <input type="text" id="codigo-balanca" placeholder="Digite o nome do item pesado..." oninput="filtrarNomeBalanca(this.value)" onkeydown="navegSugestoesBalanca(event)" autocomplete="off">
-                        <div id="dropdown-balanca" class="dropdown-sugestoes"></div>
-                    </div>
-                    <div class="input-group" style="align-self: flex-end;">
-                        <button class="btn" style="background: var(--secundaria); padding: 12px;" onclick="abrirModalPreco()">✏️ Preço / Cód</button>
-                    </div>
-                </div>
-
-                <!-- Log de Operações -->
-                <div class="card" style="flex:1; display:flex; flex-direction:column;">
-                    <label style="font-weight:bold; font-size:13px; margin-bottom:5px;">📋 Registro de Operações</label>
-                    <div id="log-sistema" class="log-box">
-                        <div>[SISTEMA] Aguardando leitura de itens...</div>
-                    </div>
-                </div>
+            <div class="cupom-area">
+                <div class="cupom-header"><span>Item</span><span style="text-align:center;">Qtd/Peso</span><span style="text-align:right;">Unit</span><span style="text-align:right;">Total</span><span></span></div>
+                <div class="produtos-lista" id="lista-cupom"></div>
+                <div class="total-box"><h3>TOTAL A PAGAR</h3><p>R$ <span id="valor-total">0.00</span></p></div>
             </div>
-
-            <!-- Direita: Cupom e Pagamento -->
-            <div class="pdv-direita">
-                <div>
-                    <div class="cupom-header">
-                        <span>PRODUTO</span>
-                        <span style="text-align:center">QTD</span>
-                        <span style="text-align:right">UNIT</span>
-                        <span style="text-align:right">TOTAL</span>
-                        <span></span>
-                    </div>
-                    <div id="lista-cupom" class="cupom-lista"></div>
-                </div>
-
-                <div>
-                    <div class="total-box">R$ <span id="valor-total">0.00</span></div>
-                    
-                    <div class="grid-2" style="margin-bottom:10px;">
-                        <div class="input-group">
-                            <label>Valor Pago (R$)</label>
-                            <input type="number" id="valor-pago" step="0.01" placeholder="0.00" oninput="calcularTroco()" onkeydown="fecharVendaComEnter(event)">
-                        </div>
-                        <div class="input-group">
-                            <label>Forma de Pagamento (F3)</label>
-                            <select id="forma-pagamento">
-                                <option value="Dinheiro">💵 Dinheiro</option>
-                                <option value="Pix">📱 PIX</option>
-                                <option value="Cartão de Débito">💳 Cartão Débito</option>
-                                <option value="Cartão de Crédito">💳 Cartão Crédito</option>
-                                <option value="Fiado">📖 Fiado / Caderneta</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="input-group" style="margin-bottom:10px;">
-                        <label>Cliente (Fiado ou Programa Fidelidade)</label>
-                        <select id="cliente-selecionado">
-                            <option value="">Consumidor Final (Sem Vínculo)</option>
-                        </select>
-                    </div>
-
-                    <div id="box-troco" class="troco-box">Troco: R$ 0.00</div>
-
-                    <div class="grid-2" style="margin-top:10px;">
-                        <button class="btn" style="background: var(--sucesso);" onclick="finalizarVenda(false)">✅ Finalizar (F2)</button>
-                        <button class="btn" style="background: #8b5cf6;" onclick="finalizarVenda(true)">📄 NFC-e (F4)</button>
-                    </div>
-                    <button class="btn" style="background: var(--erro); margin-top: 8px; padding: 8px; font-size: 13px;" onclick="cancelarCupom()">❌ Cancelar Compra</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- TELA PAINEL ADM -->
-    <div id="tela-adm" class="tela">
-        <header>
-            <h2>⚙️ Painel de Controle e Gestão</h2>
-            <button class="btn-sm btn-sair" onclick="mostrarTela('tela-pdv')">⬅️ Voltar ao PDV</button>
-        </header>
-
-        <div class="adm-content">
-            <!-- Dashboard -->
-            <div class="dash-cards">
-                <div class="dash-card">
-                    <h3>TOTAL FATURADO (HOJE) <button id="btn-olho-faturamento" onclick="toggleVisualizacaoFaturamento()" style="border:none; background:none; cursor:pointer;">👁️‍🗨️</button></h3>
-                    <p id="dash-total">R$ ***</p>
-                </div>
-                <div class="dash-card">
-                    <h3>VENDAS REALIZADAS</h3>
-                    <p id="dash-qtd">0</p>
-                </div>
-                <div class="dash-card">
-                    <h3>PRODUTOS NO BANCO</h3>
-                    <p id="contador-produtos">0</p>
-                </div>
-                <div class="dash-card" style="display:flex; align-items:center;">
-                    <button class="btn" style="background: var(--erro); font-size:13px;" onclick="zerarVendas()">🧹 Zerar Expediente</button>
-                </div>
-            </div>
-
-            <!-- Cadastro de Produto Local e Nuvem -->
-            <div class="grid-2">
-                <div class="card">
-                    <h3 style="margin-bottom:15px; font-size:16px;">➕ Cadastrar Novo Produto</h3>
-                    <div class="input-group">
-                        <label>Código de Barras</label>
-                        <input type="text" id="novo-cod" placeholder="Ex: 7891234567890">
-                    </div>
-                    <div class="input-group">
-                        <label>Nome do Produto</label>
-                        <input type="text" id="novo-nome" placeholder="Ex: FEIJÃO CARIOCA 1KG">
-                    </div>
-                    <div class="input-group">
-                        <label>Preço (R$)</label>
-                        <input type="number" id="novo-preco" step="0.01" placeholder="0.00">
-                    </div>
-                    <button class="btn" onclick="cadastrarProdutoLocal()">Salvar Produto</button>
-                </div>
-
-                <div class="card">
-                    <h3 style="margin-bottom:15px; font-size:16px;">☁️ Sincronização em Nuvem (GitHub)</h3>
-                    <div class="input-group">
-                        <label>Repositório (Usuario/Repositorio)</label>
-                        <input type="text" id="cloud-repo" value="rafaelxt1033-gif/pdvmercadodoluiz">
-                    </div>
-                    <div class="input-group">
-                        <label>Token de Acesso do GitHub (PAT)</label>
-                        <input type="password" id="cloud-token" placeholder="Cole seu ghp_Token aqui...">
-                    </div>
-                    <div class="grid-2" style="margin-top:15px;">
-                        <button class="btn" onclick="salvarConfiguracaoNuvem()">💾 Salvar Dados</button>
-                        <button class="btn" style="background: #0284c7;" onclick="forcarSincronizacaoNuvem()">🔄 Sincronizar Agora</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Cadastrar e Listar Clientes -->
-            <div class="card">
-                <h3 style="margin-bottom:15px; font-size:16px;">👤 Gestão de Clientes / Fiado / Fidelidade</h3>
-                <div class="grid-3" style="margin-bottom:15px;">
-                    <div class="input-group">
-                        <label>Nome do Cliente</label>
-                        <input type="text" id="novo-cliente-nome" placeholder="Nome completo">
-                    </div>
-                    <div class="input-group">
-                        <label>Telefone / WhatsApp</label>
-                        <input type="text" id="novo-cliente-tel" placeholder="84988887777">
-                    </div>
-                    <div class="input-group" style="align-self: flex-end;">
-                        <button class="btn" style="background: var(--sucesso);" onclick="cadastrarCliente()">➕ Cadastrar</button>
-                    </div>
-                </div>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Cliente</th>
-                            <th>Telefone</th>
-                            <th>Pontos Fidelidade</th>
-                            <th>Última Nota/Obs</th>
-                            <th>Dívida Fiado</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabela-clientes-corpo"></tbody>
-                </table>
-            </div>
-
-            <!-- Tabela de Produtos -->
-            <div class="card">
-                <h3 style="margin-bottom:15px; font-size:16px;">📦 Lista de Produtos em Estoque</h3>
-                <div style="max-height: 300px; overflow-y: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Descrição do Produto</th>
-                                <th>Preço</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela-estoque-corpo"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL DE BUSCA (F8) -->
-    <div id="modal-busca" class="modal">
-        <div class="modal-body">
-            <h3>🔍 Consultar Preço e Produto</h3>
-            <div class="input-group" style="margin-top:15px;">
-                <input type="text" id="campo-consulta" placeholder="Digite o nome ou código..." oninput="executarBusca(this.value)">
-            </div>
-            <div id="resultado-busca" style="max-height:250px; overflow-y:auto; margin-top:10px;"></div>
-            <button class="btn" style="margin-top:15px; background: var(--erro);" onclick="fecharModalBusca()">Fechar</button>
-        </div>
-    </div>
-
-    <!-- MODAL DE EDITAR PREÇO E CÓDIGO -->
-    <div id="modal-editar-preco" class="modal">
-        <div class="modal-body">
-            <h3>✏️ Alterar Preço ou Código</h3>
-            <div class="input-group pos-relativa" style="margin-top:15px;">
-                <label>Buscar Produto pelo Nome ou Código</label>
-                <input type="text" id="edit-cod" placeholder="Digite o nome do produto..." oninput="buscarParaEdicao(this.value)" onkeydown="navegarSugestoesEdicao(event)" autocomplete="off">
-                <input type="hidden" id="edit-cod-selecionado">
-                <div id="dropdown-edicao-preco" class="dropdown-sugestoes"></div>
-            </div>
-            <div id="edit-nome-prod" style="font-weight:bold; margin-bottom:10px; font-size:14px;"></div>
-            <div class="input-group">
-                <label>Novo Código de Barras</label>
-                <input type="text" id="edit-codigo-novo" placeholder="Código de barras">
-            </div>
-            <div class="input-group">
-                <label>Novo Preço (R$)</label>
-                <input type="number" id="edit-preco" step="0.01" placeholder="0.00">
-            </div>
-            <div class="input-group">
-                <label>Senha do Gerente</label>
-                <input type="password" id="edit-senha" placeholder="Digite a senha">
-            </div>
-            <div class="grid-2" style="margin-top:15px;">
-                <button class="btn" style="background: var(--sucesso);" onclick="salvarNovoPreco()">Salvar</button>
-                <button class="btn" style="background: var(--erro);" onclick="fecharModalPreco()">Cancelar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL EDITAR CLIENTE -->
-    <div id="modal-editar-cliente" class="modal">
-        <div class="modal-body">
-            <h3>✏️ Editar Cadastro de Cliente</h3>
-            <input type="hidden" id="edit-cli-id">
-            <div class="input-group" style="margin-top:15px;">
-                <label>Nome Completo</label>
-                <input type="text" id="edit-cli-nome">
-            </div>
-            <div class="input-group">
-                <label>Telefone / WhatsApp</label>
-                <input type="text" id="edit-cli-tel">
-            </div>
-            <div class="grid-2">
-                <div class="input-group">
-                    <label>Dívida Atual (R$)</label>
-                    <input type="number" id="edit-cli-divida" step="0.01">
-                </div>
-                <div class="input-group">
-                    <label>Pontos Fidelidade</label>
-                    <input type="number" id="edit-cli-pontos">
-                </div>
-            </div>
-            <div class="input-group">
-                <label>Data / Observação</label>
-                <input type="text" id="edit-cli-data">
-            </div>
-            <div class="grid-2" style="margin-top:15px;">
-                <button class="btn" style="background: var(--sucesso);" onclick="salvarEdicaoCliente()">Salvar Alterações</button>
-                <button class="btn" style="background: var(--erro);" onclick="excluirClienteAtual()">🗑️ Excluir Cliente</button>
-            </div>
-            <button class="btn" style="margin-top:10px; background: #64748b;" onclick="fecharModalEditarCliente()">Cancelar</button>
-        </div>
-    </div>
-
-    <!-- SCRIPT PRINCIPAL DO SISTEMA -->
-    <script>
-        let estoqueCloud = {}; 
-        let precosModificadosManualmente = {};
-        let vendasRealizadas = [];
-        let cupomAtual = [];
-        let totalVenda = 0;
-        let listaFiltrada = [];
-        let faturamentoVisivel = false; 
-        
-        let clientesDB = {}; 
-        let clienteEmEdicao = null;
-        
-        let indiceSelecionadoSugestoes = -1;
-        let indiceSelecionadoBalanca = -1;
-        let indiceSelecionadoEdicao = -1;
-        let timeoutBusca = null;
-
-        // INICIALIZAÇÃO
-        window.onload = async function() {
-            if (document.getElementById('cloud-repo')) document.getElementById('cloud-repo').value = localStorage.getItem('cloud_repo') || 'rafaelxt1033-gif/pdvmercadodoluiz';
-            if (document.getElementById('cloud-token')) document.getElementById('cloud-token').value = localStorage.getItem('cloud_token') || '';
             
-            const vendasSalvas = localStorage.getItem('vendas') || localStorage.getItem('vendas_realizadas');
-            if (vendasSalvas) { try { vendasRealizadas = JSON.parse(vendasSalvas); } catch(e) { vendasRealizadas = []; } }
-            
-            const clientesSalvos = localStorage.getItem('clientes_mercado');
-            if (clientesSalvos) { try { clientesDB = JSON.parse(clientesSalvos); } catch(e) { clientesDB = {}; } }
-            atualizarSelectClientes();
-
-            const locais = localStorage.getItem('precos_modificados');
-            if (locais) { try { precosModificadosManualmente = JSON.parse(locais); } catch(e) {} }
-
-            // Força a busca atualizada na nuvem (GitHub) sempre que a página carrega
-            await carregarEstoqueCompletoDaNuvem();
-
-            for (let c in precosModificadosManualmente) {
-                if (typeof precosModificadosManualmente[c] === 'object' && precosModificadosManualmente[c] !== null) {
-                    estoqueCloud[c] = precosModificadosManualmente[c];
-                } else if (estoqueCloud[c]) {
-                    estoqueCloud[c].preco = precosModificadosManualmente[c];
-                }
-            }
-
-            localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-            if (document.getElementById('contador-produtos')) document.getElementById('contador-produtos').innerText = Object.keys(estoqueCloud).length;
-            atualizarDashboard();
-            
-            document.addEventListener('keydown', (e) => { 
-                if (e.key === 'F4') { e.preventDefault(); finalizarVenda(true); }
-                if (e.key === 'F2') { e.preventDefault(); finalizarVenda(false); }
-                if (e.key === 'F3') { e.preventDefault(); const fp = document.getElementById('forma-pagamento'); if (fp) fp.focus(); }
-                if (e.key === 'F8') { e.preventDefault(); abrirModalBusca(); }
-            });
-            manterFocoNoInput();
-        };
-
-        // CARREGAR BANCO DE DADOS DA NUVEM
-        async function carregarEstoqueCompletoDaNuvem() {
-            let repo = localStorage.getItem('cloud_repo') || 'rafaelxt1033-gif/pdvmercadodoluiz';
-            registrarLog("Buscando banco na nuvem...", "alerta");
-            try {
-                let res = await fetch(`https://raw.githubusercontent.com/${repo}/main/precos.json?t=${new Date().getTime()}`);
-                if (res.ok) { 
-                    let d = await res.json(); 
-                    if(d && typeof d === 'object' && Object.keys(d).length > 0){ 
-                        estoqueCloud = d; 
-                        localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud)); 
-                        return; 
-                    } 
-                }
-            } catch(e) {}
-            estoqueCloud = busterProdutosBackup; 
-            localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-        }
-
-        // TABELAS E RENDERIZAÇÃO ADM
-        function renderizarTabelaAdm() {
-            const tbody = document.getElementById('tabela-estoque-corpo');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            
-            let count = 0;
-            for (let cod in estoqueCloud) {
-                let prod = estoqueCloud[cod];
-                if (!prod) continue;
-                let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${cod}</td>
-                    <td>${prod.nome || 'Sem nome'}</td>
-                    <td>R$ ${parseFloat(prod.preco || 0).toFixed(2)}</td>
-                `;
-                tbody.appendChild(tr);
-                count++;
-            }
-            if (document.getElementById('contador-produtos')) document.getElementById('contador-produtos').innerText = count;
-        }
-
-        // GESTÃO DE CLIENTES
-        function atualizarSelectClientes() {
-            const select = document.getElementById('cliente-selecionado');
-            if (!select) return;
-            select.innerHTML = '<option value="">Consumidor Final (Sem Vínculo)</option>';
-            for (let id in clientesDB) {
-                let div = parseFloat(clientesDB[id].divida || 0);
-                select.innerHTML += `<option value="${id}">${clientesDB[id].nome} (Devendo: R$ ${div.toFixed(2)})</option>`;
-            }
-        }
-
-        function cadastrarCliente() {
-            const nome = document.getElementById('novo-cliente-nome').value.trim();
-            const tel = document.getElementById('novo-cliente-tel').value.trim();
-            if (!nome) return alert("O nome do cliente é obrigatório!");
-            const id = 'CLI_' + Date.now();
-            
-            clientesDB[id] = { 
-                nome: nome, 
-                telefone: tel, 
-                pontos: 0, 
-                divida: 0,
-                dataObs: new Date().toLocaleDateString('pt-BR')
-            };
-            
-            salvarClientes();
-            document.getElementById('novo-cliente-nome').value = ''; 
-            document.getElementById('novo-cliente-tel').value = '';
-            alert("Cliente cadastrado com sucesso!");
-        }
-
-        function salvarClientes() {
-            localStorage.setItem('clientes_mercado', JSON.stringify(clientesDB));
-            atualizarSelectClientes();
-            if (document.getElementById('tela-adm').classList.contains('ativa')) renderizarTabelaClientes();
-        }
-
-        function renderizarTabelaClientes() {
-            const tbody = document.getElementById('tabela-clientes-corpo'); 
-            if (!tbody) return;
-            tbody.innerHTML = '';
-            for (let id in clientesDB) {
-                let cli = clientesDB[id] || {};
-                let divida = parseFloat(cli.divida || 0);
-                let pontos = parseFloat(cli.pontos || 0);
-                let corDivida = divida > 0 ? 'color: var(--erro); font-weight: bold;' : 'color: var(--sucesso);';
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${cli.nome || 'Sem nome'}</strong></td>
-                        <td>${cli.telefone || '-'}</td>
-                        <td>⭐ ${pontos.toFixed(0)}</td>
-                        <td style="font-size:12px; color:#64748b;">${cli.dataObs || '-'}</td>
-                        <td style="${corDivida}">R$ ${divida.toFixed(2)}</td>
-                        <td style="display:flex; gap:5px; flex-wrap: wrap;">
-                            <button onclick="abrirModalEditarCliente('${id}')" style="background: var(--alerta); color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer;">✏️ Editar</button>
-                            ${divida > 0 ? `<button onclick="quitarDivida('${id}')" style="background: var(--sucesso); color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer;">💰 Quitar</button>` : ''}
-                            ${divida > 0 && cli.telefone ? `<button onclick="cobrarFiadoWhatsApp('${id}')" style="background: #25D366; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer;">📲 Cobrar</button>` : ''}
-                        </td>
-                    </tr>
-                `;
-            }
-        }
-
-        function quitarDivida(id) {
-            if (confirm(`Deseja zerar a dívida de R$ ${parseFloat(clientesDB[id].divida || 0).toFixed(2)} do cliente ${clientesDB[id].nome}?`)) {
-                clientesDB[id].divida = 0; 
-                clientesDB[id].dataObs = `Dívida quitada em ${new Date().toLocaleDateString('pt-BR')}`;
-                salvarClientes(); 
-                registrarLog(`Dívida quitada: ${clientesDB[id].nome}`, 'sucesso');
-            }
-        }
-
-        function cobrarFiadoWhatsApp(id) {
-            let cli = clientesDB[id]; 
-            let num = cli.telefone.replace(/\D/g, ''); 
-            if(num.length < 10) return alert("Telefone inválido!");
-            let msg = encodeURIComponent(`Olá ${cli.nome}, tudo bem? Aqui é do Mercadinho Dois Irmãos. Informamos que o saldo atual da sua caderneta (fiado) é de R$ ${parseFloat(cli.divida || 0).toFixed(2)}. Qualquer dúvida, estamos à disposição!`);
-            window.open(`https://api.whatsapp.com/send?phone=55${num}&text=${msg}`, '_blank');
-        }
-
-        function abrirModalEditarCliente(id) {
-            clienteEmEdicao = id;
-            let cli = clientesDB[id];
-            document.getElementById('edit-cli-id').value = id;
-            document.getElementById('edit-cli-nome').value = cli.nome || '';
-            document.getElementById('edit-cli-tel').value = cli.telefone || '';
-            document.getElementById('edit-cli-divida').value = parseFloat(cli.divida || 0).toFixed(2);
-            document.getElementById('edit-cli-pontos').value = cli.pontos || 0;
-            document.getElementById('edit-cli-data').value = cli.dataObs || '';
-            document.getElementById('modal-editar-cliente').classList.add('ativo');
-        }
-
-        function fecharModalEditarCliente() {
-            clienteEmEdicao = null;
-            document.getElementById('modal-editar-cliente').classList.remove('ativo');
-        }
-
-        function salvarEdicaoCliente() {
-            if (!clienteEmEdicao) return;
-            let nome = document.getElementById('edit-cli-nome').value.trim();
-            let tel = document.getElementById('edit-cli-tel').value.trim();
-            let divida = parseFloat(document.getElementById('edit-cli-divida').value) || 0;
-            let pontos = parseFloat(document.getElementById('edit-cli-pontos').value) || 0;
-            let dataObs = document.getElementById('edit-cli-data').value.trim();
-
-            if (!nome) return alert("O nome não pode ficar vazio!");
-
-            clientesDB[clienteEmEdicao] = { nome: nome, telefone: tel, divida: divida, pontos: pontos, dataObs: dataObs };
-            salvarClientes();
-            fecharModalEditarCliente();
-            alert("Cadastro do cliente atualizado com sucesso!");
-        }
-
-        function excluirClienteAtual() {
-            if (!clienteEmEdicao) return;
-            let divida = parseFloat(clientesDB[clienteEmEdicao].divida || 0);
-            if (divida > 0) {
-                if (!confirm(`ATENÇÃO! O cliente ${clientesDB[clienteEmEdicao].nome} ainda deve R$ ${divida.toFixed(2)}. Deseja realmente excluir e APAGAR esta dívida?`)) return;
-            } else {
-                if (!confirm(`Deseja excluir permanentemente o cadastro de ${clientesDB[clienteEmEdicao].nome}?`)) return;
-            }
-            
-            delete clientesDB[clienteEmEdicao];
-            salvarClientes();
-            fecharModalEditarCliente();
-            alert("Cliente excluído do sistema.");
-        }
-
-        // CADASTRO LOCAL E SINCRONIZAÇÃO
-        function cadastrarProdutoLocal() {
-            let cod = document.getElementById('novo-cod').value.trim(); 
-            let nome = document.getElementById('novo-nome').value.trim().toUpperCase(); 
-            let preco = parseFloat(document.getElementById('novo-preco').value.replace(',', '.'));
-            if(!cod || !nome || !preco || preco <= 0) return alert("Preencha todos os campos do produto!");
-            
-            estoqueCloud[cod] = { nome: nome, preco: preco }; 
-            localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-            precosModificadosManualmente[cod] = { nome: nome, preco: preco }; 
-            localStorage.setItem('precos_modificados', JSON.stringify(precosModificadosManualmente));
-            
-            forcarSincronizacaoNuvemSilenciosa(); 
-            alert("Produto Salvo com Sucesso!"); 
-            document.getElementById('novo-cod').value = ''; 
-            document.getElementById('novo-nome').value = ''; 
-            document.getElementById('novo-preco').value = ''; 
-            renderizarTabelaAdm();
-        }
-
-        function toggleVisualizacaoFaturamento() {
-            const btn = document.getElementById('btn-olho-faturamento');
-            if (!faturamentoVisivel) { 
-                let senha = prompt("Senha do Gerente:"); 
-                if (senha === 'kd041022') { 
-                    faturamentoVisivel = true; 
-                    btn.innerText = "👁️"; 
-                    atualizarDashboard(); 
-                } else if (senha !== null) alert("Senha Incorreta!"); 
-            } else { 
-                faturamentoVisivel = false; 
-                btn.innerText = "👁️‍🗨️"; 
-                atualizarDashboard(); 
-            }
-        }
-
-        function atualizarDashboard() {
-            let totalFinanceiro = 0; 
-            vendasRealizadas.forEach(v => totalFinanceiro += (v.total || 0));
-            const txtTotal = document.getElementById('dash-total');
-            if (txtTotal) {
-                if (faturamentoVisivel) { txtTotal.innerText = "R$ " + formatarMoeda(totalFinanceiro); } else { txtTotal.innerText = "R$ ***"; }
-            }
-            if (document.getElementById('dash-qtd')) document.getElementById('dash-qtd').innerText = vendasRealizadas.length;
-        }
-
-        function zerarVendas() {
-            if(confirm("Deseja fechar o expediente e zerar o dashboard?")) {
-                vendasRealizadas = []; 
-                localStorage.setItem('vendas', JSON.stringify([])); 
-                localStorage.setItem('vendas_realizadas', JSON.stringify([]));
-                faturamentoVisivel = false; 
-                if (document.getElementById('btn-olho-faturamento')) document.getElementById('btn-olho-faturamento').innerText = "👁️‍🗨️"; 
-                atualizarDashboard(); 
-                registrarLog("Expediente zerado.", "alerta");
-            }
-        }
-
-        function salvarConfiguracaoNuvem() {
-            localStorage.setItem('cloud_repo', document.getElementById('cloud-repo').value.trim()); 
-            localStorage.setItem('cloud_token', document.getElementById('cloud-token').value.trim());
-            alert("Configurações da Nuvem Salvas!"); 
-            carregarEstoqueCompletoDaNuvem().then(() => renderizarTabelaAdm());
-        }
-
-        async function forcarSincronizacaoNuvem() {
-            let repo = localStorage.getItem('cloud_repo'); 
-            let token = localStorage.getItem('cloud_token'); 
-            if(!repo || !token) return alert("Configure o Repositório e o Token do GitHub no Painel ADM!");
-            
-            registrarLog("Enviando banco para a nuvem...", "alerta");
-            try {
-                let sha = ""; 
-                let url = `https://api.github.com/repos/${repo}/contents/precos.json`;
-                let resCheck = await fetch(url, { headers: { "Authorization": `token ${token}` } }); 
-                if(resCheck.ok) { let dataCheck = await resCheck.json(); sha = dataCheck.sha; }
+            <div class="operacao-area">
+                <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Sistema pronto para operação.</div></div>
                 
-                let bodyPayload = { message: "Sync Geral PDV", content: btoa(unescape(encodeURIComponent(JSON.stringify(estoqueCloud, null, 2)))), branch: "main" };
-                if(sha) bodyPayload.sha = sha;
-                
-                let resUpload = await fetch(url, { method: "PUT", headers: { "Authorization": `token ${token}`, "Content-Type": "application/json" }, body: JSON.stringify(bodyPayload) });
-                if(resUpload.ok) { registrarLog("Nuvem atualizada com sucesso!", "sucesso"); alert("Sincronização com GitHub concluída!"); } else { alert("Erro ao enviar para o GitHub. Verifique o Token!"); }
-            } catch(err) { alert("Erro de conexão ao acessar o GitHub."); }
-        }
+                <div class="area-balanca">
+                    <span style="font-size: 24px;">⚖️</span>
+                    <input type="number" id="peso-balanca" placeholder="Peso (ex: 0.450)" style="width: 140px;" step="0.001">
+                    <div style="position: relative; flex: 1;">
+                        <input type="text" id="codigo-balanca" placeholder="Nome da fruta/verdura..." style="width: 100%;" oninput="filtrarNomeBalanca(this.value)" onkeydown="navegSugestoesBalanca(event)" autocomplete="off">
+                        <div id="dropdown-balanca" class="dropdown-busca" style="top: 100%; bottom: auto; margin-top: 5px;"></div>
+                    </div>
+                </div>
 
-        async function forcarSincronizacaoNuvemSilenciosa() {
-            let repo = localStorage.getItem('cloud_repo'); 
-            let token = localStorage.getItem('cloud_token'); 
-            if(!repo || !token) return;
-            try {
-                let sha = ""; 
-                let url = `https://api.github.com/repos/${repo}/contents/precos.json`; 
-                let resCheck = await fetch(url, { headers: { "Authorization": `token ${token}` } });
-                if(resCheck.ok) { let dataCheck = await resCheck.json(); sha = dataCheck.sha; }
-                
-                let bodyPayload = { message: "Sync Item PDV", content: btoa(unescape(encodeURIComponent(JSON.stringify(estoqueCloud, null, 2)))), branch: "main" }; 
-                if(sha) bodyPayload.sha = sha;
-                
-                await fetch(url, { method: "PUT", headers: { "Authorization": `token ${token}`, "Content-Type": "application/json" }, body: JSON.stringify(bodyPayload) });
-            } catch(e) {}
-        }
-
-        // INTERAÇÃO E NAVEGAÇÃO
-        function pularDaUnidadeProBipe(e) { if (e.key === 'Enter') { e.preventDefault(); document.getElementById('codigo-barras').focus(); } }
-        function fecharVendaComEnter(e) { if (e.key === 'Enter') { e.preventDefault(); finalizarVenda(true); } }
-
-        function manterFocoNoInput() {
-            document.addEventListener('click', (e) => {
-                const dropBarra = document.getElementById('dropdown-sugestoes'); 
-                const dropBalanca = document.getElementById('dropdown-balanca'); 
-                const dropEdicao = document.getElementById('dropdown-edicao-preco');
-                const isPdv = document.getElementById('tela-pdv').classList.contains('ativa'); 
-                const modalPreco = document.getElementById('modal-editar-preco').classList.contains('ativo'); 
-                const modalBusca = document.getElementById('modal-busca').classList.contains('ativo'); 
-                const modalCli = document.getElementById('modal-editar-cliente').classList.contains('ativo');
-                
-                if(!document.getElementById('peso-balanca').contains(e.target) && !document.getElementById('codigo-balanca').contains(e.target) && !dropBalanca.contains(e.target)) dropBalanca.style.display = 'none';
-                if(!document.getElementById('codigo-barras').contains(e.target) && !dropBarra.contains(e.target)) dropBarra.style.display = 'none';
-                if(!document.getElementById('edit-cod').contains(e.target) && !dropEdicao.contains(e.target)) dropEdicao.style.display = 'none';
-                if (document.getElementById('peso-balanca').contains(e.target) || document.getElementById('codigo-balanca').contains(e.target) || dropBalanca.contains(e.target)) { return; }
-
-                const ativo = document.activeElement.id;
-                if (isPdv && !modalPreco && !modalBusca && !modalCli && !dropBarra.contains(e.target) && !dropBalanca.contains(e.target) && ativo !== 'valor-pago' && ativo !== 'forma-pagamento' && ativo !== 'cliente-selecionado' && ativo !== 'peso-balanca' && ativo !== 'codigo-balanca' && ativo !== 'input-qtd-manual') {
-                    document.getElementById('codigo-barras').focus();
-                }
-            });
-        }
-
-        function mostrarTela(id) {
-            document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa')); 
-            document.getElementById(id).classList.add('ativa');
-            if (id === 'tela-adm') { renderizarTabelaAdm(); renderizarTabelaClientes(); }
-        }
-
-        function fazerLogin() {
-            const u = document.getElementById('login-usuario').value.toLowerCase().trim(); 
-            const s = document.getElementById('login-senha').value.trim();
-            if (u === 'eduardo' && s === 'kd041022') { document.getElementById('btn-painel-atalho').style.display = 'block'; document.getElementById('caixa-nome-status').innerText = 'Eduardo'; mostrarTela('tela-pdv'); } 
-            else if (u === 'caixa' && s === '123') { document.getElementById('btn-painel-atalho').style.display = 'none'; document.getElementById('caixa-nome-status').innerText = 'Caixa'; mostrarTela('tela-pdv'); } 
-            else { alert("Usuário ou senha incorreta!"); }
-        }
-        
-        function sair() { mostrarTela('tela-login'); cupomAtual = []; faturamentoVisivel = false; document.getElementById('btn-olho-faturamento').innerText = "👁️‍🗨️"; renderizarCupom(); }
-
-        function registrarLog(msg, tipo='info') { const log = document.getElementById('log-sistema'); const col = tipo === 'erro' ? '#ef4444' : tipo === 'alerta' ? '#f59e0b' : tipo === 'sucesso' ? '#10b981' : '#38bdf8'; log.innerHTML = `<div style="color:${col}">[SISTEMA] ${msg}</div>` + log.innerHTML; }
-
-        function abrirModalBusca() { document.getElementById('modal-busca').classList.add('ativo'); document.getElementById('campo-consulta').value = ''; document.getElementById('resultado-busca').innerHTML = ''; setTimeout(() => document.getElementById('campo-consulta').focus(), 100); }
-        function fecharModalBusca() { document.getElementById('modal-busca').classList.remove('ativo'); document.getElementById('codigo-barras').focus(); }
-        
-        function executarBusca(val) {
-            let res = document.getElementById('resultado-busca'); let t = val.toLowerCase().trim(); clearTimeout(timeoutBusca);
-            if(!t) { res.innerHTML = ''; return; } res.innerHTML = '<div style="padding:15px; text-align:center; color:#666;">Processando...</div>';
-            timeoutBusca = setTimeout(() => {
-                if (isNaN(t) && t.length < 3) { res.innerHTML = '<div style="padding:15px; text-align:center; color:var(--alerta); font-weight:bold;">Digite pelo menos 3 letras...</div>'; return; }
-                let htmlFinal = ''; let contador = 0; const maxResultados = 30;
-                for (let c in estoqueCloud) {
-                    let p = estoqueCloud[c];
-                    if (p && p.nome && (p.nome.toLowerCase().includes(t) || c.includes(t))) { htmlFinal += `<div style="padding:10px; border-bottom:1px solid #eee; font-weight:bold;">📦 ${p.nome} <br> <span style="color:var(--secundaria)">Preço: R$ ${parseFloat(p.preco || 0).toFixed(2)}</span> <small style="color:#666; float:right;">Cód: ${c}</small></div>`; contador++; }
-                    if (contador >= maxResultados) { htmlFinal += `<div style="padding:10px; text-align:center; color:#666; font-size:13px; font-style:italic;">Mostrando ${maxResultados} resultados...</div>`; break; }
-                }
-                if (contador === 0) { htmlFinal = `<div style="padding:15px; text-align:center; color:var(--erro); font-weight:bold;">Produto não encontrado.</div>`; } res.innerHTML = htmlFinal;
-            }, 300);
-        }
-
-        function abrirModalPreco() { document.getElementById('modal-editar-preco').classList.add('ativo'); document.getElementById('edit-cod').value = ''; document.getElementById('edit-cod-selecionado').value = ''; document.getElementById('edit-codigo-novo').value = ''; document.getElementById('edit-preco').value = ''; document.getElementById('edit-senha').value = ''; document.getElementById('edit-nome-prod').innerText = ''; setTimeout(() => document.getElementById('edit-cod').focus(), 100); }
-        function fecharModalPreco() { document.getElementById('modal-editar-preco').classList.remove('ativo'); document.getElementById('codigo-barras').focus(); }
-        
-        function filtrarPorNome(val) {
-            const txt = val.toLowerCase().trim(); const drop = document.getElementById('dropdown-sugestoes'); drop.innerHTML = ''; indiceSelecionadoSugestoes = -1;
-            if(!txt || !isNaN(txt)) { drop.style.display = 'none'; return; }
-            listaFiltrada = Object.keys(estoqueCloud).filter(c => estoqueCloud[c] && estoqueCloud[c].nome && estoqueCloud[c].nome.toLowerCase().includes(txt)).slice(0, 15);
-            if(listaFiltrada.length > 0) { drop.style.display = 'block'; let qtdAtiva = parseFloat(document.getElementById('input-qtd-manual').value || 1); listaFiltrada.forEach((c, idx) => drop.innerHTML += `<div class="opcao-busca" id="opt-sugestao-${idx}" onclick="addCupom('${c}', ${qtdAtiva})"><span>📦 ${estoqueCloud[c].nome}</span> <span>R$ ${parseFloat(estoqueCloud[c].preco || 0).toFixed(2)}</span></div>`);
-            } else { drop.style.display = 'none'; }
-        }
-
-        function filtrarNomeBalanca(val) {
-            const txt = val.toLowerCase().trim(); const drop = document.getElementById('dropdown-balanca'); drop.innerHTML = ''; indiceSelecionadoBalanca = -1;
-            if(!txt) { drop.style.display = 'none'; return; }
-            listaFiltrada = Object.keys(estoqueCloud).filter(c => estoqueCloud[c] && estoqueCloud[c].nome && estoqueCloud[c].nome.toLowerCase().includes(txt)).slice(0, 10);
-            if(listaFiltrada.length > 0) { drop.style.display = 'block'; listaFiltrada.forEach((c, idx) => { drop.innerHTML += `<div class="opcao-busca" id="opt-balanca-${idx}" onclick="addCupomBalanca('${c}')"><span>⚖️ ${estoqueCloud[c].nome}</span> <span>R$ ${parseFloat(estoqueCloud[c].preco || 0).toFixed(2)}/Kg</span></div>`; });
-            } else { drop.style.display = 'none'; }
-        }
-
-        function buscarParaEdicao(val) {
-            let txt = val.toLowerCase().trim(); let label = document.getElementById('edit-nome-prod'); let drop = document.getElementById('dropdown-edicao-preco'); drop.innerHTML = ''; indiceSelecionadoEdicao = -1;
-            if(!txt) { drop.style.display = 'none'; label.innerText = ''; return; }
-            if(!isNaN(txt) && txt.length >= 3) { if (estoqueCloud[txt]) { selecionarProdutoParaPreco(txt); return; } }
-            listaFiltrada = Object.keys(estoqueCloud).filter(c => estoqueCloud[c] && estoqueCloud[c].nome && estoqueCloud[c].nome.toLowerCase().includes(txt)).slice(0, 5);
-            if(listaFiltrada.length > 0) { drop.style.display = 'block'; listaFiltrada.forEach((c, idx) => { drop.innerHTML += `<div class="opcao-busca" id="opt-edicao-${idx}" onclick="selecionarProdutoParaPreco('${c}')"><span>✏️ ${estoqueCloud[c].nome}</span> <span>R$ ${parseFloat(estoqueCloud[c].preco || 0).toFixed(2)}</span></div>`; });
-            } else { drop.style.display = 'none'; label.innerText = "Produto não encontrado"; label.style.color = "var(--erro)"; }
-        }
-
-        function selecionarProdutoParaPreco(cod) {
-            document.getElementById('edit-cod').value = estoqueCloud[cod].nome; document.getElementById('edit-cod-selecionado').value = cod; document.getElementById('edit-codigo-novo').value = cod; document.getElementById('edit-preco').value = parseFloat(estoqueCloud[cod].preco || 0).toFixed(2);
-            let label = document.getElementById('edit-nome-prod'); label.innerText = `✅ Selecionado: ${estoqueCloud[cod].nome}`; label.style.color = "var(--sucesso)"; document.getElementById('dropdown-edicao-preco').style.display = 'none'; document.getElementById('edit-codigo-novo').focus();
-        }
-
-        function navegarSugestoes(e) {
-            const drop = document.getElementById('dropdown-sugestoes'); const opcoes = drop.querySelectorAll('.opcao-busca');
-            if (drop.style.display === 'block' && opcoes.length > 0) {
-                if (e.key === 'ArrowDown') { e.preventDefault(); if (indiceSelecionadoSugestoes < opcoes.length - 1) { if (indiceSelecionadoSugestoes >= 0) opcoes[indiceSelecionadoSugestoes].classList.remove('selecionada'); indiceSelecionadoSugestoes++; opcoes[indiceSelecionadoSugestoes].classList.add('selecionada'); opcoes[indiceSelecionadoSugestoes].scrollIntoView({ block: 'nearest' }); } return;
-                } else if (e.key === 'ArrowUp') { e.preventDefault(); if (indiceSelecionadoSugestoes > 0) { if (indiceSelecionadoSugestoes >= 0) opcoes[indiceSelecionadoSugestoes].classList.remove('selecionada'); indiceSelecionadoSugestoes--; opcoes[indiceSelecionadoSugestoes].classList.add('selecionada'); opcoes[indiceSelecionadoSugestoes].scrollIntoView({ block: 'nearest' }); } return;
-                } else if (e.key === 'Enter' && indiceSelecionadoSugestoes >= 0) { e.preventDefault(); let qtdAtiva = parseFloat(document.getElementById('input-qtd-manual').value || 1); addCupom(listaFiltrada[indiceSelecionadoSugestoes], qtdAtiva); document.getElementById('input-qtd-manual').value = "1"; return; }
-            }
-            if(e.key === 'Enter') {
-                e.preventDefault(); let txt = document.getElementById('codigo-barras').value.trim();
-                if(!txt) { if (cupomAtual.length === 0) return alert("Passe os produtos!"); document.getElementById('valor-pago').focus(); document.getElementById('valor-pago').select(); return; }
-                let qtd = parseFloat(document.getElementById('input-qtd-manual').value || 1); let cod = txt;
-                if(txt.includes('*')) { qtd = parseFloat(txt.split('*')[0]); cod = txt.split('*')[1]; }
-                if(estoqueCloud[cod]) { addCupom(cod, qtd); document.getElementById('input-qtd-manual').value = "1"; } 
-                else { registrarLog("Código não encontrado: " + cod, "erro"); document.getElementById('codigo-barras').value = ''; }
-            }
-        }
-
-        function navegSugestoesBalanca(e) {
-            const drop = document.getElementById('dropdown-balanca'); const opcoes = drop.querySelectorAll('.opcao-busca');
-            if (drop.style.display === 'block' && opcoes.length > 0) {
-                if (e.key === 'ArrowDown') { e.preventDefault(); if (indiceSelecionadoBalanca < opcoes.length - 1) { if (indiceSelecionadoBalanca >= 0) opcoes[indiceSelecionadoBalanca].classList.remove('selecionada'); indiceSelecionadoBalanca++; opcoes[indiceSelecionadoBalanca].classList.add('selecionada'); opcoes[indiceSelecionadoBalanca].scrollIntoView({ block: 'nearest' }); }
-                } else if (e.key === 'ArrowUp') { e.preventDefault(); if (indiceSelecionadoBalanca > 0) { opcoes[indiceSelecionadoBalanca].classList.remove('selecionada'); indiceSelecionadoBalanca--; opcoes[indiceSelecionadoBalanca].classList.add('selecionada'); opcoes[indiceSelecionadoBalanca].scrollIntoView({ block: 'nearest' }); }
-                } else if (e.key === 'Enter' && indiceSelecionadoBalanca >= 0) { e.preventDefault(); addCupomBalanca(listaFiltrada[indiceSelecionadoBalanca]); }
-            }
-        }
-
-        function navegarSugestoesEdicao(e) {
-            const drop = document.getElementById('dropdown-edicao-preco'); const opcoes = drop.querySelectorAll('.opcao-busca');
-            if (drop.style.display === 'block' && opcoes.length > 0) {
-                if (e.key === 'ArrowDown') { e.preventDefault(); if (indiceSelecionadoEdicao < opcoes.length - 1) { if (indiceSelecionadoEdicao >= 0) opcoes[indiceSelecionadoEdicao].classList.remove('selecionada'); indiceSelecionadoEdicao++; opcoes[indiceSelecionadoEdicao].classList.add('selecionada'); opcoes[indiceSelecionadoEdicao].scrollIntoView({ block: 'nearest' }); }
-                } else if (e.key === 'ArrowUp') { e.preventDefault(); if (indiceSelecionadoEdicao > 0) { opcoes[indiceSelecionadoEdicao].classList.remove('selecionada'); indiceSelecionadoEdicao--; opcoes[indiceSelecionadoEdicao].classList.add('selecionada'); opcoes[indiceSelecionadoEdicao].scrollIntoView({ block: 'nearest' }); }
-                } else if (e.key === 'Enter' && indiceSelecionadoEdicao >= 0) { e.preventDefault(); selecionarProdutoParaPreco(listaFiltrada[indiceSelecionadoEdicao]); }
-            }
-        }
-
-        function salvarNovoPreco() {
-            let codAntigo = document.getElementById('edit-cod-selecionado').value.trim(); 
-            let codNovo = document.getElementById('edit-codigo-novo').value.trim(); 
-            let precoFormatado = parseFloat(document.getElementById('edit-preco').value.replace(',', '.')); 
-            let senha = document.getElementById('edit-senha').value;
-            
-            if (!codAntigo || !estoqueCloud[codAntigo]) return alert("Selecione um produto válido!"); 
-            if (!codNovo) return alert("O código não pode ficar vazio!"); 
-            if (isNaN(precoFormatado) || precoFormatado <= 0) return alert("Digite um preço válido!"); 
-            if (senha !== 'kd041022') return alert("Senha do gerente incorreta!");
-            
-            let nomeOriginal = estoqueCloud[codAntigo].nome; 
-            if (codAntigo !== codNovo) { delete estoqueCloud[codAntigo]; precosModificadosManualmente[codAntigo] = null; }
-            
-            estoqueCloud[codNovo] = { nome: nomeOriginal, preco: precoFormatado }; 
-            localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-            precosModificadosManualmente[codNovo] = { nome: nomeOriginal, preco: precoFormatado }; 
-            localStorage.setItem('precos_modificados', JSON.stringify(precosModificadosManualmente));
-            
-            fecharModalPreco(); 
-            forcarSincronizacaoNuvemSilenciosa(); 
-            alert(`Produto atualizado com sucesso!`);
-        }
-
-        function addCupom(cod, qtd) {
-            const p = estoqueCloud[cod]; 
-            cupomAtual.push({ cod: cod, nome: p.nome, qtd: qtd, unit: p.preco, total: p.preco * qtd });
-            document.getElementById('codigo-barras').value = ''; 
-            document.getElementById('dropdown-sugestoes').style.display = 'none'; 
-            registrarLog(`Adicionado: ${qtd}x ${p.nome}`, 'sucesso'); 
-            renderizarCupom(); 
-            document.getElementById('codigo-barras').focus();
-        }
-
-        function addCupomBalanca(cod) {
-            let peso = parseFloat(document.getElementById('peso-balanca').value); 
-            if (!peso || peso <= 0) { alert("Digite o peso!"); document.getElementById('peso-balanca').focus(); return; }
-            const p = estoqueCloud[cod]; 
-            cupomAtual.push({ cod: cod, nome: p.nome, qtd: peso, unit: p.preco, total: p.preco * peso });
-            document.getElementById('peso-balanca').value = ''; 
-            document.getElementById('codigo-balanca').value = ''; 
-            document.getElementById('dropdown-balanca').style.display = 'none'; 
-            document.getElementById('codigo-barras').focus();
-            registrarLog(`Pesado: ${peso}kg de ${p.nome}`, 'sucesso'); 
-            renderizarCupom();
-        }
-
-        function removerItem(idx) { cupomAtual.splice(idx, 1); renderizarCupom(); }
-        function cancelarCupom() { if(confirm("Deseja cancelar esta compra atual?")) { cupomAtual = []; renderizarCupom(); registrarLog("Compra Cancelada", "erro"); } }
-
-        function renderizarCupom() {
-            const lista = document.getElementById('lista-cupom'); 
-            lista.innerHTML = ''; 
-            totalVenda = 0;
-            cupomAtual.forEach((item, i) => { 
-                totalVenda += item.total; 
-                let unidade = Number.isInteger(item.qtd) ? 'UN' : 'KG'; 
-                lista.innerHTML += `<div class="item-cupom"><span>${item.nome}</span><span style="text-align:center">${item.qtd} <span class="badge-unidade">${unidade}</span></span><span style="text-align:right">${item.unit.toFixed(2)}</span><span style="text-align:right; font-weight:bold; color:var(--secundaria);">${item.total.toFixed(2)}</span><button class="btn-remover" onclick="removerItem(${i})">❌</button></div>`; 
-            });
-            document.getElementById('valor-total').innerText = totalVenda.toFixed(2); 
-            calcularTroco();
-        }
-
-        function calcularTroco() {
-            const pago = parseFloat(document.getElementById('valor-pago').value || 0); 
-            const box = document.getElementById('box-troco');
-            if(pago >= totalVenda && totalVenda > 0) { box.innerText = `Troco: R$ ${(pago - totalVenda).toFixed(2)}`; box.style.color = '#10b981'; } 
-            else { box.innerText = `Troco: R$ 0.00`; box.style.color = '#2563eb'; }
-        }
-
-        function formatarMoeda(valor) { return valor.toFixed(2).replace('.', ','); }
-
-        function gerarCupomPDV(formaPagto) {
-            let containerAntigo = document.getElementById('recibo-impressao'); 
-            if(containerAntigo) containerAntigo.remove();
-            let dataAtual = new Date().toLocaleString('pt-BR'); 
-            let pedidoNumber = Math.floor(Math.random() * 90000) + 10000;
-            let pago = parseFloat(document.getElementById('valor-pago').value || totalVenda); 
-            let troco = pago > totalVenda ? pago - totalVenda : 0;
-            let html = `<div id="recibo-impressao"><div class="txt-centro" style="font-size:14px; font-weight:bold;">MERCADINHO DOIS IRMAOS</div><div class="txt-centro">Rua Padre Cicero, 375, Felipe Camarão</div><div class="txt-centro" style="margin-bottom:5px;">${dataAtual} - Pedido ${pedidoNumber}</div><div class="linha-tracejada"></div><div class="flex-space"><span>Qtd Descrição</span><span>Total</span></div><div class="linha-tracejada"></div><div style="margin-bottom:4px;">`;
-            cupomAtual.forEach(i => { let und = Number.isInteger(i.qtd) ? 'UN' : 'KG'; html += `<div style="margin-bottom:4px;"><div>${i.qtd} ${und} x ${i.nome}</div><div class="txt-direita">${formatarMoeda(i.total)}</div></div>`; });
-            html += `</div><div class="linha-tracejada"></div><div class="flex-space" style="font-size:13px; margin-top:5px; font-weight:bold;"><span>Total a pagar</span><span>R$ ${formatarMoeda(totalVenda)}</span></div><div class="flex-space"><span>${formaPagto}</span><span>R$ ${formatarMoeda(pago)}</span></div><div class="flex-space"><span>VALOR TROCO</span><span>R$ ${formatarMoeda(troco)}</span></div><div style="margin-top:5px;">Vendedor: ${document.getElementById('caixa-nome-status').innerText}</div><div class="txt-centro" style="margin-top:15px;">Obrigado pela preferência!</div></div>`;
-            let divElement = document.createElement('div'); divElement.innerHTML = html; document.body.appendChild(divElement.firstElementChild);
-        }
-
-        function gerarNFCe(formaPagto) {
-            let containerAntigo = document.getElementById('recibo-impressao'); 
-            if(containerAntigo) containerAntigo.remove();
-            let dataStr = new Date().toLocaleDateString('pt-BR'); 
-            let horaStr = new Date().toLocaleTimeString('pt-BR'); 
-            let pago = parseFloat(document.getElementById('valor-pago').value || totalVenda); 
-            let troco = pago > totalVenda ? pago - totalVenda : 0;
-            let html = `<div id="recibo-impressao"><div class="txt-centro">CNPJ: 44.133.465/0001-96 MERCADINHO DOIS IRMAOS LTDA<br>RUA PADRE CICERO, 375 FELIPE CAMARAO - NATAL - RN<br>Fone: (84)98631-5330 I.E.: 20.591.002-5<br>DOCUMENTO AUXILIAR DA NOTA FISCAL DE CONSUMIDOR ELETRÔNICA</div><div class="linha-tracejada"></div><div># Descrição do Item / Qtd Un Vl Unit. Vl Total</div><div class="linha-tracejada"></div><div style="margin-bottom:5px;">`;
-            cupomAtual.forEach((i, index) => { let numItem = String(index + 1).padStart(3, '0'); let und = Number.isInteger(i.qtd) ? 'UN' : 'KG'; html += `<div style="margin-bottom:4px;"><div>${numItem} ${i.nome.toUpperCase()}</div><div class="flex-space" style="padding-left:15px;"><span>${i.qtd} ${und} X ${formatarMoeda(i.unit)}</span><span>${formatarMoeda(i.total)}</span></div></div>`; });
-            html += `</div><div class="linha-tracejada"></div><div class="flex-space"><span>QTD. TOTAL DE ITENS</span><span>${String(cupomAtual.length).padStart(3, '0')}</span></div><div class="flex-space"><span>VALOR TOTAL R$</span><span>${formatarMoeda(totalVenda)}</span></div><div class="flex-space"><span>FORMA DE PAGAMENTO</span><span>Valor Pago</span></div><div class="flex-space"><span>${formaPagto}</span><span>R$ ${formatarMoeda(pago)}</span></div><div class="flex-space"><span>VALOR TROCO R$</span><span>R$ ${formatarMoeda(troco)}</span></div><div class="linha-tracejada" style="margin-top:5px;"></div><div class="txt-centro" style="margin-top: 5px;">Consulte pela Chave de Acesso em<br>www.set.rn.gov.br/nfce/consulta<br>2426 0744 1334 6500 0196 6500 1000 0057 0210 0038 4190<br><strong>CONSUMIDOR NÃO IDENTIFICADO</strong><br>NFC-e nº 000005702 Série 001 ${dataStr} ${horaStr}<br>Protocolo de Autorização: 224260250855527<br>Data de Autorização ${dataStr} ${horaStr}</div><div id="qrcode-recibo"></div></div>`;
-            let divElement = document.createElement('div'); divElement.innerHTML = html; document.body.appendChild(divElement.firstElementChild);
-            if (typeof QRCode !== 'undefined') {
-                new QRCode(document.getElementById("qrcode-recibo"), { text: "https://www.set.rn.gov.br/nfce/consulta?p=24260744133465000196650010000057021000384190", width: 130, height: 130, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.L });
-            }
-        }
-
-        async function finalizarVenda(nfce) {
-            if(cupomAtual.length === 0) return alert("Passe os produtos primeiro!");
-            
-            const formaPagto = document.getElementById('forma-pagamento').value;
-            const clienteId = document.getElementById('cliente-selecionado').value;
-            
-            if (formaPagto === 'Fiado') {
-                if (!clienteId) return alert("Para vender fiado, selecione um cliente cadastrado!");
-                clientesDB[clienteId].divida = (clientesDB[clienteId].divida || 0) + totalVenda;
-                clientesDB[clienteId].dataObs = `Última compra fiado em ${new Date().toLocaleDateString('pt-BR')}`;
-            }
-            
-            if (clienteId && clientesDB[clienteId]) {
-                clientesDB[clienteId].pontos = (clientesDB[clienteId].pontos || 0) + totalVenda;
-                salvarClientes(); 
-            }
-            
-            vendasRealizadas.push({ data: new Date().toLocaleString('pt-BR'), total: totalVenda, pagamento: formaPagto, cliente: clienteId && clientesDB[clienteId] ? clientesDB[clienteId].nome : 'Avulso' });
-            setTimeout(() => { localStorage.setItem('vendas', JSON.stringify(vendasRealizadas)); }, 50);
-            atualizarDashboard();
-
-            if(nfce) { gerarNFCe(formaPagto); setTimeout(() => { window.print(); }, 200); } 
-            else { gerarCupomPDV(formaPagto); setTimeout(() => { window.print(); }, 100); }
-            
-            cupomAtual = []; totalVenda = 0;
-            document.getElementById('valor-pago').value = ''; 
-            document.getElementById('cliente-selecionado').value = ''; 
-            document.getElementById('forma-pagamento').value = 'Dinheiro'; 
-            renderizarCupom(); 
-            setTimeout(() => { document.getElementById('input-qtd-manual').focus(); document.getElementById('input-qtd-manual').select(); }, 500);
-        }
-
-        const busterProdutosBackup = {"7896002109000": {"nome": "51 LATA 350ML", "preco": 4.5}, "7896002110792": {"nome": "51 LATAO 473ML", "preco": 5.99}, "1": {"nome": "ABACATE KG", "preco": 8.99}, "119": {"nome": "TOMATE KG", "preco": 4.99}, "7891000102640": {"nome": "AVEIA EM FLOCOS NESTLE 170G", "preco": 4.99}, "7894900027013": {"nome": "COCA COLA PET 2 LITROS", "preco": 11.99}};
-    </script>
-</body>
-</html>
-
+                <div style="position: relative; display: flex; gap: 8px;">
+                    <input type="number" id="input-qtd-manual" value="1" style="width: 80px; text-align: center; font-size: 24px; border: 3px solid var(--primaria); border-radius: 12px; font-weight: bold;" onkeydown="pularDaUnidadeProBipe(event)">
+                    <div style="position: relative; flex: 1;">
+                        <div id="dropdown-sugestoes" class="dropdown-busca" style="bottom: 100%; margin-bottom: 5px; width: 100%;"></div>
+                        <input
