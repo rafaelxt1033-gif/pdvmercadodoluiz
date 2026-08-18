@@ -198,16 +198,27 @@
       background: rgba(0,0,0,0.5);
       align-items: center;
       justify-content: center;
+      z-index: 1000;
     }
 
     .modal-content {
       background: #fff;
       padding: 20px;
       border-radius: 8px;
-      width: 400px;
+      width: 550px;
+      max-width: 90%;
       display: flex;
       flex-direction: column;
       gap: 10px;
+      max-height: 80vh;
+    }
+
+    .search-results {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -235,6 +246,7 @@
           <input type="text" id="barcode-input" placeholder="Digite o nome ou bipe o código de barras..." autofocus>
           <input type="number" id="qty-input" value="1" min="1" style="width: 80px;" placeholder="Qtd">
           <button class="btn" onclick="addItem()">Adicionar</button>
+          <button class="btn" style="background-color: #0284c7;" onclick="openSearchModal()">🔍 Buscar Produto</button>
         </div>
 
         <div class="table-container">
@@ -250,7 +262,7 @@
               </tr>
             </thead>
             <tbody id="cart-table">
-              </tbody>
+            </tbody>
           </table>
         </div>
 
@@ -345,6 +357,32 @@
     </section>
   </main>
 
+  <div class="modal" id="modal-busca">
+    <div class="modal-content">
+      <h3>🔍 Pesquisar na Lista de Produtos</h3>
+      <input type="text" id="search-product-input" placeholder="Digite o código ou nome do produto..." oninput="filterProducts()">
+      
+      <div class="search-results">
+        <table>
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nome / Descrição</th>
+              <th>Preço</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody id="search-results-body">
+          </tbody>
+        </table>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+        <button class="btn btn-danger" onclick="closeModal('modal-busca')">Fechar</button>
+      </div>
+    </div>
+  </div>
+
   <div class="modal" id="modal-preco">
     <div class="modal-content">
       <h3>Consultar / Mudar Preço</h3>
@@ -415,6 +453,22 @@
         input.focus();
       } else {
         alert('Produto não encontrado! Tente cadastrar no Dashboard.');
+      }
+    }
+
+    // Função para adicionar produto selecionado via busca direto no carrinho
+    function addDirectToCart(code) {
+      const prod = dbProducts[code];
+      if(prod) {
+        cart.push({
+          code: code,
+          name: prod.name,
+          qty: 1,
+          unitPrice: prod.price,
+          totalPrice: prod.price
+        });
+        updateCartTable();
+        closeModal('modal-busca');
       }
     }
 
@@ -495,6 +549,36 @@
       } else {
         alert('Preencha todos os campos do produto!');
       }
+    }
+
+    // Controles do Modal de Busca
+    function openSearchModal() {
+      openModal('modal-busca');
+      document.getElementById('search-product-input').value = '';
+      filterProducts();
+      setTimeout(() => document.getElementById('search-product-input').focus(), 100);
+    }
+
+    function filterProducts() {
+      const query = document.getElementById('search-product-input').value.toLowerCase();
+      const tbody = document.getElementById('search-results-body');
+      tbody.innerHTML = '';
+
+      Object.keys(dbProducts).forEach(code => {
+        const prod = dbProducts[code];
+        if(code.includes(query) || prod.name.toLowerCase().includes(query)) {
+          tbody.innerHTML += `
+            <tr>
+              <td>${code}</td>
+              <td>${prod.name}</td>
+              <td>R$ ${prod.price.toFixed(2)}</td>
+              <td>
+                <button class="btn btn-success" style="padding: 4px 8px; font-size: 0.85rem;" onclick="addDirectToCart('${code}')">+ Add</button>
+              </td>
+            </tr>
+          `;
+        }
+      });
     }
 
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
