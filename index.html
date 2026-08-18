@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mercadinho Dois Irmãos - PDV Completo</title>
+    <title>Mercadinho Dois Irmãos - PDV Completo Sincronizado</title>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -196,12 +196,13 @@
                 </div>
             </div>
 
-            <!-- RELATÓRIO DE VENDAS PARA O CONTADOR -->
+            <!-- RELATÓRIO DE VENDAS PARA O CONTADOR (EXCEL E XML) -->
             <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #0284c7; margin-bottom: 20px;">
                 <h3 style="color: #0284c7; margin-bottom: 10px;">📑 Relatório de Vendas (Contabilidade / Contador)</h3>
-                <p style="font-size: 14px; color: #64748b; margin-bottom: 15px;">Gere e baixe a lista completa de vendas registradas em formato Excel/CSV para enviar ao seu contador.</p>
+                <p style="font-size: 14px; color: #64748b; margin-bottom: 15px;">Baixe o relatório detalhado em planilha ou os arquivos XML fiscais de todas as vendas do expediente.</p>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-                    <button class="btn-universal" onclick="exportarRelatorioContador()" style="background: #0284c7; width: auto; padding: 12px 25px;">📄 Baixar Relatório (Excel / CSV)</button>
+                    <button class="btn-universal" onclick="exportarRelatorioContador()" style="background: #0284c7; width: auto; padding: 12px 20px;">📄 Baixar Relatório (Excel / CSV)</button>
+                    <button class="btn-universal" onclick="exportarXMLContador()" style="background: #0369a1; width: auto; padding: 12px 20px;">📦 Baixar XML Fiscal (NFC-e)</button>
                 </div>
             </div>
 
@@ -212,8 +213,11 @@
                     <div class="input-group" style="margin-top: 15px; margin-bottom: 10px;">
                         <input type="text" id="cloud-repo" placeholder="Repositório (Ex: rafaelxt1033-gif/pdvmercadodoluiz)">
                     </div>
+                    <div class="input-group" style="margin-bottom: 15px;">
+                        <input type="password" id="cloud-token" placeholder="Token GitHub (ghp_...)">
+                    </div>
                     <div style="display: flex; gap: 10px;">
-                        <button onclick="salvarConfiguracaoNuvem()" class="btn-universal" style="background: var(--fiscal); padding: 12px; font-size:14px;">Salvar Repositório</button>
+                        <button onclick="salvarConfiguracaoNuvem()" class="btn-universal" style="background: var(--fiscal); padding: 12px; font-size:14px;">Salvar Dados</button>
                         <button onclick="carregarEstoqueCompletoDaNuvem()" class="btn-universal" style="background: var(--sucesso); padding: 12px; font-size:14px;">⚡ Sincronizar Nuvem</button>
                     </div>
                 </div>
@@ -340,8 +344,28 @@
         let indiceSelecionadoEdicao = -1;
         let timeoutBusca = null;
 
+        // Canal de comunicação local entre abas/janelas
+        const canalSincronizacao = new BroadcastChannel('pdv_dois_irmaos_sync');
+
+        canalSincronizacao.onmessage = (event) => {
+            if (event.data && event.data.tipo === 'ATUALIZAR_ESTOQUE') {
+                estoqueCloud = event.data.estoque;
+                localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
+                renderizarTabelaAdm();
+                registrarLog("Produtos e preços atualizados pelo outro caixa!", "sucesso");
+            }
+        };
+
+        function notificarOutrosCaixas() {
+            canalSincronizacao.postMessage({
+                tipo: 'ATUALIZAR_ESTOQUE',
+                estoque: estoqueCloud
+            });
+        }
+
         window.onload = async function() {
             document.getElementById('cloud-repo').value = localStorage.getItem('cloud_repo') || 'rafaelxt1033-gif/pdvmercadodoluiz';
+            document.getElementById('cloud-token').value = localStorage.getItem('cloud_token') || '';
             
             const vendasSalvas = localStorage.getItem('vendas') || localStorage.getItem('vendas_realizadas');
             if (vendasSalvas) { try { vendasRealizadas = JSON.parse(vendasSalvas); } catch(e) { vendasRealizadas = []; } }
@@ -350,7 +374,6 @@
             if (clientesSalvos) clientesDB = JSON.parse(clientesSalvos);
             atualizarSelectClientes();
 
-            // Carrega primeiro o banco local salvo
             const local = localStorage.getItem('estoque_mercado');
             if (local) {
                 try {
@@ -359,11 +382,14 @@
                 } catch(e) {}
             }
 
-            // Tenta sincronizar com o GitHub
             await carregarEstoqueCompletoDaNuvem();
-
             atualizarDashboard();
             
+            // Loop de sincronização em segundo plano no Caixa 2 a cada 15 segundos
+            setInterval(() => {
+                carregarEstoqueCompletoDaNuvem(true);
+            }, 15000);
+
             document.addEventListener('keydown', (e) => { 
                 if (e.key === 'F4') { e.preventDefault(); finalizarVenda(true); }
                 if (e.key === 'F2') { e.preventDefault(); finalizarVenda(false); }
@@ -373,9 +399,6 @@
             manterFocoNoInput();
         };
 
-        // ==========================================
-        // MANTER FOCO PERPÉTUO NO LEITOR (BIPE)
-        // ==========================================
         function manterFocoNoInput() {
             document.addEventListener('click', (e) => {
                 const isPdv = document.getElementById('tela-pdv').classList.contains('ativa');
@@ -392,18 +415,18 @@
         }
 
         // ==========================================
-        // SINCRONIZAÇÃO EM NUVEM (GITHUB)
+        // SINCRONIZAÇÃO EM NUVEM (GITHUB API)
         // ==========================================
-        async function carregarEstoqueCompletoDaNuvem() {
+        async function carregarEstoqueCompletoDaNuvem(silencioso = false) {
             let repo = localStorage.getItem('cloud_repo') || 'rafaelxt1033-gif/pdvmercadodoluiz';
-            registrarLog("Sincronizando produtos da nuvem...", "alerta");
+            if(!silencioso) registrarLog("Sincronizando produtos da nuvem...", "alerta");
             
             let novoEstoque = {};
             const branches = ['principal', 'main'];
 
             for (let branch of branches) {
                 try {
-                    let resCsv = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/Plano1.csv`);
+                    let resCsv = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/Plano1.csv?t=${new Date().getTime()}`);
                     if (resCsv.ok) {
                         let text = await resCsv.text();
                         let linhas = text.trim().split('\n');
@@ -423,7 +446,7 @@
                         if (Object.keys(novoEstoque).length > 0) {
                             estoqueCloud = novoEstoque;
                             localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-                            registrarLog(`Sucesso! ${Object.keys(estoqueCloud).length} produtos carregados do GitHub (${branch}).`, 'sucesso');
+                            if(!silencioso) registrarLog(`Sucesso! ${Object.keys(estoqueCloud).length} produtos carregados do GitHub.`, 'sucesso');
                             renderizarTabelaAdm();
                             return;
                         }
@@ -433,22 +456,69 @@
                 }
             }
 
-            if (Object.keys(estoqueCloud).length > 0) {
+            if (Object.keys(estoqueCloud).length > 0 && !silencioso) {
                 registrarLog(`Mantendo ${Object.keys(estoqueCloud).length} produtos salvos localmente.`, 'info');
-            } else {
-                registrarLog("Nenhum produto encontrado na nuvem.", "erro");
             }
             renderizarTabelaAdm();
         }
 
+        async function salvarAlteracaoNoGitHub() {
+            let repo = localStorage.getItem('cloud_repo') || 'rafaelxt1033-gif/pdvmercadodoluiz';
+            let token = localStorage.getItem('cloud_token') || '';
+
+            if (!token) {
+                registrarLog("Alteração salva localmente. Informe o Token do GitHub no ADM para sincronizar caixas.", "alerta");
+                return;
+            }
+
+            try {
+                let csvContent = '"Codigo","Nome","Categoria","Preco"\n';
+                for (let cod in estoqueCloud) {
+                    csvContent += `"${cod}","${estoqueCloud[cod].nome}","GERAL","${estoqueCloud[cod].preco.toFixed(2).replace('.', ',')}"\n`;
+                }
+
+                const url = `https://api.github.com/repos/${repo}/contents/Plano1.csv`;
+                
+                let getRes = await fetch(url, { headers: { 'Authorization': `token ${token}` } });
+                let sha = "";
+                if (getRes.ok) {
+                    let getData = await getRes.json();
+                    sha = getData.sha;
+                }
+
+                let contentEncoded = btoa(unescape(encodeURIComponent(csvContent)));
+
+                let putRes = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: 'Atualização automática de preços pelo PDV',
+                        content: contentEncoded,
+                        sha: sha,
+                        branch: 'principal'
+                    })
+                });
+
+                if (putRes.ok) {
+                    registrarLog("Preço sincronizado com sucesso no GitHub!", "sucesso");
+                }
+            } catch (err) {
+                console.error("Erro ao enviar para o GitHub:", err);
+            }
+        }
+
         function salvarConfiguracaoNuvem() {
             localStorage.setItem('cloud_repo', document.getElementById('cloud-repo').value.trim());
-            alert("Configuração salva!");
+            localStorage.setItem('cloud_token', document.getElementById('cloud-token').value.trim());
+            alert("Configurações da Nuvem salvas!");
             carregarEstoqueCompletoDaNuvem();
         }
 
         // ==========================================
-        // RELATÓRIO DE VENDAS PARA O CONTADOR
+        // RELATÓRIOS PARA O CONTADOR (EXCEL E XML)
         // ==========================================
         function exportarRelatorioContador() {
             if (vendasRealizadas.length === 0) {
@@ -476,6 +546,35 @@
             document.body.removeChild(link);
 
             registrarLog("Relatório para o contador gerado com sucesso!", "sucesso");
+        }
+
+        function exportarXMLContador() {
+            if (vendasRealizadas.length === 0) {
+                return alert("Nenhuma venda disponível para emissão do XML.");
+            }
+
+            let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<nfeProc xmlns="http://www.portalfiscal.inf.br/nfe" versao="4.00">\n  <NFe>\n    <infNFe Id="NFe44133465000196650010000057021000384190">\n      <emit>\n        <CNPJ>44133465000196</CNPJ>\n        <xNome>MERCADINHO DOIS IRMAOS LTDA</xNome>\n      </emit>\n      <vendas>\n`;
+
+            vendasRealizadas.forEach((v, i) => {
+                xml += `        <venda id="${i+1}">\n`;
+                xml += `          <dhEmi>${v.data}</dhEmi>\n`;
+                xml += `          <tPag>${v.pagamento}</tPag>\n`;
+                xml += `          <cliente>${v.cliente}</cliente>\n`;
+                xml += `          <vNF>${(v.total || 0).toFixed(2)}</vNF>\n`;
+                xml += `        </venda>\n`;
+            });
+
+            xml += `      </vendas>\n    </infNFe>\n  </NFe>\n</nfeProc>`;
+
+            const blob = new Blob([xml], { type: 'text/xml' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Vendas_Fiscal_NFCe_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.xml`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            registrarLog("Arquivo XML Fiscal gerado com sucesso!", "sucesso");
         }
 
         // ==========================================
@@ -515,6 +614,8 @@
                     if (carregados > 0) {
                         estoqueCloud = novoEstoque;
                         localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
+                        notificarOutrosCaixas();
+                        salvarAlteracaoNoGitHub();
                         renderizarTabelaAdm();
                         registrarLog(`Sucesso! ${carregados} produtos importados da planilha.`, 'sucesso');
                         alert(`${carregados} produtos foram carregados com sucesso!`);
@@ -749,19 +850,16 @@
         function navegarSugestoes(e) {
             const drop = document.getElementById('dropdown-sugestoes'); const opcoes = drop.querySelectorAll('.opcao-busca');
             
-            // Navegação de setas na lista suspensa
             if (drop.style.display === 'block' && opcoes.length > 0) {
                 if (e.key === 'ArrowDown') { e.preventDefault(); if (indiceSelecionadoSugestoes < opcoes.length - 1) { if (indiceSelecionadoSugestoes >= 0) opcoes[indiceSelecionadoSugestoes].classList.remove('selecionada'); indiceSelecionadoSugestoes++; opcoes[indiceSelecionadoSugestoes].classList.add('selecionada'); opcoes[indiceSelecionadoSugestoes].scrollIntoView({ block: 'nearest' }); } return;
                 } else if (e.key === 'ArrowUp') { e.preventDefault(); if (indiceSelecionadoSugestoes > 0) { if (indiceSelecionadoSugestoes >= 0) opcoes[indiceSelecionadoSugestoes].classList.remove('selecionada'); indiceSelecionadoSugestoes--; opcoes[indiceSelecionadoSugestoes].classList.add('selecionada'); opcoes[indiceSelecionadoSugestoes].scrollIntoView({ block: 'nearest' }); } return;
                 } else if (e.key === 'Enter' && indiceSelecionadoSugestoes >= 0) { e.preventDefault(); let qtdAtiva = parseFloat(document.getElementById('input-qtd-manual').value || 1); addCupom(listaFiltrada[indiceSelecionadoSugestoes], qtdAtiva); document.getElementById('input-qtd-manual').value = "1"; return; }
             }
 
-            // Ação ao apertar Enter / Bipe do Leitor
             if (e.key === 'Enter') {
                 e.preventDefault(); 
                 let txt = document.getElementById('codigo-barras').value.trim();
                 
-                // Se o campo estiver vazio, avança para o pagamento
                 if(!txt) { 
                     if (cupomAtual.length === 0) return alert("Passe os produtos!"); 
                     document.getElementById('valor-pago').focus(); 
@@ -772,13 +870,11 @@
                 let qtd = parseFloat(document.getElementById('input-qtd-manual').value || 1); 
                 let cod = txt;
                 
-                // Suporte para multiplicar quantidade: Exemplo (5*789...)
                 if(txt.includes('*')) { 
                     qtd = parseFloat(txt.split('*')[0]); 
                     cod = txt.split('*')[1]; 
                 }
 
-                // Lança o produto imediatamente pelo código de barras
                 if(estoqueCloud[cod]) { 
                     addCupom(cod, qtd); 
                     document.getElementById('input-qtd-manual').value = "1"; 
@@ -808,11 +904,29 @@
         }
 
         function salvarNovoPreco() {
-            let codAntigo = document.getElementById('edit-cod-selecionado').value.trim(); let codNovo = document.getElementById('edit-codigo-novo').value.trim(); let precoFormatado = parseFloat(document.getElementById('edit-preco').value.replace(',', '.')); let senha = document.getElementById('edit-senha').value;
-            if (!codAntigo || !estoqueCloud[codAntigo]) return alert("Selecione um produto válido!"); if (!codNovo) return alert("O código não pode ficar vazio!"); if (isNaN(precoFormatado) || precoFormatado <= 0) return alert("Digite um preço válido!"); if (senha !== 'kd041022') return alert("Senha incorreta!");
-            let nomeOriginal = estoqueCloud[codAntigo].nome; if (codAntigo !== codNovo) { delete estoqueCloud[codAntigo]; precosModificadosManualmente[codAntigo] = null; }
-            estoqueCloud[codNovo] = { nome: nomeOriginal, preco: precoFormatado }; localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-            fecharModalPreco(); alert(`Sucesso!`);
+            let codAntigo = document.getElementById('edit-cod-selecionado').value.trim(); 
+            let codNovo = document.getElementById('edit-codigo-novo').value.trim(); 
+            let precoFormatado = parseFloat(document.getElementById('edit-preco').value.replace(',', '.')); 
+            let senha = document.getElementById('edit-senha').value;
+            
+            if (!codAntigo || !estoqueCloud[codAntigo]) return alert("Selecione um produto válido!"); 
+            if (!codNovo) return alert("O código não pode ficar vazio!"); 
+            if (isNaN(precoFormatado) || precoFormatado <= 0) return alert("Digite um preço válido!"); 
+            if (senha !== 'kd041022') return alert("Senha incorreta!");
+            
+            let nomeOriginal = estoqueCloud[codAntigo].nome; 
+            if (codAntigo !== codNovo) { 
+                delete estoqueCloud[codAntigo]; 
+            }
+            
+            estoqueCloud[codNovo] = { nome: nomeOriginal, preco: precoFormatado }; 
+            localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
+            
+            notificarOutrosCaixas();
+            salvarAlteracaoNoGitHub();
+            
+            fecharModalPreco(); 
+            alert(`Preço atualizado com sucesso e sincronizado com os outros caixas!`);
         }
 
         function addCupom(cod, qtd) {
