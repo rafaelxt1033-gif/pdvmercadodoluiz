@@ -194,6 +194,16 @@
                 </div>
             </div>
 
+            <!-- RELATÓRIO DE VENDAS PARA O CONTADOR (EXCEL E XML) -->
+            <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #0284c7; margin-bottom: 20px;">
+                <h3 style="color: #0284c7; margin-bottom: 10px;">📑 Relatório para a Contabilidade (Contador)</h3>
+                <p style="font-size: 14px; color: #64748b; margin-bottom: 15px;">Baixe o relatório detalhado em planilha ou os arquivos XML fiscais de todas as vendas realizadas.</p>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                    <button class="btn-universal" onclick="exportarRelatorioContador()" style="background: #0284c7; width: auto; padding: 12px 20px;">📄 Baixar Relatório (Excel / CSV)</button>
+                    <button class="btn-universal" onclick="exportarXMLContador()" style="background: #0369a1; width: auto; padding: 12px 20px;">📦 Baixar XML Fiscal (NFC-e)</button>
+                </div>
+            </div>
+
             <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid var(--secundaria); margin-bottom: 20px;">
                 <h3>📂 Importação Local de Produtos (Super Rápida)</h3>
                 <p style="font-size: 13px; color: #64748b; margin-top: 5px; margin-bottom: 15px;">Selecione o arquivo <b>Plano1.csv</b> ou sua planilha do computador para carregar os produtos instantaneamente, sem travamentos.</p>
@@ -280,7 +290,7 @@
         };
 
         window.onload = function() {
-            const vendasSalvas = localStorage.getItem('vendas');
+            const vendasSalvas = localStorage.getItem('vendas') || localStorage.getItem('vendas_realizadas');
             if (vendasSalvas) { try { vendasRealizadas = JSON.parse(vendasSalvas); } catch(e) { vendasRealizadas = []; } }
             
             const clientesSalvos = localStorage.getItem('clientes_mercado');
@@ -316,6 +326,39 @@
                     document.getElementById('codigo-barras').focus();
                 }
             });
+        }
+
+        // EXPORTAÇÕES PARA O CONTADOR
+        function exportarRelatorioContador() {
+            if (vendasRealizadas.length === 0) return alert("Nenhuma venda registrada até o momento.");
+            let csvContent = "data:text/csv;charset=utf-8,ID_Venda;Data_Hora;Forma_Pagamento;Cliente;Total_Venda_RS\n";
+            vendasRealizadas.forEach((v, index) => {
+                csvContent += `${index + 1};${v.data};${v.pagamento};${v.cliente};${(v.total || 0).toFixed(2).replace('.', ',')}\n`;
+            });
+            const link = document.createElement("a");
+            link.setAttribute("href", encodeURI(csvContent));
+            link.setAttribute("download", `Relatorio_Contabilidade_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            registrarLog("Relatório contábil gerado com sucesso!", "sucesso");
+        }
+
+        function exportarXMLContador() {
+            if (vendasRealizadas.length === 0) return alert("Nenhuma venda disponível para o arquivo XML.");
+            let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<nfeProc xmlns="http://www.portalfiscal.inf.br/nfe" versao="4.00">\n  <NFe>\n    <infNFe Id="NFe44133465000196650010000057021000384190">\n      <emit>\n        <CNPJ>44133465000196</CNPJ>\n        <xNome>MERCADINHO DOIS IRMAOS LTDA</xNome>\n      </emit>\n      <vendas>\n`;
+            vendasRealizadas.forEach((v, i) => {
+                xml += `        <venda id="${i+1}"><dhEmi>${v.data}</dhEmi><tPag>${v.pagamento}</tPag><cliente>${v.cliente}</cliente><vNF>${(v.total || 0).toFixed(2)}</vNF></venda>\n`;
+            });
+            xml += `      </vendas>\n    </infNFe>\n  </NFe>\n</nfeProc>`;
+            const blob = new Blob([xml], { type: 'text/xml' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Vendas_Fiscal_NFCe_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.xml`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            registrarLog("XML Fiscal gerado com sucesso!", "sucesso");
         }
 
         // IMPORTAÇÃO LOCAL SUPER LEVE E RÁPIDA
@@ -520,6 +563,7 @@
             }
             vendasRealizadas.push({ data: new Date().toLocaleString('pt-BR'), total: totalVenda, pagamento: formaPagto, cliente: clienteId ? clientesDB[clienteId].nome : 'Balcão' });
             localStorage.setItem('vendas', JSON.stringify(vendasRealizadas));
+            localStorage.setItem('vendas_realizadas', JSON.stringify(vendasRealizadas));
             atualizarDashboard();
             cupomAtual = []; totalVenda = 0;
             document.getElementById('valor-pago').value = ''; document.getElementById('cliente-selecionado').value = ''; document.getElementById('forma-pagamento').value = 'Dinheiro';
@@ -554,7 +598,7 @@
             if (!faturamentoVisivel) { if (prompt("Senha:") === 'kd041022') faturamentoVisivel = true; } else faturamentoVisivel = false;
             atualizarDashboard();
         }
-        function zerarVendas() { if(confirm("Zerar?")) { vendasRealizadas = []; localStorage.setItem('vendas', '[]'); faturamentoVisivel = false; atualizarDashboard(); } }
+        function zerarVendas() { if(confirm("Zerar?")) { vendasRealizadas = []; localStorage.setItem('vendas', '[]'); localStorage.setItem('vendas_realizadas', '[]'); faturamentoVisivel = false; atualizarDashboard(); } }
     </script>
 </body>
 </html>
