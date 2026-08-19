@@ -410,7 +410,7 @@
         }
 
         // ==========================================
-        // CARREGAMENTO SEGURO COM AUTENTICAÇÃO BEARER
+        // CARREGAMENTO COM DIAGNÓSTICO DE ERROS
         // ==========================================
         async function carregarEstoqueCompletoDaNuvem(silencioso = false) {
             let repo = localStorage.getItem('cloud_repo') || 'rafaelxt1033-gif/pdvmercadodoluiz';
@@ -419,61 +419,61 @@
             
             let novoEstoque = {};
             let csvText = "";
+            let logErros = [];
 
-            const headers = {};
+            // 1. TENTA VIA API OFICIAL (Para repositórios privados com Token)
             if (token) {
-                headers['Authorization'] = `Bearer ${token.trim()}`;
-            }
-
-            // TENTATIVA 1: VIA LINK RAW (COM TOKEN SE O REPO FOR PRIVADO)
-            const branches = ['principal', 'main', 'master'];
-            for (let branch of branches) {
-                try {
-                    let resCsv = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/Plano1.csv?t=${new Date().getTime()}`, { headers });
-                    if (resCsv.ok) {
-                        csvText = await resCsv.text();
-                        break;
-                    }
-                } catch(e) {}
-            }
-
-            // TENTATIVA 2: VIA API REST DE CONTEÚDO (MÍDIA RAW)
-            if (!csvText && token) {
                 try {
                     let apiRes = await fetch(`https://api.github.com/repos/${repo}/contents/Plano1.csv`, {
                         headers: { 
-                            'Authorization': `Bearer ${token.trim()}`,
-                            'Accept': 'application/vnd.github.v3.raw'
+                            'Authorization': `token ${token.trim()}`,
+                            'Accept': 'application/vnd.github.v3+json'
                         }
                     });
                     if (apiRes.ok) {
-                        csvText = await apiRes.text();
+                        let data = await apiRes.json();
+                        csvText = decodeURIComponent(escape(atob(data.content))); // Descriptografa Base64
+                    } else {
+                        logErros.push(`API GitHub falhou: Erro ${apiRes.status}`);
                     }
                 } catch(e) {
-                    console.error("Erro na API do GitHub:", e);
+                    logErros.push("Falha de rede na API.");
+                }
+            } else {
+                logErros.push("Nenhum Token informado para leitura Privada.");
+            }
+
+            // 2. TENTA VIA LINK PÚBLICO (Se não usou token ou se falhou)
+            if (!csvText) {
+                const branches = ['principal', 'main'];
+                for (let branch of branches) {
+                    try {
+                        let resCsv = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/Plano1.csv?t=${new Date().getTime()}`);
+                        if (resCsv.ok) {
+                            csvText = await resCsv.text();
+                            break;
+                        } else {
+                            logErros.push(`Link direto (${branch}) falhou: Erro ${resCsv.status}`);
+                        }
+                    } catch(e) {}
                 }
             }
 
-            // PROCESSA O CONTEÚDO CSV
+            // PROCESSA O ARQUIVO SE ENCONTRADO
             if (csvText) {
                 let linhas = csvText.split(/\r?\n/);
-                
                 for (let i = 1; i < linhas.length; i++) {
                     let linha = linhas[i].trim();
                     if (!linha) continue;
 
                     let cols = linha.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || linha.split(',');
-                    
                     if (cols && cols.length >= 2) {
                         let cod = cols[0].replace(/^"|"$/g, '').trim();
                         let nome = cols[1].replace(/^"|"$/g, '').trim().toUpperCase();
-                        
                         let precoBruto = cols[3] || cols[2] || "0";
                         let preco = parseFloat(precoBruto.replace(/^"|"$/g, '').replace(',', '.')) || 0;
 
-                        if (cod && nome) {
-                            novoEstoque[cod] = { nome: nome, preco: preco };
-                        }
+                        if (cod && nome) novoEstoque[cod] = { nome: nome, preco: preco };
                     }
                 }
 
@@ -481,14 +481,16 @@
                 if (totalItens > 0) {
                     estoqueCloud = novoEstoque;
                     localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-                    
-                    if(!silencioso) registrarLog(`Sucesso! ${totalItens} produtos carregados da nuvem.`, 'sucesso');
+                    if(!silencioso) registrarLog(`Sucesso! ${totalItens} produtos carregados.`, 'sucesso');
                     renderizarTabelaAdm();
                     return;
                 }
             }
 
-            if (!silencioso) registrarLog("Erro de Leitura. Verifique se o Token foi colado no ADM.", "erro");
+            if (!silencioso) {
+                alert("Falha ao baixar os produtos do GitHub.\n\nMotivos identificados pelo sistema:\n- " + logErros.join("\n- ") + "\n\nDICA: Se der Erro 401, o Token está errado. Se der Erro 404, o repositório precisa ficar Público ou o nome do arquivo está diferente.");
+                registrarLog("Erro de Leitura. Verifique o pop-up de aviso.", "erro");
+            }
         }
 
         async function salvarAlteracaoNoGitHub() {
@@ -496,7 +498,7 @@
             let token = localStorage.getItem('cloud_token') || '';
 
             if (!token) {
-                registrarLog("Alteração salva localmente. Informe o Token do GitHub no ADM para atualizar a nuvem.", "alerta");
+                registrarLog("Preço salvo apenas neste caixa. Para enviar para a nuvem, insira o Token.", "alerta");
                 return;
             }
 
@@ -508,7 +510,7 @@
 
                 const url = `https://api.github.com/repos/${repo}/contents/Plano1.csv`;
                 
-                let getRes = await fetch(url, { headers: { 'Authorization': `Bearer ${token.trim()}` } });
+                let getRes = await fetch(url, { headers: { 'Authorization': `token ${token.trim()}` } });
                 let sha = "";
                 if (getRes.ok) {
                     let getData = await getRes.json();
@@ -520,7 +522,7 @@
                 let putRes = await fetch(url, {
                     method: 'PUT',
                     headers: {
-                        'Authorization': `Bearer ${token.trim()}`,
+                        'Authorization': `token ${token.trim()}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
@@ -532,7 +534,9 @@
                 });
 
                 if (putRes.ok) {
-                    registrarLog("Preço atualizado com sucesso no GitHub!", "sucesso");
+                    registrarLog("Preço sincronizado com sucesso na nuvem!", "sucesso");
+                } else {
+                    alert("O GitHub negou a gravação do preço (Erro " + putRes.status + "). O seu Token pode estar sem a permissão 'repo'.");
                 }
             } catch (err) {
                 console.error("Erro ao salvar no GitHub:", err);
@@ -542,7 +546,7 @@
         function salvarConfiguracaoNuvem() {
             localStorage.setItem('cloud_repo', document.getElementById('cloud-repo').value.trim());
             localStorage.setItem('cloud_token', document.getElementById('cloud-token').value.trim());
-            alert("Configurações salvas!");
+            alert("Configurações da Nuvem salvas!");
             carregarEstoqueCompletoDaNuvem();
         }
 
