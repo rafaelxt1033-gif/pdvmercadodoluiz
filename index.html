@@ -106,7 +106,7 @@
             </div>
             
             <div class="operacao-area">
-                <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Sistema operando normalmente.</div></div>
+                <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Sistema pronto para vendas.</div></div>
                 
                 <div class="area-balanca">
                     <span style="font-size: 24px;">⚖️</span>
@@ -121,7 +121,7 @@
                     <input type="number" id="input-qtd-manual" value="1" style="width: 80px; text-align: center; font-size: 24px; border: 3px solid var(--primaria); border-radius: 12px; font-weight: bold;" onkeydown="pularDaUnidadeProBipe(event)">
                     <div style="position: relative; flex: 1;">
                         <div id="dropdown-sugestoes" class="dropdown-busca" style="bottom: 100%; margin-bottom: 5px; width: 100%;"></div>
-                        <input type="text" class="input-codigo" id="codigo-barras" placeholder="Bipe ou digite (Ex: 5*Código)..." oninput="filtrarPorNome(this.value)" onkeydown="navegarSugestoes(event)" autocomplete="off" autofocus>
+                        <input type="text" class="input-codigo" id="codigo-barras" placeholder="Bipe ou digite o nome/código..." oninput="filtrarPorNome(this.value)" onkeydown="navegarSugestoes(event)" autocomplete="off" autofocus>
                     </div>
                 </div>
                 
@@ -181,13 +181,14 @@
             </div>
 
             <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid var(--secundaria); margin-bottom: 20px;">
-                <h3>📂 Importação Local (Plano1.csv)</h3>
+                <h3>📂 Importação Local da Planilha (Plano1.csv)</h3>
+                <p style="font-size: 13px; color: #64748b; margin-top: 5px; margin-bottom: 15px;">Selecione o arquivo exato da sua planilha para atualizar os preços corretamente.</p>
                 <input type="file" id="input-arquivo-excel" accept=".xlsx, .xls, .csv" style="display: none;" onchange="importarArquivoProdutos(event)">
-                <button class="btn-universal" onclick="document.getElementById('input-arquivo-excel').click()" style="background: var(--secundaria); width: auto;">📥 Selecionar Planilha Local</button>
+                <button class="btn-universal" onclick="document.getElementById('input-arquivo-excel').click()" style="background: var(--secundaria); width: auto; padding: 12px 20px;">📥 Selecionar Planilha (Plano1.csv)</button>
             </div>
 
             <div style="background: white; padding: 25px; border-radius: 8px;">
-                <h3>Status do Banco de Dados: <span id="contador-produtos" style="color: var(--secundaria);">0</span> itens</h3>
+                <h3>Status do Banco de Dados: <span id="contador-produtos" style="color: var(--secundaria);">0</span> itens cadastrados</h3>
             </div>
         </div>
     </div>
@@ -196,7 +197,7 @@
     <div id="modal-busca" class="modal-bg">
         <div class="modal-card">
             <h3 style="color: var(--primaria); margin-bottom: 10px;">Consultar Preço</h3>
-            <input type="text" id="campo-consulta" placeholder="Digite o nome..." style="width:100%; padding:14px; border:2px solid #cbd5e1; border-radius:8px; outline:none; font-size:16px;" oninput="executarBusca(this.value)">
+            <input type="text" id="campo-consulta" placeholder="Digite o nome..." style="width:100%; padding:14px; border:2px solid #cbd5e1; border-radius:8px; outline:none; font-size:16px;" oninput="executarBuscaModal(this.value)">
             <div id="resultado-busca" style="max-height: 250px; overflow-y:auto; margin-top:15px; border-top:1px solid #e2e8f0; padding-top:10px;"></div>
             <button class="btn-universal" style="background:var(--erro); margin-top:20px; padding:12px;" onclick="fecharModalBusca()">Fechar</button>
         </div>
@@ -223,7 +224,6 @@
         let totalVenda = 0;
         let clientesDB = {}; 
         let listaFiltrada = [];
-        let timeoutBusca = null;
 
         const canalSincronizacao = new BroadcastChannel('pdv_dois_irmaos_sync');
         canalSincronizacao.onmessage = (event) => {
@@ -284,6 +284,7 @@
             atualizarContadorProdutos();
         }
 
+        // LEITURA EXATA CORRIGIDA PARA A COLUNA 4 DE PREÇO (Valor)
         function importarArquivoProdutos(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -293,21 +294,36 @@
                     const workbook = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
                     const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
                     let novo = {};
+                    let contador = 0;
+
                     for (let i = 1; i < json.length; i++) {
                         let l = json[i];
-                        if (l && l[0] && l[1]) {
-                            let cod = String(l[0]).trim();
-                            let nome = String(l[1]).trim().toUpperCase();
-                            let preco = parseFloat(String(l[3] || l[2] || 0).replace(',', '.'));
-                            if(nome && preco > 0) novo[cod] = { nome, preco };
+                        if (!l || l.length < 2) continue;
+
+                        let cod = String(l[0] || '').trim();
+                        let nome = String(l[1] || '').trim().toUpperCase();
+                        
+                        // A coluna 'Valor' é o índice 3 (4ª coluna)
+                        let precoBruto = String(l[3] !== undefined ? l[3] : (l[2] !== undefined ? l[2] : '0'));
+                        let preco = parseFloat(precoBruto.replace(',', '.')) || 0;
+
+                        if (nome && preco > 0) {
+                            if (!cod || cod === 'undefined') cod = 'COD_' + i;
+                            novo[cod] = { nome: nome, preco: preco };
+                            contador++;
                         }
                     }
-                    estoqueCloud = novo;
-                    localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-                    canalSincronizacao.postMessage({ tipo: 'ATUALIZAR_ESTOQUE', estoque: estoqueCloud });
-                    atualizarContadorProdutos();
-                    alert("Planilha importada com sucesso!");
-                } catch(err) { alert("Erro ao ler o arquivo."); }
+
+                    if (contador > 0) {
+                        estoqueCloud = novo;
+                        localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
+                        canalSincronizacao.postMessage({ tipo: 'ATUALIZAR_ESTOQUE', estoque: estoqueCloud });
+                        atualizarContadorProdutos();
+                        alert(`${contador} produtos importados com os preços corretos!`);
+                    } else {
+                        alert("Nenhum produto válido encontrado. Verifique se a planilha é o Plano1.csv");
+                    }
+                } catch(err) { alert("Erro ao processar o arquivo."); }
             };
             reader.readAsArrayBuffer(file);
         }
@@ -327,15 +343,34 @@
             const blob = new Blob([xml], { type: 'text/xml' }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "Vendas.xml"; link.click();
         }
 
+        // PESQUISA RÁPIDA CORRIGIDA (Busca por código ou por parte do nome)
         function filtrarPorNome(val) {
-            const txt = val.toLowerCase().trim(); const drop = document.getElementById('dropdown-sugestoes'); drop.innerHTML = '';
+            const txt = val.toLowerCase().trim(); 
+            const drop = document.getElementById('dropdown-sugestoes'); 
+            drop.innerHTML = '';
             if(!txt) { drop.style.display = 'none'; return; }
-            listaFiltrada = Object.keys(estoqueCloud).filter(c => estoqueCloud[c].nome.toLowerCase().includes(txt) || c.toLowerCase().includes(txt)).slice(0, 15);
+            
+            listaFiltrada = [];
+            let count = 0;
+            for (let c in estoqueCloud) {
+                let p = estoqueCloud[c];
+                if (c.toLowerCase().includes(txt) || p.nome.toLowerCase().includes(txt)) {
+                    listaFiltrada.push(c);
+                    count++;
+                    if (count >= 15) break; // Limita a 15 resultados para máxima velocidade
+                }
+            }
+
             if(listaFiltrada.length > 0) { 
                 drop.style.display = 'block'; 
                 let qtd = parseFloat(document.getElementById('input-qtd-manual').value || 1); 
-                listaFiltrada.forEach((c, idx) => drop.innerHTML += `<div class="opcao-busca" onclick="addCupom('${c}', ${qtd})"><span>📦 ${estoqueCloud[c].nome}</span> <span>R$ ${estoqueCloud[c].preco.toFixed(2)}</span></div>`); 
-            } else { drop.style.display = 'none'; }
+                listaFiltrada.forEach((c) => {
+                    let p = estoqueCloud[c];
+                    drop.innerHTML += `<div class="opcao-busca" onclick="addCupom('${c}', ${qtd})"><span>📦 [${c}] ${p.nome}</span> <span>R$ ${p.preco.toFixed(2)}</span></div>`;
+                }); 
+            } else { 
+                drop.style.display = 'none'; 
+            }
         }
 
         function navegarSugestoes(e) {
@@ -343,9 +378,24 @@
                 e.preventDefault(); 
                 let txt = document.getElementById('codigo-barras').value.trim();
                 if(!txt) { if (cupomAtual.length === 0) return alert("Passe os produtos!"); document.getElementById('valor-pago').focus(); return; }
-                let qtd = parseFloat(document.getElementById('input-qtd-manual').value || 1); let cod = txt;
-                if(txt.includes('*')) { qtd = parseFloat(txt.split('*')[0]); cod = txt.split('*')[1]; }
-                if(estoqueCloud[cod]) { addCupom(cod, qtd); document.getElementById('input-qtd-manual').value = "1"; } else { alert("Produto não encontrado!"); document.getElementById('codigo-barras').value = ''; }
+                let qtd = parseFloat(document.getElementById('input-qtd-manual').value || 1); 
+                let cod = txt;
+                if(txt.includes('*')) { qtd = parseFloat(txt.split('*')[0]); cod = txt.split('*')[1].trim(); }
+                
+                if(estoqueCloud[cod]) { 
+                    addCupom(cod, qtd); 
+                } else {
+                    // Tenta achar pelo nome exato ou primeiro resultado filtrado
+                    let achou = Object.keys(estoqueCloud).find(c => c === cod || estoqueCloud[c].nome.toLowerCase() === cod.toLowerCase());
+                    if (achou) {
+                        addCupom(achou, qtd);
+                    } else if (listaFiltrada.length > 0) {
+                        addCupom(listaFiltrada[0], qtd);
+                    } else {
+                        alert("Produto não encontrado!"); 
+                        document.getElementById('codigo-barras').value = ''; 
+                    }
+                }
             }
         }
 
@@ -354,6 +404,7 @@
             cupomAtual.push({ cod, nome: p.nome, qtd, unit: p.preco, total: p.preco * qtd });
             document.getElementById('codigo-barras').value = ''; 
             document.getElementById('dropdown-sugestoes').style.display = 'none'; 
+            document.getElementById('input-qtd-manual').value = '1';
             renderizarCupom(); 
             document.getElementById('codigo-barras').focus();
         }
@@ -410,9 +461,26 @@
             }); 
         }
 
-        function abrirModalBusca() { document.getElementById('modal-busca').classList.add('ativo'); }
+        function abrirModalBusca() { document.getElementById('modal-busca').classList.add('ativo'); document.getElementById('campo-consulta').value = ''; document.getElementById('resultado-busca').innerHTML = ''; setTimeout(() => document.getElementById('campo-consulta').focus(), 100); }
         function fecharModalBusca() { document.getElementById('modal-busca').classList.remove('ativo'); }
-        function executarBusca(val) { /* Consulta rápida */ }
+        
+        function executarBuscaModal(val) {
+            let t = val.toLowerCase().trim();
+            let res = document.getElementById('resultado-busca');
+            if (!t) { res.innerHTML = ''; return; }
+            let html = '';
+            let count = 0;
+            for (let c in estoqueCloud) {
+                let p = estoqueCloud[c];
+                if (c.toLowerCase().includes(t) || p.nome.toLowerCase().includes(t)) {
+                    html += `<div style="padding:10px; border-bottom:1px solid #eee; font-weight:bold; cursor:pointer;" onclick="addCupom('${c}', 1); fecharModalBusca();">📦 [${c}] ${p.nome} <br> <span style="color:var(--secundaria)">R$ ${p.preco.toFixed(2)}</span></div>`;
+                    count++;
+                    if (count >= 20) break;
+                }
+            }
+            res.innerHTML = html || '<div style="padding:10px; color:var(--erro);">Nenhum produto encontrado.</div>';
+        }
+
         function abrirModalPreco() { document.getElementById('modal-editar-preco').classList.add('ativo'); }
         function fecharModalPreco() { document.getElementById('modal-editar-preco').classList.remove('ativo'); }
         function salvarNovoPreco() { fecharModalPreco(); alert("Preço alterado!"); }
@@ -421,4 +489,3 @@
     </script>
 </body>
 </html>
-
