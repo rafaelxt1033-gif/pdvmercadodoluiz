@@ -208,7 +208,7 @@
                     </div>
                     <div style="display: flex; gap: 10px;">
                         <button onclick="salvarConfiguracaoNuvem()" class="btn-universal" style="background: var(--fiscal); padding: 12px; font-size:14px;">Salvar Dados</button>
-                        <button onclick="carregarEstoqueCompletoDaNuvem()" class="btn-universal" style="background: var(--sucesso); padding: 12px; font-size:14px;">⚡ Sincronizar Agora</button>
+                        <button onclick="carregarEstoqueCompletoDaNuvem(false)" class="btn-universal" style="background: var(--sucesso); padding: 12px; font-size:14px;">⚡ Sincronizar Agora</button>
                     </div>
                 </div>
 
@@ -321,6 +321,9 @@
 
             atualizarDashboard();
             
+            // AQUI ESTAVA O PROBLEMA: AGORA ELE É SILENCIOSO E NÃO VAI MOSTRAR O AVISO CHATO!
+            await carregarEstoqueCompletoDaNuvem(true); 
+
             // Foco e atalhos
             document.addEventListener('keydown', (e) => { 
                 if (e.key === 'F4') { e.preventDefault(); finalizarVenda(true); }
@@ -347,7 +350,6 @@
         // SISTEMA DE SINCRONIZAÇÃO BLINDADO
         // ==========================================
         async function carregarEstoqueCompletoDaNuvem(silencioso = false) {
-            // Trim remove espaços fantasmas que quebram o link
             let repo = (localStorage.getItem('cloud_repo') || 'rafaelxt1033-gif/pdvmercadodoluiz').trim();
             let token = (localStorage.getItem('cloud_token') || '').trim();
             
@@ -355,8 +357,8 @@
             
             let novoEstoque = {};
             let csvText = "";
+            let logErros = [];
 
-            // O "cache: 'no-store'" força o Vercel a ignorar o erro 404 antigo
             let headers = { 'Cache-Control': 'no-cache' };
             if (token) headers['Authorization'] = `token ${token}`;
 
@@ -366,6 +368,8 @@
                 if (resApi.ok) {
                     let data = await resApi.json();
                     csvText = decodeURIComponent(escape(atob(data.content)));
+                } else {
+                    logErros.push(`API GitHub falhou: Erro ${resApi.status}`);
                 }
             } catch(e) {}
 
@@ -378,6 +382,8 @@
                         if (resRaw.ok) {
                             csvText = await resRaw.text();
                             break;
+                        } else {
+                            logErros.push(`Link direto (${branch}) falhou: Erro ${resRaw.status}`);
                         }
                     } catch(e) {}
                 }
@@ -412,7 +418,10 @@
                 }
             }
 
-            if (!silencioso) registrarLog("O GitHub bloqueou o acesso. Use o botão 'Selecionar Planilha Local' no ADM.", "erro");
+            if (!silencioso) {
+                alert("Falha ao baixar os produtos do GitHub.\n\nMotivos identificados pelo sistema:\n- " + logErros.join("\n- ") + "\n\nDICA: Se der Erro 401, o Token está errado. Se der Erro 404, o repositório precisa ficar Público ou o nome do arquivo está diferente.");
+                registrarLog("O GitHub bloqueou o acesso. Use o botão 'Selecionar Planilha Local' no ADM.", "erro");
+            }
         }
 
         function salvarConfiguracaoNuvem() {
