@@ -41,10 +41,9 @@
         .area-balanca { background: #e2e8f0; padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; gap: 10px; align-items: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
         .area-balanca input { padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; }
         .input-codigo { width: 100%; padding: 22px; font-size: 38px; text-align: center; border: 3px solid var(--primaria); border-radius: 12px; outline: none; font-weight: bold; }
-        
-        .dropdown-busca { display: none; position: absolute; left: 0; width: 100%; background: white; border: 2px solid var(--secundaria); border-radius: 8px; max-height: 250px; overflow-y: auto; z-index: 9999; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .opcao-busca { padding: 12px; cursor: pointer; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; color: #1e293b; }
-        .opcao-busca:hover { background: #eff6ff; color: var(--secundaria); }
+        .dropdown-busca { display: none; position: absolute; left: 0; width: 100%; background: white; border: 2px solid var(--secundaria); border-radius: 8px; max-height: 250px; overflow-y: auto; z-index: 999; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .opcao-busca { padding: 14px; cursor: pointer; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; }
+        .opcao-busca:hover, .opcao-busca.selecionada { background: #eff6ff; color: var(--secundaria); }
         
         .fechamento-painel { background: #0f172a; padding: 25px; border-radius: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .fechamento-painel label { font-size: 17px !important; font-weight: 900 !important; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 8px; }
@@ -61,7 +60,11 @@
         
         .modal-bg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
         .modal-bg.ativo { display: flex; }
-        .modal-card { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 480px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
+        .modal-card { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 440px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
+
+        .container-faturamento-olho { display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 5px; }
+        .btn-olho-faturamento { background: transparent; border: none; cursor: pointer; font-size: 26px; display: flex; align-items: center; justify-content: center; padding: 5px; border-radius: 50%; transition: background 0.2s; }
+        .btn-olho-faturamento:hover { background: rgba(0, 0, 0, 0.05); }
     </style>
 </head>
 <body>
@@ -103,7 +106,7 @@
             </div>
             
             <div class="operacao-area">
-                <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Sistema pronto para vendas e bipe.</div></div>
+                <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Pronto para vendas. Bipe ou digite o código/nome.</div></div>
                 
                 <div class="area-balanca">
                     <span style="font-size: 24px;">⚖️</span>
@@ -154,15 +157,30 @@
     <!-- TELA ADM -->
     <div id="tela-adm" class="tela">
         <div class="top-bar">
-            <div><strong>PAINEL GERENCIAL</strong></div>
+            <div><strong>PAINEL GERENCIAL E SINCRONIZAÇÃO GITHUB</strong></div>
             <button class="btn-universal" onclick="mostrarTela('tela-pdv')" style="background: var(--secundaria); width: auto; padding: 8px 15px;">Voltar ao Caixa</button>
         </div>
         <div class="dashboard-area">
             
+            <!-- SINCRONIZAÇÃO GITHUB VIA TOKEN -->
+            <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #2563eb; margin-bottom: 20px;">
+                <h3 style="color: #2563eb; margin-bottom: 10px;">☁️ Sincronização em Nuvem (GitHub Token)</h3>
+                <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Conecte seu Token do GitHub para salvar ou baixar o estoque centralizado na nuvem.</p>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+                    <input type="password" id="git-token" placeholder="GitHub Personal Access Token (ghp_...)" style="flex:2; padding:12px; border:1px solid #cbd5e1; border-radius:8px;">
+                    <input type="text" id="git-repo" placeholder="Repositório (ex: rafaelxt1033-gif/pdvmercadodoluiz)" value="rafaelxt1033-gif/pdvmercadodoluiz" style="flex:2; padding:12px; border:1px solid #cbd5e1; border-radius:8px;">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="salvarConfigGitHub()" class="btn-universal" style="background:#475569; width:auto; padding: 10px 15px; font-size:14px;">💾 Salvar Credenciais</button>
+                    <button onclick="baixarEstoqueGitHub()" class="btn-universal" style="background:#2563eb; width:auto; padding: 10px 15px; font-size:14px;">📥 Baixar da Nuvem</button>
+                    <button onclick="enviarEstoqueGitHub()" class="btn-universal" style="background:#10b981; width:auto; padding: 10px 15px; font-size:14px;">☁️ Enviar para Nuvem</button>
+                </div>
+            </div>
+
             <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #10b981; margin-bottom: 20px;">
                 <h3 style="color: #10b981; margin-bottom: 10px;">➕ Adicionar Novo Produto</h3>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <input type="text" id="novo-cod" placeholder="Código de Barras" style="flex:1; padding:12px; border:1px solid #cbd5e1; border-radius:8px;">
+                    <input type="text" id="novo-cod" placeholder="Código / Código de Barras" style="flex:1; padding:12px; border:1px solid #cbd5e1; border-radius:8px;">
                     <input type="text" id="novo-nome" placeholder="Nome do Produto" style="flex:3; padding:12px; border:1px solid #cbd5e1; border-radius:8px;">
                     <input type="number" id="novo-preco" placeholder="Preço (R$)" style="flex:1; padding:12px; border:1px solid #cbd5e1; border-radius:8px;" step="0.01">
                     <button onclick="adicionarProdutoManual()" class="btn-universal" style="background:#10b981; width:auto;">Adicionar</button>
@@ -179,7 +197,6 @@
 
             <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid var(--secundaria); margin-bottom: 20px;">
                 <h3>📂 Importação Local da Planilha (Plano1.csv)</h3>
-                <p style="font-size: 13px; color: #64748b; margin-top: 5px; margin-bottom: 15px;">Selecione o arquivo da sua planilha para atualizar os preços corretos na coluna de valores.</p>
                 <input type="file" id="input-arquivo-excel" accept=".xlsx, .xls, .csv" style="display: none;" onchange="importarArquivoProdutos(event)">
                 <button class="btn-universal" onclick="document.getElementById('input-arquivo-excel').click()" style="background: var(--secundaria); width: auto; padding: 12px 20px;">📥 Selecionar Planilha (Plano1.csv)</button>
             </div>
@@ -200,38 +217,22 @@
         </div>
     </div>
 
-    <!-- MODAL MUDAR PREÇO INTELIGENTE -->
+    <!-- MODAL MUDAR PREÇO E CÓDIGO -->
     <div id="modal-editar-preco" class="modal-bg">
-        <div class="modal-card" style="position: relative;">
-            <h3 style="color: var(--secundaria); margin-bottom: 15px;">✏️ Mudar Preço do Produto</h3>
-            
+        <div class="modal-card">
+            <h3 style="color: var(--secundaria); margin-bottom: 5px;">Mudar Preço e Código</h3>
             <div class="input-group" style="position: relative;">
-                <label>Pesquisar Produto (Nome ou Código)</label>
-                <input type="text" id="edit-busca-prod" placeholder="Digite para buscar..." oninput="buscarProdParaEditar(this.value)" autocomplete="off">
-                <div id="dropdown-edicao" class="dropdown-busca" style="top: 100%; bottom: auto; margin-top: 5px;"></div>
+                <label>Buscar Produto (Nome ou Código)</label>
+                <input type="text" id="edit-busca-prod" placeholder="Digite para buscar..." oninput="buscarProdEdicao(this.value)" autocomplete="off">
+                <input type="hidden" id="edit-cod-antigo">
+                <div id="dropdown-edicao" class="dropdown-busca" style="top: 100%; bottom: auto;"></div>
             </div>
-
-            <div style="background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #e2e8f0;">
-                <div style="font-size: 13px; color: #64748b;">Produto Selecionado:</div>
-                <div id="edit-prod-selecionado-nome" style="font-weight: bold; color: var(--primaria); font-size: 15px;">Nenhum selecionado</div>
-                <div style="font-size: 13px; color: #64748b; margin-top: 5px;">Preço Atual: <span id="edit-prod-preco-atual" style="font-weight: bold; color: var(--secundaria);">R$ 0.00</span></div>
-            </div>
-
-            <input type="hidden" id="edit-codigo-selecionado">
-
-            <div class="input-group">
-                <label>Novo Preço (R$)</label>
-                <input type="number" id="edit-novo-preco" placeholder="0.00" step="0.01">
-            </div>
-
-            <div class="input-group">
-                <label>Senha do Gerente</label>
-                <input type="password" id="edit-senha" placeholder="••••••••" onkeypress="if(event.key === 'Enter') salvarNovoPreco()">
-            </div>
-
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <div class="input-group"><label>Novo Código / Código de Barras</label><input type="text" id="edit-cod-novo"></div>
+            <div class="input-group"><label>Novo Preço (R$)</label><input type="number" id="edit-preco" step="0.01"></div>
+            <div class="input-group"><label>Senha do Gerente</label><input type="password" id="edit-senha" onkeypress="if(event.key === 'Enter') salvarNovoPrecoCodigo()"></div>
+            <div style="display: flex; gap: 10px;">
                 <button class="btn-universal" style="background: var(--erro);" onclick="fecharModalPreco()">Cancelar</button>
-                <button class="btn-universal" style="background: var(--sucesso);" onclick="salvarNovoPreco()">Salvar Novo Preço</button>
+                <button class="btn-universal" style="background: var(--sucesso);" onclick="salvarNovoPrecoCodigo()">Salvar Alterações</button>
             </div>
         </div>
     </div>
@@ -244,15 +245,6 @@
         let clientesDB = {}; 
         let listaFiltrada = [];
 
-        const canalSincronizacao = new BroadcastChannel('pdv_dois_irmaos_sync');
-        canalSincronizacao.onmessage = (event) => {
-            if (event.data && event.data.tipo === 'ATUALIZAR_ESTOQUE') {
-                estoqueCloud = event.data.estoque;
-                localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-                atualizarContadorProdutos();
-            }
-        };
-
         window.onload = function() {
             const vendasSalvas = localStorage.getItem('vendas') || localStorage.getItem('vendas_realizadas');
             if (vendasSalvas) { try { vendasRealizadas = JSON.parse(vendasSalvas); } catch(e) { vendasRealizadas = []; } }
@@ -262,9 +254,81 @@
             const local = localStorage.getItem('estoque_mercado');
             if (local) { try { estoqueCloud = JSON.parse(local); } catch(e) {} atualizarContadorProdutos(); }
             
+            if (localStorage.getItem('git_token')) document.getElementById('git-token').value = localStorage.getItem('git_token');
+            if (localStorage.getItem('git_repo')) document.getElementById('git-repo').value = localStorage.getItem('git_repo');
+
             atualizarSelectClientes();
             manterFocoNoInput();
         };
+
+        // GITHUB TOKEN SYNC FUNCTIONS
+        function salvarConfigGitHub() {
+            localStorage.setItem('git_token', document.getElementById('git-token').value.trim());
+            localStorage.setItem('git_repo', document.getElementById('git-repo').value.trim());
+            alert("Credenciais salvas com sucesso!");
+        }
+
+        async function baixarEstoqueGitHub() {
+            let token = localStorage.getItem('git_token') || document.getElementById('git-token').value.trim();
+            let repo = localStorage.getItem('git_repo') || document.getElementById('git-repo').value.trim();
+            if (!token || !repo) return alert("Preencha o Token e o Repositório do GitHub!");
+
+            try {
+                let res = await fetch(`https://api.github.com/repos/${repo}/contents/estoque.json`, {
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+                });
+                if (!res.ok) throw new Error("Arquivo estoque.json não encontrado no repositório.");
+                let data = await res.json();
+                let decoded = JSON.parse(atob(data.content));
+                estoqueCloud = decoded;
+                localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
+                atualizarContadorProdutos();
+                alert("Estoque baixado com sucesso da nuvem do GitHub!");
+            } catch (err) {
+                alert("Erro ao baixar do GitHub: " + err.message);
+            }
+        }
+
+        async function enviarEstoqueGitHub() {
+            let token = localStorage.getItem('git_token') || document.getElementById('git-token').value.trim();
+            let repo = localStorage.getItem('git_repo') || document.getElementById('git-repo').value.trim();
+            if (!token || !repo) return alert("Preencha o Token e o Repositório do GitHub!");
+            if (Object.keys(estoqueCloud).length === 0) return alert("Nenhum produto no estoque para enviar.");
+
+            try {
+                let sha = '';
+                let getRes = await fetch(`https://api.github.com/repos/${repo}/contents/estoque.json`, {
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+                });
+                if (getRes.ok) {
+                    let fileData = await getRes.json();
+                    sha = fileData.sha;
+                }
+
+                let contentEncoded = btoa(unescape(encodeURIComponent(JSON.stringify(estoqueCloud, null, 2))));
+                let bodyData = {
+                    message: "Atualização de estoque via PDV Dois Irmãos",
+                    content: contentEncoded,
+                    branch: "main"
+                };
+                if (sha) bodyData.sha = sha;
+
+                let putRes = await fetch(`https://api.github.com/repos/${repo}/contents/estoque.json`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json' },
+                    body: JSON.stringify(bodyData)
+                });
+
+                if (putRes.ok) {
+                    alert("Estoque enviado com sucesso para o GitHub!");
+                } else {
+                    let errJson = await putRes.json();
+                    throw new Error(errJson.message || "Erro desconhecido ao enviar.");
+                }
+            } catch (err) {
+                alert("Erro ao enviar para o GitHub: " + err.message);
+            }
+        }
 
         function fazerLogin() {
             const u = document.getElementById('login-usuario').value.toLowerCase().trim(); 
@@ -297,13 +361,11 @@
             if(!cod || !nome || isNaN(preco)) return alert("Preencha código, nome e preço!");
             estoqueCloud[cod] = { nome: nome, preco: preco };
             localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-            canalSincronizacao.postMessage({ tipo: 'ATUALIZAR_ESTOQUE', estoque: estoqueCloud });
             alert("Produto adicionado!");
             document.getElementById('novo-cod').value = ''; document.getElementById('novo-nome').value = ''; document.getElementById('novo-preco').value = '';
             atualizarContadorProdutos();
         }
 
-        // IMPORTAÇÃO EXATA DA PLANILHA PLANO1.CSV (COLUNA 4 = VALOR)
         function importarArquivoProdutos(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -321,8 +383,6 @@
 
                         let cod = String(l[0] || '').trim();
                         let nome = String(l[1] || '').trim().toUpperCase();
-                        
-                        // A coluna 'Valor' é o índice 3 (4ª coluna)
                         let precoBruto = String(l[3] !== undefined ? l[3] : (l[2] !== undefined ? l[2] : '0'));
                         let preco = parseFloat(precoBruto.replace(',', '.')) || 0;
 
@@ -336,13 +396,12 @@
                     if (contador > 0) {
                         estoqueCloud = novo;
                         localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-                        canalSincronizacao.postMessage({ tipo: 'ATUALIZAR_ESTOQUE', estoque: estoqueCloud });
                         atualizarContadorProdutos();
-                        alert(`${contador} produtos importados com os preços corretos!`);
+                        alert(`${contador} produtos importados com sucesso!`);
                     } else {
-                        alert("Nenhum produto válido encontrado. Verifique se o arquivo selecionado é o Plano1.csv");
+                        alert("Nenhum produto válido encontrado.");
                     }
-                } catch(err) { alert("Erro ao processar o arquivo."); }
+                } catch(err) { alert("Erro ao ler o arquivo."); }
             };
             reader.readAsArrayBuffer(file);
         }
@@ -362,22 +421,21 @@
             const blob = new Blob([xml], { type: 'text/xml' }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "Vendas.xml"; link.click();
         }
 
-        // PESQUISA RÁPIDA NO BIPE / CAIXA
+        // BIPE / SCANNER E PESQUISA NO PDV
         function filtrarPorNome(val) {
-            const txt = val.trim(); 
+            const txt = val.toLowerCase().trim(); 
             const drop = document.getElementById('dropdown-sugestoes'); 
             drop.innerHTML = '';
             if(!txt) { drop.style.display = 'none'; return; }
             
-            const t = txt.toLowerCase();
             listaFiltrada = [];
             let count = 0;
             for (let c in estoqueCloud) {
                 let p = estoqueCloud[c];
-                if (c.toLowerCase().includes(t) || p.nome.toLowerCase().includes(t)) {
+                if (c.toLowerCase().includes(txt) || p.nome.toLowerCase().includes(txt)) {
                     listaFiltrada.push(c);
                     count++;
-                    if (count >= 15) break; 
+                    if (count >= 15) break;
                 }
             }
 
@@ -397,26 +455,16 @@
             if (e.key === 'Enter') {
                 e.preventDefault(); 
                 let txt = document.getElementById('codigo-barras').value.trim();
-                document.getElementById('dropdown-sugestoes').style.display = 'none';
-
-                if(!txt) { 
-                    if (cupomAtual.length === 0) return alert("Passe os produtos!"); 
-                    document.getElementById('valor-pago').focus(); 
-                    return; 
-                }
-
+                if(!txt) { if (cupomAtual.length === 0) return alert("Passe os produtos!"); document.getElementById('valor-pago').focus(); return; }
                 let qtd = parseFloat(document.getElementById('input-qtd-manual').value || 1); 
                 let cod = txt;
-                if(txt.includes('*')) { 
-                    qtd = parseFloat(txt.split('*')[0]); 
-                    cod = txt.split('*')[1].trim(); 
-                }
+                if(txt.includes('*')) { qtd = parseFloat(txt.split('*')[0]); cod = txt.split('*')[1].trim(); }
                 
-                // Verifica se o código exato existe
+                // Verificação exata do código bipado
                 if(estoqueCloud[cod]) { 
                     addCupom(cod, qtd); 
                 } else {
-                    // Tenta achar pelo nome exato ou primeiro resultado filtrado
+                    // Tenta encontrar pelo nome exato ou código
                     let achou = Object.keys(estoqueCloud).find(c => c === cod || estoqueCloud[c].nome.toLowerCase() === cod.toLowerCase());
                     if (achou) {
                         addCupom(achou, qtd);
@@ -485,17 +533,15 @@
             document.addEventListener('click', (e) => { 
                 if(document.getElementById('tela-pdv').classList.contains('ativa')) {
                     const tag = e.target.tagName;
-                    const modalAberto = document.querySelector('.modal-bg.ativo');
-                    if(!modalAberto && tag !== 'INPUT' && tag !== 'BUTTON' && tag !== 'SELECT') {
+                    if(tag !== 'INPUT' && tag !== 'BUTTON' && tag !== 'SELECT') {
                         document.getElementById('codigo-barras').focus();
                     }
                 }
             }); 
         }
 
-        // MODAL CONSULTA PREÇO
         function abrirModalBusca() { document.getElementById('modal-busca').classList.add('ativo'); document.getElementById('campo-consulta').value = ''; document.getElementById('resultado-busca').innerHTML = ''; setTimeout(() => document.getElementById('campo-consulta').focus(), 100); }
-        function fecharModalBusca() { document.getElementById('modal-busca').classList.remove('ativo'); document.getElementById('codigo-barras').focus(); }
+        function fecharModalBusca() { document.getElementById('modal-busca').classList.remove('ativo'); }
         
         function executarBuscaModal(val) {
             let t = val.toLowerCase().trim();
@@ -514,76 +560,70 @@
             res.innerHTML = html || '<div style="padding:10px; color:var(--erro);">Nenhum produto encontrado.</div>';
         }
 
-        // MODAL MUDAR PREÇO COM PESQUISA INTELIGENTE
+        // ALTERAR PREÇO E CÓDIGO
         function abrirModalPreco() { 
             document.getElementById('modal-editar-preco').classList.add('ativo'); 
             document.getElementById('edit-busca-prod').value = '';
-            document.getElementById('edit-prod-selecionado-nome').innerText = 'Nenhum selecionado';
-            document.getElementById('edit-prod-preco-atual').innerText = 'R$ 0.00';
-            document.getElementById('edit-codigo-selecionado').value = '';
-            document.getElementById('edit-novo-preco').value = '';
+            document.getElementById('edit-cod-antigo').value = '';
+            document.getElementById('edit-cod-novo').value = '';
+            document.getElementById('edit-preco').value = '';
             document.getElementById('edit-senha').value = '';
             document.getElementById('dropdown-edicao').style.display = 'none';
             setTimeout(() => document.getElementById('edit-busca-prod').focus(), 100);
         }
+        function fecharModalPreco() { document.getElementById('modal-editar-preco').classList.remove('ativo'); }
 
-        function fecharModalPreco() { 
-            document.getElementById('modal-editar-preco').classList.remove('ativo'); 
-            document.getElementById('codigo-barras').focus();
-        }
-
-        function buscarProdParaEditar(val) {
+        function buscarProdEdicao(val) {
             let txt = val.toLowerCase().trim();
             let drop = document.getElementById('dropdown-edicao');
             drop.innerHTML = '';
-            if(!txt) { drop.style.display = 'none'; return; }
+            if (!txt) { drop.style.display = 'none'; return; }
 
-            let count = 0;
-            let html = '';
-            for (let c in estoqueCloud) {
-                let p = estoqueCloud[c];
-                if (c.toLowerCase().includes(txt) || p.nome.toLowerCase().includes(txt)) {
-                    html += `<div class="opcao-busca" onclick="selecionarParaEditar('${c}')"><span>📦 [${c}] ${p.nome}</span> <span>R$ ${p.preco.toFixed(2)}</span></div>`;
-                    count++;
-                    if (count >= 10) break;
-                }
-            }
-
-            if(html) {
+            let matches = Object.keys(estoqueCloud).filter(c => c.toLowerCase().includes(txt) || estoqueCloud[c].nome.toLowerCase().includes(txt)).slice(0, 10);
+            if (matches.length > 0) {
                 drop.style.display = 'block';
-                drop.innerHTML = html;
+                matches.forEach(c => {
+                    let p = estoqueCloud[c];
+                    drop.innerHTML += `<div class="opcao-busca" onclick="selecionarProdEdicao('${c}')"><span>📦 [${c}] ${p.nome}</span> <span>R$ ${p.preco.toFixed(2)}</span></div>`;
+                });
             } else {
                 drop.style.display = 'none';
             }
         }
 
-        function selecionarParaEditar(cod) {
+        function selecionarProdEdicao(cod) {
             let p = estoqueCloud[cod];
-            document.getElementById('edit-codigo-selecionado').value = cod;
-            document.getElementById('edit-prod-selecionado-nome').innerText = `[${cod}] ${p.nome}`;
-            document.getElementById('edit-prod-preco-atual').innerText = `R$ ${p.preco.toFixed(2)}`;
             document.getElementById('edit-busca-prod').value = p.nome;
+            document.getElementById('edit-cod-antigo').value = cod;
+            document.getElementById('edit-cod-novo').value = cod;
+            document.getElementById('edit-preco').value = p.preco.toFixed(2);
             document.getElementById('dropdown-edicao').style.display = 'none';
-            document.getElementById('edit-novo-preco').value = p.preco.toFixed(2);
-            document.getElementById('edit-novo-preco').focus();
-            document.getElementById('edit-novo-preco').select();
+            document.getElementById('edit-cod-novo').focus();
         }
 
-        function salvarNovoPreco() {
-            let cod = document.getElementById('edit-codigo-selecionado').value.trim();
-            let novoPreco = parseFloat(document.getElementById('edit-novo-preco').value.replace(',', '.'));
+        function salvarNovoPrecoCodigo() {
+            let codAntigo = document.getElementById('edit-cod-antigo').value.trim();
+            let codNovo = document.getElementById('edit-cod-novo').value.trim();
+            let preco = parseFloat(document.getElementById('edit-preco').value.replace(',', '.'));
             let senha = document.getElementById('edit-senha').value.trim();
 
-            if(!cod || !estoqueCloud[cod]) return alert("Selecione um produto válido pesquisando na lista!");
-            if(isNaN(novoPreco) || novoPreco <= 0) return alert("Digite um preço válido!");
-            if(senha !== 'kd041022') return alert("Senha do gerente incorreta!");
+            if (!codAntigo || !estoqueCloud[codAntigo]) return alert("Selecione um produto válido para editar!");
+            if (!codNovo) return alert("O novo código não pode estar vazio!");
+            if (isNaN(preco) || preco <= 0) return alert("Digite um preço válido!");
+            if (senha !== 'kd041022') return alert("Senha do gerente incorreta!");
 
-            estoqueCloud[cod].preco = novoPreco;
+            let nomeProd = estoqueCloud[codAntigo].nome;
+
+            // Se o código mudou, remove o antigo e cria o novo
+            if (codAntigo !== codNovo) {
+                delete estoqueCloud[codAntigo];
+            }
+            estoqueCloud[codNovo] = { nome: nomeProd, preco: preco };
+
             localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
-            canalSincronizacao.postMessage({ tipo: 'ATUALIZAR_ESTOQUE', estoque: estoqueCloud });
-
-            alert("Preço alterado com sucesso!");
+            atualizarContadorProdutos();
             fecharModalPreco();
+            alert("Preço e Código atualizados com sucesso!");
         }
 
         function pularDaUnidadeProBipe(e) { if(e.key === 'Enter') document.getElementById('codigo-barras').focus(); }
