@@ -1,12 +1,4 @@
 {
-  "1": {
-    "nome": "ABACATE KG",
-    "preco": 8.99
-  },
-  "119": {
-    "nome": "TOMATE KG",
-    "preco": 5.99
-  },
   "7896002109000": {
     "nome": "51 LATA 350ML",
     "preco": 4.5
@@ -15,28 +7,24 @@
     "nome": "51 LATAO 473ML",
     "preco": 5.99
   },
-  "7891000102640": {
-    "nome": "AVEIA EM FLOCOS NESTLE 170G",
+  "1": {
+    "nome": "ABACATE KG",
+    "preco": 8.99
+  },
+  "5": {
+    "nome": "ABACAXI GD",
+    "preco": 7.0
+  },
+  "4": {
+    "nome": "ABACAXI PQ",
+    "preco": 5.5
+  },
+  "7899441502555": {
+    "nome": "ABRIDOR DE LATAS ISQ",
+    "preco": 6.9
+  },
+  "7500435127240": {
+    "nome": "ABS ALWAYS COM ABAS",
     "preco": 4.99
-  },
-  "7894900027013": {
-    "nome": "COCA COLA PET 2 LITROS",
-    "preco": 11.99
-  },
-  "7891515563516": {
-    "nome": "FILÉ DE PEITO SADIA 1KG",
-    "preco": 21.99
-  },
-  "7893000482401": {
-    "nome": "FILE DE PEITO- SADIA 1K",
-    "preco": 21.99
-  },
-  "7898096280009": {
-    "nome": "LANCHINHO MIRASSOL 250G",
-    "preco": 7.99
-  },
-  "7898117960088": {
-    "nome": "MANGUZA REI DE OURO 400G",
-    "preco": 2.75
   }
 }
