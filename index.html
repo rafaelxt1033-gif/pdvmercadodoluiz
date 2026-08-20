@@ -62,8 +62,8 @@
         .modal-bg.ativo { display: flex; }
         .modal-card { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 440px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
 
-        .container-faturamento-olho { display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 5px; }
-        .btn-olho-faturamento { background: transparent; border: none; cursor: pointer; font-size: 26px; display: flex; align-items: center; justify-content: center; padding: 5px; border-radius: 50%; transition: background 0.2s; }
+        .container-faturamento-olho { display: flex; align-items: center; justify-content: center; gap: 15px; }
+        .btn-olho-faturamento { background: transparent; border: none; cursor: pointer; font-size: 24px; display: flex; align-items: center; justify-content: center; padding: 5px; border-radius: 50%; transition: background 0.2s; }
         .btn-olho-faturamento:hover { background: rgba(0, 0, 0, 0.05); }
     </style>
 </head>
@@ -162,6 +162,36 @@
         </div>
         <div class="dashboard-area">
             
+            <!-- PAINEL DE VENDAS E FATURAMENTO DIÁRIO COM OLHO OCULTO -->
+            <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #7c3aed; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h3 style="color: #7c3aed; margin-bottom: 5px;">📊 Faturamento e Histórico de Vendas</h3>
+                        <p style="font-size: 13px; color: #64748b;">Acompanhe as vendas registradas e o faturamento do dia.</p>
+                    </div>
+                    <div class="container-faturamento-olho" style="background: #f1f5f9; padding: 8px 15px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                        <span style="font-weight: bold; font-size: 15px;">Faturamento Hoje: <span id="faturamento-diario-valor" style="color: var(--secundaria); font-size: 18px;">R$ 0,00</span></span>
+                        <button class="btn-olho-faturamento" onclick="toggleVisibilidadeFaturamento()" id="btn-olho" title="Ocultar/Exibir Valores">👁️</button>
+                    </div>
+                </div>
+                
+                <div style="max-height: 250px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px;">
+                    <table class="tabela-dados" style="margin-top: 0;">
+                        <thead>
+                            <tr style="background: #f8fafc;">
+                                <th>Data / Hora</th>
+                                <th>Forma de Pagto</th>
+                                <th>Cliente</th>
+                                <th style="text-align: right;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-vendas-adm">
+                            <tr><td colspan="4" style="text-align: center; color: #64748b;">Nenhuma venda registrada ainda.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <!-- SINCRONIZAÇÃO GITHUB VIA TOKEN -->
             <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #2563eb; margin-bottom: 20px;">
                 <h3 style="color: #2563eb; margin-bottom: 10px;">☁️ Sincronização em Nuvem (GitHub Token)</h3>
@@ -244,6 +274,7 @@
         let totalVenda = 0;
         let clientesDB = {}; 
         let listaFiltrada = [];
+        let faturamentoOculto = false; // Controle do olho oculto
 
         window.onload = function() {
             const vendasSalvas = localStorage.getItem('vendas') || localStorage.getItem('vendas_realizadas');
@@ -352,6 +383,58 @@
             document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa')); 
             document.getElementById(id).classList.add('ativa');
             if (id === 'tela-pdv') setTimeout(() => document.getElementById('codigo-barras').focus(), 100);
+            if (id === 'tela-adm') atualizarPainelVendasAdm(); // Atualiza painel de vendas ao abrir
+        }
+
+        // ATUALIZAÇÃO DA TABELA E FATURAMENTO DIÁRIO NO ADM
+        function atualizarPainelVendasAdm() {
+            const tbody = document.getElementById('tabela-vendas-adm');
+            const spanTotal = document.getElementById('faturamento-diario-valor');
+            if (!tbody || !spanTotal) return;
+
+            tbody.innerHTML = '';
+            const hojeStr = new Date().toLocaleDateString('pt-BR');
+            let totalHoje = 0;
+
+            if (vendasRealizadas.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #64748b;">Nenhuma venda registrada ainda.</td></tr>';
+                spanTotal.innerText = faturamentoOculto ? 'R$ ••••••' : 'R$ 0.00';
+                return;
+            }
+
+            // Inverter para mostrar a mais recente primeiro
+            let vendasInvertidas = [...vendasRealizadas].reverse();
+
+            vendasInvertidas.forEach(v => {
+                let dataVendaApenas = v.data.split(',')[0].trim();
+                let valorVenda = v.total || 0;
+
+                if (dataVendaApenas === hojeStr) {
+                    totalHoje += valorVenda;
+                }
+
+                let valorFormatado = faturamentoOculto ? 'R$ ••••••' : `R$ ${valorVenda.toFixed(2)}`;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${v.data}</td>
+                        <td>${v.pagamento}</td>
+                        <td>${v.cliente || 'Balcão'}</td>
+                        <td style="text-align: right; font-weight: bold; color: var(--secundaria);">${valorFormatado}</td>
+                    </tr>
+                `;
+            });
+
+            spanTotal.innerText = faturamentoOculto ? 'R$ ••••••' : `R$ ${totalHoje.toFixed(2)}`;
+        }
+
+        function toggleVisibilidadeFaturamento() {
+            faturamentoOculto = !faturamentoOculto;
+            const btn = document.getElementById('btn-olho');
+            if (btn) {
+                btn.innerText = faturamentoOculto ? '🙈' : '👁️';
+            }
+            atualizarPainelVendasAdm();
         }
 
         function adicionarProdutoManual() {
@@ -460,11 +543,9 @@
                 let cod = txt;
                 if(txt.includes('*')) { qtd = parseFloat(txt.split('*')[0]); cod = txt.split('*')[1].trim(); }
                 
-                // Verificação exata do código bipado
                 if(estoqueCloud[cod]) { 
                     addCupom(cod, qtd); 
                 } else {
-                    // Tenta encontrar pelo nome exato ou código
                     let achou = Object.keys(estoqueCloud).find(c => c === cod || estoqueCloud[c].nome.toLowerCase() === cod.toLowerCase());
                     if (achou) {
                         addCupom(achou, qtd);
@@ -614,7 +695,6 @@
 
             let nomeProd = estoqueCloud[codAntigo].nome;
 
-            // Se o código mudou, remove o antigo e cria o novo
             if (codAntigo !== codNovo) {
                 delete estoqueCloud[codAntigo];
             }
