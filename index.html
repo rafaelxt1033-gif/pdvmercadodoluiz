@@ -383,10 +383,9 @@
             document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa')); 
             document.getElementById(id).classList.add('ativa');
             if (id === 'tela-pdv') setTimeout(() => document.getElementById('codigo-barras').focus(), 100);
-            if (id === 'tela-adm') atualizarPainelVendasAdm(); // Atualiza painel de vendas ao abrir
+            if (id === 'tela-adm') atualizarPainelVendasAdm(); 
         }
 
-        // ATUALIZAÇÃO DA TABELA E FATURAMENTO DIÁRIO NO ADM
         function atualizarPainelVendasAdm() {
             const tbody = document.getElementById('tabela-vendas-adm');
             const spanTotal = document.getElementById('faturamento-diario-valor');
@@ -633,16 +632,77 @@
             if(pago >= totalVenda && totalVenda > 0) { box.innerText = `Troco: R$ ${(pago - totalVenda).toFixed(2)}`; box.style.color = '#4ade80'; } else { box.innerText = `Troco: R$ 0.00`; box.style.color = '#38bdf8'; }
         }
 
+        // FUNÇÃO DE FINALIZAÇÃO E IMPRESSÃO AUTOMÁTICA
         function finalizarVenda(nfce) {
             if(cupomAtual.length === 0) return alert("Adicione produtos!");
             const formaPagto = document.getElementById('forma-pagamento').value;
-            vendasRealizadas.push({ data: new Date().toLocaleString('pt-BR'), total: totalVenda, pagamento: formaPagto, cliente: 'Balcão' });
+            const clienteSel = document.getElementById('cliente-selecionado').value || 'Consumidor Final';
+            
+            let itensParaImpressao = [...cupomAtual];
+            let totalParaImpressao = totalVenda;
+            let dataAtual = new Date().toLocaleString('pt-BR');
+
+            // Salva na lista e no localStorage
+            vendasRealizadas.push({ data: dataAtual, total: totalParaImpressao, pagamento: formaPagto, cliente: clienteSel, itens: itensParaImpressao });
             localStorage.setItem('vendas', JSON.stringify(vendasRealizadas));
+
+            // Executa a impressão automática
+            imprimirComprovante(itensParaImpressao, totalParaImpressao, formaPagto, clienteSel, nfce);
+
+            // Limpa o cupom atual
             cupomAtual = []; totalVenda = 0;
             document.getElementById('valor-pago').value = ''; 
             renderizarCupom(); 
-            alert("Venda Finalizada com Sucesso!");
+            
             setTimeout(() => document.getElementById('codigo-barras').focus(), 300);
+        }
+
+        function imprimirComprovante(itens, total, pagamento, cliente, isNfce) {
+            let janelaImpressao = window.open('', '', 'height=600,width=400');
+            let titulo = isNfce ? "MERCADINHO DOIS IRMÃOS - NFC-e" : "MERCADINHO DOIS IRMÃOS - CUPOM NÃO FISCAL";
+            
+            let html = `<html><head><title>Imprimir Comprovante</title><style>
+                body { font-family: 'Courier New', Courier, monospace; font-size: 12px; width: 300px; margin: 0 auto; padding: 10px; color: #000; }
+                h3, h4, p { text-align: center; margin: 4px 0; }
+                table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+                th, td { font-size: 11px; text-align: left; padding: 3px 0; }
+                .total { text-align: right; font-weight: bold; font-size: 14px; margin-top: 8px; }
+                hr { border-top: 1px dashed #000; margin: 8px 0; }
+            </style></head><body>`;
+            
+            html += `<h3>${titulo}</h3>`;
+            html += `<p>CNPJ: 00.000.000/0001-00</p>`;
+            html += `<p>Data: ${new Date().toLocaleString('pt-BR')}</p>`;
+            html += `<p>Cliente: ${cliente}</p>`;
+            html += `<hr>`;
+            html += `<table><tr><th>Item</th><th>Qtd</th><th>Unit</th><th>Total</th></tr>`;
+            
+            itens.forEach(item => {
+                let un = Number.isInteger(item.qtd) ? 'UN' : 'KG';
+                html += `<tr><td>${item.nome}</td><td>${item.qtd} ${un}</td><td>${item.unit.toFixed(2)}</td><td>${item.total.toFixed(2)}</td></tr>`;
+            });
+            
+            html += `</table>`;
+            html += `<hr>`;
+            html += `<p>Forma de Pagamento: ${pagamento}</p>`;
+            html += `<p class="total">TOTAL: R$ ${total.toFixed(2)}</p>`;
+            
+            if(isNfce) {
+                html += `<hr><p style="font-size: 10px; text-align: center;">Nota Fiscal de Consumidor Eletrônica (NFC-e)</p>`;
+                html += `<p style="font-size: 10px; text-align: center;">Consulta via chave de acesso no portal da SEFAZ</p>`;
+            }
+            
+            html += `<hr><p>Obrigado pela preferência!</p>`;
+            html += `</body></html>`;
+
+            janelaImpressao.document.write(html);
+            janelaImpressao.document.close();
+            janelaImpressao.focus();
+            
+            setTimeout(() => {
+                janelaImpressao.print();
+                janelaImpressao.close();
+            }, 400);
         }
 
         function atualizarContadorProdutos() {
