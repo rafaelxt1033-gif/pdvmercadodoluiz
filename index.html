@@ -402,7 +402,6 @@
                 return;
             }
 
-            // Inverter para mostrar a mais recente primeiro
             let vendasInvertidas = [...vendasRealizadas].reverse();
 
             vendasInvertidas.forEach(v => {
@@ -435,6 +434,53 @@
                 btn.innerText = faturamentoOculto ? '🙈' : '👁️';
             }
             atualizarPainelVendasAdm();
+        }
+
+        // FILTRO E ADIÇÃO DE PRODUTOS DA BALANÇA
+        function filtrarNomeBalanca(val) {
+            const txt = val.toLowerCase().trim();
+            const drop = document.getElementById('dropdown-balanca');
+            drop.innerHTML = '';
+            if(!txt) { drop.style.display = 'none'; return; }
+            
+            let lista = [];
+            let count = 0;
+            for (let c in estoqueCloud) {
+                let p = estoqueCloud[c];
+                if (c.toLowerCase().includes(txt) || p.nome.toLowerCase().includes(txt)) {
+                    lista.push(c);
+                    count++;
+                    if (count >= 15) break;
+                }
+            }
+
+            if(lista.length > 0) {
+                drop.style.display = 'block';
+                lista.forEach((c) => {
+                    let p = estoqueCloud[c];
+                    drop.innerHTML += `<div class="opcao-busca" onclick="addCupomBalanca('${c}')"><span>⚖️ [${c}] ${p.nome}</span> <span>R$ ${p.preco.toFixed(2)}/kg</span></div>`;
+                });
+            } else {
+                drop.style.display = 'none';
+            }
+        }
+
+        function addCupomBalanca(cod) {
+            let peso = parseFloat(document.getElementById('peso-balanca').value || 0);
+            if (peso <= 0) {
+                alert("Digite o peso na balança primeiro (ex: 0.450)!");
+                document.getElementById('peso-balanca').focus();
+                return;
+            }
+            const p = estoqueCloud[cod];
+            cupomAtual.push({ cod, nome: p.nome, qtd: peso, unit: p.preco, total: p.preco * peso });
+            
+            document.getElementById('codigo-balanca').value = '';
+            document.getElementById('peso-balanca').value = '';
+            document.getElementById('dropdown-balanca').style.display = 'none';
+            
+            renderizarCupom();
+            document.getElementById('codigo-barras').focus();
         }
 
         function adicionarProdutoManual() {
