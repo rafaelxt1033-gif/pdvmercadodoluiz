@@ -632,7 +632,7 @@
             if(pago >= totalVenda && totalVenda > 0) { box.innerText = `Troco: R$ ${(pago - totalVenda).toFixed(2)}`; box.style.color = '#4ade80'; } else { box.innerText = `Troco: R$ 0.00`; box.style.color = '#38bdf8'; }
         }
 
-        // FUNÇÃO DE FINALIZAÇÃO E IMPRESSÃO COM ALTA NITIDEZ
+        // FUNÇÃO DE FINALIZAÇÃO E IMPRESSÃO COM FONTE NÍTIDA E TOTAL DE ITENS
         function finalizarVenda(nfce) {
             if(cupomAtual.length === 0) return alert("Adicione produtos!");
             const formaPagto = document.getElementById('forma-pagamento').value;
@@ -661,22 +661,26 @@
             let dadosQrCode = `MERCADINHO DOIS IRMAOS|TOTAL:R$${total.toFixed(2)}|DATA:${new Date().toISOString()}`;
             let qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(dadosQrCode)}`;
 
-            // CSS otimizado para eliminar qualquer borrado e garantir impressão nítida
+            // Calcula a quantidade total de itens comprados
+            let totalQtdItens = itens.reduce((acc, item) => acc + item.qtd, 0);
+
+            // CSS otimizado para fonte padrão de cupom com alta nitidez (evitando borrão)
             let html = `<html><head><title>Imprimir Comprovante</title><style>
                 * {
                     -webkit-print-color-adjust: exact;
                     print-color-adjust: exact;
                 }
                 body { 
-                    font-family: 'Courier New', Courier, monospace; 
-                    font-size: 12px; 
+                    font-family: 'Lucida Console', Monaco, monospace; 
+                    font-size: 13px; 
                     width: 280px; 
                     margin: 0 auto; 
                     padding: 5px; 
                     color: #000000; 
                     background: #ffffff;
+                    line-height: 1.25;
                 }
-                h3 { font-size: 13px; text-align: center; margin: 4px 0; font-weight: bold; }
+                h3 { font-size: 14px; text-align: center; margin: 4px 0; font-weight: bold; }
                 p { text-align: center; margin: 3px 0; font-size: 11px; font-weight: bold; }
                 table { width: 100%; border-collapse: collapse; margin-top: 5px; }
                 th, td { font-size: 11px; text-align: left; padding: 3px 0; color: #000000; font-weight: bold; }
@@ -701,11 +705,13 @@
             
             itens.forEach(item => {
                 let un = Number.isInteger(item.qtd) ? 'UN' : 'KG';
-                html += `<tr><td>${item.nome}</td><td>${item.qtd} ${un}</td><td>${item.unit.toFixed(2)}</td><td>${item.total.toFixed(2)}</td></tr>`;
+                let qtdFormatada = Number.isInteger(item.qtd) ? item.qtd : item.qtd.toFixed(3);
+                html += `<tr><td>${item.nome}</td><td>${qtdFormatada} ${un}</td><td>${item.unit.toFixed(2)}</td><td>${item.total.toFixed(2)}</td></tr>`;
             });
             
             html += `</table>`;
             html += `<hr>`;
+            html += `<p style="text-align: left;">Qtde Total de Itens: ${totalQtdItens % 1 === 0 ? totalQtdItens : totalQtdItens.toFixed(3)}</p>`;
             html += `<p style="text-align: left;">Forma de Pagto: ${pagamento}</p>`;
             html += `<p class="total">TOTAL: R$ ${total.toFixed(2)}</p>`;
             
