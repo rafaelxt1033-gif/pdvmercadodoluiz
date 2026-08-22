@@ -632,7 +632,7 @@
             if(pago >= totalVenda && totalVenda > 0) { box.innerText = `Troco: R$ ${(pago - totalVenda).toFixed(2)}`; box.style.color = '#4ade80'; } else { box.innerText = `Troco: R$ 0.00`; box.style.color = '#38bdf8'; }
         }
 
-        // FUNÇÃO DE FINALIZAÇÃO E IMPRESSÃO COM QR CODE
+        // FUNÇÃO DE FINALIZAÇÃO E IMPRESSÃO COM ALTA NITIDEZ
         function finalizarVenda(nfce) {
             if(cupomAtual.length === 0) return alert("Adicione produtos!");
             const formaPagto = document.getElementById('forma-pagamento').value;
@@ -658,18 +658,38 @@
             let janelaImpressao = window.open('', '', 'height=650,width=400');
             let titulo = isNfce ? "MERCADINHO DOIS IRMÃOS - NFC-e" : "MERCADINHO DOIS IRMÃOS - CUPOM NÃO FISCAL";
             
-            // Link de QR Code dinâmico baseado na venda e no valor total
             let dadosQrCode = `MERCADINHO DOIS IRMAOS|TOTAL:R$${total.toFixed(2)}|DATA:${new Date().toISOString()}`;
-            let qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=${encodeURIComponent(dadosQrCode)}`;
+            let qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(dadosQrCode)}`;
 
+            // CSS otimizado para eliminar qualquer borrado e garantir impressão nítida
             let html = `<html><head><title>Imprimir Comprovante</title><style>
-                body { font-family: 'Courier New', Courier, monospace; font-size: 12px; width: 300px; margin: 0 auto; padding: 10px; color: #000; }
-                h3, h4, p { text-align: center; margin: 4px 0; }
-                table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-                th, td { font-size: 11px; text-align: left; padding: 3px 0; }
-                .total { text-align: right; font-weight: bold; font-size: 14px; margin-top: 8px; }
-                .qrcode-box { text-align: center; margin: 10px 0; }
-                hr { border-top: 1px dashed #000; margin: 8px 0; }
+                * {
+                    -webkit-print-color-adjust: exact;
+                    print-color-adjust: exact;
+                }
+                body { 
+                    font-family: 'Courier New', Courier, monospace; 
+                    font-size: 12px; 
+                    width: 280px; 
+                    margin: 0 auto; 
+                    padding: 5px; 
+                    color: #000000; 
+                    background: #ffffff;
+                }
+                h3 { font-size: 13px; text-align: center; margin: 4px 0; font-weight: bold; }
+                p { text-align: center; margin: 3px 0; font-size: 11px; font-weight: bold; }
+                table { width: 100%; border-collapse: collapse; margin-top: 5px; }
+                th, td { font-size: 11px; text-align: left; padding: 3px 0; color: #000000; font-weight: bold; }
+                th { border-bottom: 1px solid #000; }
+                .total { text-align: right; font-weight: bold; font-size: 14px; margin-top: 6px; }
+                .qrcode-box { text-align: center; margin: 8px 0; }
+                .qrcode-box img { 
+                    image-rendering: pixelated; 
+                    image-rendering: crisp-edges; 
+                    width: 120px; 
+                    height: 120px; 
+                }
+                hr { border: none; border-top: 1px dashed #000000; margin: 6px 0; }
             </style></head><body>`;
             
             html += `<h3>${titulo}</h3>`;
@@ -686,18 +706,17 @@
             
             html += `</table>`;
             html += `<hr>`;
-            html += `<p>Forma de Pagamento: ${pagamento}</p>`;
+            html += `<p style="text-align: left;">Forma de Pagto: ${pagamento}</p>`;
             html += `<p class="total">TOTAL: R$ ${total.toFixed(2)}</p>`;
             
-            // Inserção do QR Code (Aparece em ambas as notas ou com foco maior na NFC-e)
             html += `<hr>`;
             html += `<div class="qrcode-box">`;
-            html += `<img src="${qrCodeUrl}" alt="QR Code da Venda" width="110" height="110"><br>`;
-            html += `<span style="font-size: 9px;">Consulte o QR Code pelo aplicativo</span>`;
+            html += `<img src="${qrCodeUrl}" alt="QR Code da Venda"><br>`;
+            html += `<span style="font-size: 9px;">Consulta via Chave de Acesso</span>`;
             html += `</div>`;
 
             if(isNfce) {
-                html += `<p style="font-size: 10px; text-align: center;">Nota Fiscal de Consumidor Eletrônica (NFC-e)</p>`;
+                html += `<p style="font-size: 10px; text-align: center;">Nota Fiscal de Consumidor Eletrônica</p>`;
             }
             
             html += `<hr><p style="text-align:center;">Obrigado pela preferência!</p>`;
