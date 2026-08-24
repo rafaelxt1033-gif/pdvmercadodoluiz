@@ -648,50 +648,34 @@
             setTimeout(() => document.getElementById('codigo-barras').focus(), 300);
         }
 
-        // CUPOM CORRIGIDO: Largura fixa estruturada (table-layout: fixed) para evitar cortes na lateral e garantir nitidez máxima
+        // IMPRESSÃO COM GERADOR LOCAL DE QR CODE (Qrcode.js) E CNPJ CORRETO
         function imprimirComprovante(itens, total, pagamento, cliente, isNfce) {
             let janelaImpressao = window.open('', '', 'height=650,width=400');
             let titulo = isNfce ? "MERCADINHO DOIS IRMÃOS - NFC-e" : "MERCADINHO DOIS IRMÃOS - CUPOM NÃO FISCAL";
-            
-            let dadosQrCode = `MERCADINHO DOIS IRMAOS|CNPJ:12.345.678/0001-99|TOTAL:R$${total.toFixed(2)}|DATA:${new Date().toISOString()}`;
-            let qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(dadosQrCode)}`;
-
+            let dadosQrCode = `MERCADINHO DOIS IRMAOS|CNPJ:44.133.465/0001-96|TOTAL:R$${total.toFixed(2)}|DATA:${new Date().toISOString()}`;
             let totalQtdItens = itens.reduce((acc, item) => acc + item.qtd, 0);
 
-            let html = `<html><head><title>Cupom Fiscal</title><style>
-                @page { size: 58mm auto; margin: 0; }
-                body { 
-                    font-family: 'Courier New', Courier, monospace; 
-                    font-size: 11px; 
-                    width: 56mm; 
-                    margin: 0 auto; 
-                    padding: 4px; 
-                    color: #000000; 
-                    background: #ffffff; 
-                    line-height: 1.2;
-                }
-                h3 { font-size: 12px; text-align: center; margin: 3px 0; font-weight: bold; }
-                p { text-align: center; margin: 2px 0; font-size: 10px; font-weight: bold; }
-                table { width: 100%; border-collapse: collapse; margin-top: 5px; table-layout: fixed; }
-                th, td { font-size: 10px; text-align: left; padding: 2px 0; color: #000000; font-weight: bold; word-break: break-all; }
-                th { border-bottom: 1px dashed #000; }
-                .col-item { width: 40%; }
-                .col-qtd { width: 18%; text-align: center; }
-                .col-unit { width: 20%; text-align: right; }
-                .col-total { width: 22%; text-align: right; }
-                .total { text-align: right; font-weight: bold; font-size: 13px; margin-top: 5px; }
-                .qrcode-box { text-align: center; margin: 6px 0; }
-                .qrcode-box img { 
-                    image-rendering: pixelated; 
-                    image-rendering: crisp-edges; 
-                    width: 100px; 
-                    height: 100px; 
-                }
-                hr { border: none; border-top: 1px dashed #000000; margin: 5px 0; }
-            </style></head><body>`;
+            let html = `<html><head><title>Cupom Fiscal</title>` +
+                `<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>` +
+                `<style>` +
+                `@page { size: 58mm auto; margin: 0; }` +
+                `body { font-family: 'Courier New', Courier, monospace; font-size: 11px; width: 56mm; margin: 0 auto; padding: 4px; color: #000; background: #fff; line-height: 1.2; }` +
+                `h3 { font-size: 12px; text-align: center; margin: 3px 0; font-weight: bold; }` +
+                `p { text-align: center; margin: 2px 0; font-size: 10px; font-weight: bold; }` +
+                `table { width: 100%; border-collapse: collapse; margin-top: 5px; table-layout: fixed; }` +
+                `th, td { font-size: 10px; text-align: left; padding: 2px 0; color: #000; font-weight: bold; word-break: break-all; }` +
+                `th { border-bottom: 1px dashed #000; }` +
+                `.col-item { width: 40%; }` +
+                `.col-qtd { width: 18%; text-align: center; }` +
+                `.col-unit { width: 20%; text-align: right; }` +
+                `.col-total { width: 22%; text-align: right; }` +
+                `.total { text-align: right; font-weight: bold; font-size: 13px; margin-top: 5px; }` +
+                `.qrcode-box { text-align: center; margin: 6px 0; display: flex; justify-content: center; }` +
+                `hr { border: none; border-top: 1px dashed #000; margin: 5px 0; }` +
+                `</style></head><body>`;
             
             html += `<h3>${titulo}</h3>`;
-            html += `<p>CNPJ: 12.345.678/0001-99</p>`;
+            html += `<p>CNPJ: 44.133.465/0001-96</p>`;
             html += `<p>Data: ${new Date().toLocaleString('pt-BR')}</p>`;
             html += `<p>Cliente: ${cliente}</p>`;
             html += `<hr>`;
@@ -716,26 +700,31 @@
             html += `<p class="total">TOTAL: R$ ${total.toFixed(2)}</p>`;
             
             html += `<hr>`;
-            html += `<div class="qrcode-box">`;
-            html += `<img src="${qrCodeUrl}" alt="QR Code da Venda"><br>`;
-            html += `<span style="font-size: 8px;">Consulta via Chave de Acesso NFC-e</span>`;
-            html += `</div>`;
+            html += `<div class="qrcode-box" id="qrcode"></div>`;
+            html += `<div style="text-align:center; font-size:8px;">Consulta via Chave de Acesso NFC-e</div>`;
 
             if(isNfce) {
                 html += `<p style="font-size: 9px; text-align: center;">Consumidor Eletrônica</p>`;
             }
             
             html += `<hr><p style="text-align:center;">Obrigado pela preferência!</p>`;
+            
+            // Script para desenhar o QR code localmente antes da impressão
+            html += `<script>` +
+                `window.onload = function() {` +
+                `  new QRCode(document.getElementById("qrcode"), {` +
+                `    text: "${dadosQrCode}",` +
+                `    width: 95,` +
+                `    height: 95` +
+                `  });` +
+                `  setTimeout(function() { window.print(); window.close(); }, 500);` +
+                `};` +
+                `<\/script>`;
             html += `</body></html>`;
 
             janelaImpressao.document.write(html);
             janelaImpressao.document.close();
             janelaImpressao.focus();
-            
-            setTimeout(() => {
-                janelaImpressao.print();
-                janelaImpressao.close();
-            }, 500);
         }
 
         function atualizarContadorProdutos() {
