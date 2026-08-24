@@ -25,7 +25,7 @@
   },
   "7": {
     "nome": "BATATA INGRESA KG",
-    "preco": 5.99
+    "preco": 6.99
   },
   "8": {
     "nome": "BATATA DOCE",
@@ -1405,7 +1405,7 @@
   },
   "7896213005924": {
     "nome": "BISC RECH CHOCOLATE VITARELA 120G",
-    "preco": 2.25
+    "preco": 2.29
   },
   "7897934602355": {
     "nome": "BISC VITAFLOR AGUA E SAL",
@@ -1617,7 +1617,7 @@
   },
   "7898376590453": {
     "nome": "BOLACHA ARTESANAL FOLHATA DOCE REAL SABOR",
-    "preco": 5.75
+    "preco": 5.99
   },
   "7897934600054": {
     "nome": "BOLACHA BEIJA FLOR AGUA/SAL 400G",
@@ -3361,7 +3361,7 @@
   },
   "7897274410306": {
     "nome": "DESIFETANTE GUARANI  FLORAL 1L",
-    "preco": 3.49
+    "preco": 3.75
   },
   "7897664140226": {
     "nome": "DESINF MINUANO EUCALIPTO 500ML",
@@ -3409,15 +3409,15 @@
   },
   "7897274410177": {
     "nome": "DESINFETANTE GUARANI  HERBAL  1L",
-    "preco": 3.49
+    "preco": 3.75
   },
   "7897274410191": {
     "nome": "DESINFETANTE GUARANI  LAVANDA  1L",
-    "preco": 3.49
+    "preco": 3.75
   },
   "7897274410207": {
     "nome": "DESINFETANTE GUARANI EUCALIPTO 1LT",
-    "preco": 3.49
+    "preco": 3.75
   },
   "7897274410351": {
     "nome": "DESINFETANTE GUARANI EUCALIPTO 500ML",
@@ -3429,7 +3429,7 @@
   },
   "7897274416179": {
     "nome": "DESINFETANTE GUARANI VIOLETA 1L",
-    "preco": 3.49
+    "preco": 3.75
   },
   "7897274416186": {
     "nome": "DESINFETANTE GUARANI VIOLETA 500ML",
@@ -9430,5 +9430,13 @@
   "7891152501551": {
     "nome": "MARGARINA PURO SABOR 1KG",
     "preco": 10.5
+  },
+  "7899561901610": {
+    "nome": "ESCOVA INFANTIL STRIKE",
+    "preco": 2.75
+  },
+  "7896056402027": {
+    "nome": "SABAO EM PASTA URCA 200G",
+    "preco": 4.5
   }
 }
