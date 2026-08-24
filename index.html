@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mercadinho Dois Irmãos - PDV Caixa</title>
+    <title>Mercadinho Dois Irmãos - PDV Pro</title>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -72,7 +72,7 @@
     <!-- TELA LOGIN -->
     <div id="tela-login" class="tela ativa login-wrapper">
         <div class="login-box">
-            <h2>Dois Irmãos PDV</h2>
+            <h2>Mercadinho Dois Irmãos</h2>
             <div class="input-group">
                 <label>Usuário</label>
                 <input type="text" id="login-usuario" placeholder="caixa ou eduardo">
@@ -162,7 +162,6 @@
         </div>
         <div class="dashboard-area">
             
-            <!-- PAINEL DE VENDAS E FATURAMENTO DIÁRIO COM OLHO OCULTO -->
             <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #7c3aed; margin-bottom: 20px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                     <div>
@@ -192,13 +191,12 @@
                 </div>
             </div>
 
-            <!-- SINCRONIZAÇÃO GITHUB VIA TOKEN -->
             <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #2563eb; margin-bottom: 20px;">
                 <h3 style="color: #2563eb; margin-bottom: 10px;">☁️ Sincronização em Nuvem (GitHub Token)</h3>
                 <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Conecte seu Token do GitHub para salvar ou baixar o estoque centralizado na nuvem.</p>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
                     <input type="password" id="git-token" placeholder="GitHub Personal Access Token (ghp_...)" style="flex:2; padding:12px; border:1px solid #cbd5e1; border-radius:8px;">
-                    <input type="text" id="git-repo" placeholder="Repositório (ex: rafaelxt1033-gif/pdvmercadodoluiz)" value="rafaelxt1033-gif/pdvmercadodoluiz" style="flex:2; padding:12px; border:1px solid #cbd5e1; border-radius:8px;">
+                    <input type="text" id="git-repo" placeholder="Repositório (ex: usuario/repositorio)" value="rafaelxt1033-gif/pdvmercadodoluiz" style="flex:2; padding:12px; border:1px solid #cbd5e1; border-radius:8px;">
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <button onclick="salvarConfigGitHub()" class="btn-universal" style="background:#475569; width:auto; padding: 10px 15px; font-size:14px;">💾 Salvar Credenciais</button>
@@ -274,7 +272,7 @@
         let totalVenda = 0;
         let clientesDB = {}; 
         let listaFiltrada = [];
-        let faturamentoOculto = false; // Controle do olho oculto
+        let faturamentoOculto = false;
 
         window.onload = function() {
             const vendasSalvas = localStorage.getItem('vendas') || localStorage.getItem('vendas_realizadas');
@@ -292,7 +290,6 @@
             manterFocoNoInput();
         };
 
-        // GITHUB TOKEN SYNC FUNCTIONS
         function salvarConfigGitHub() {
             localStorage.setItem('git_token', document.getElementById('git-token').value.trim());
             localStorage.setItem('git_repo', document.getElementById('git-repo').value.trim());
@@ -338,7 +335,7 @@
 
                 let contentEncoded = btoa(unescape(encodeURIComponent(JSON.stringify(estoqueCloud, null, 2))));
                 let bodyData = {
-                    message: "Atualização de estoque via PDV Dois Irmãos",
+                    message: "Atualização de estoque via PDV Luiz",
                     content: contentEncoded,
                     branch: "main"
                 };
@@ -435,7 +432,6 @@
             atualizarPainelVendasAdm();
         }
 
-        // FILTRO E ADIÇÃO DE PRODUTOS DA BALANÇA
         function filtrarNomeBalanca(val) {
             const txt = val.toLowerCase().trim();
             const drop = document.getElementById('dropdown-balanca');
@@ -549,7 +545,6 @@
             const blob = new Blob([xml], { type: 'text/xml' }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "Vendas.xml"; link.click();
         }
 
-        // BIPE / SCANNER E PESQUISA NO PDV
         function filtrarPorNome(val) {
             const txt = val.toLowerCase().trim(); 
             const drop = document.getElementById('dropdown-sugestoes'); 
@@ -632,7 +627,6 @@
             if(pago >= totalVenda && totalVenda > 0) { box.innerText = `Troco: R$ ${(pago - totalVenda).toFixed(2)}`; box.style.color = '#4ade80'; } else { box.innerText = `Troco: R$ 0.00`; box.style.color = '#38bdf8'; }
         }
 
-        // FUNÇÃO DE FINALIZAÇÃO E IMPRESSÃO COM FONTE NÍTIDA E TOTAL DE ITENS
         function finalizarVenda(nfce) {
             if(cupomAtual.length === 0) return alert("Adicione produtos!");
             const formaPagto = document.getElementById('forma-pagamento').value;
@@ -654,59 +648,65 @@
             setTimeout(() => document.getElementById('codigo-barras').focus(), 300);
         }
 
+        // CUPOM CORRIGIDO: Largura fixa estruturada (table-layout: fixed) para evitar cortes na lateral e garantir nitidez máxima
         function imprimirComprovante(itens, total, pagamento, cliente, isNfce) {
             let janelaImpressao = window.open('', '', 'height=650,width=400');
             let titulo = isNfce ? "MERCADINHO DOIS IRMÃOS - NFC-e" : "MERCADINHO DOIS IRMÃOS - CUPOM NÃO FISCAL";
             
-            let dadosQrCode = `MERCADINHO DOIS IRMAOS|TOTAL:R$${total.toFixed(2)}|DATA:${new Date().toISOString()}`;
-            let qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(dadosQrCode)}`;
+            let dadosQrCode = `MERCADINHO DOIS IRMAOS|CNPJ:12.345.678/0001-99|TOTAL:R$${total.toFixed(2)}|DATA:${new Date().toISOString()}`;
+            let qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(dadosQrCode)}`;
 
-            // Calcula a quantidade total de itens comprados
             let totalQtdItens = itens.reduce((acc, item) => acc + item.qtd, 0);
 
-            // CSS otimizado para fonte padrão de cupom com alta nitidez (evitando borrão)
-            let html = `<html><head><title>Imprimir Comprovante</title><style>
-                * {
-                    -webkit-print-color-adjust: exact;
-                    print-color-adjust: exact;
-                }
+            let html = `<html><head><title>Cupom Fiscal</title><style>
+                @page { size: 58mm auto; margin: 0; }
                 body { 
-                    font-family: 'Lucida Console', Monaco, monospace; 
-                    font-size: 13px; 
-                    width: 280px; 
+                    font-family: 'Courier New', Courier, monospace; 
+                    font-size: 11px; 
+                    width: 56mm; 
                     margin: 0 auto; 
-                    padding: 5px; 
+                    padding: 4px; 
                     color: #000000; 
-                    background: #ffffff;
-                    line-height: 1.25;
+                    background: #ffffff; 
+                    line-height: 1.2;
                 }
-                h3 { font-size: 14px; text-align: center; margin: 4px 0; font-weight: bold; }
-                p { text-align: center; margin: 3px 0; font-size: 11px; font-weight: bold; }
-                table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-                th, td { font-size: 11px; text-align: left; padding: 3px 0; color: #000000; font-weight: bold; }
-                th { border-bottom: 1px solid #000; }
-                .total { text-align: right; font-weight: bold; font-size: 14px; margin-top: 6px; }
-                .qrcode-box { text-align: center; margin: 8px 0; }
+                h3 { font-size: 12px; text-align: center; margin: 3px 0; font-weight: bold; }
+                p { text-align: center; margin: 2px 0; font-size: 10px; font-weight: bold; }
+                table { width: 100%; border-collapse: collapse; margin-top: 5px; table-layout: fixed; }
+                th, td { font-size: 10px; text-align: left; padding: 2px 0; color: #000000; font-weight: bold; word-break: break-all; }
+                th { border-bottom: 1px dashed #000; }
+                .col-item { width: 40%; }
+                .col-qtd { width: 18%; text-align: center; }
+                .col-unit { width: 20%; text-align: right; }
+                .col-total { width: 22%; text-align: right; }
+                .total { text-align: right; font-weight: bold; font-size: 13px; margin-top: 5px; }
+                .qrcode-box { text-align: center; margin: 6px 0; }
                 .qrcode-box img { 
                     image-rendering: pixelated; 
                     image-rendering: crisp-edges; 
-                    width: 120px; 
-                    height: 120px; 
+                    width: 100px; 
+                    height: 100px; 
                 }
-                hr { border: none; border-top: 1px dashed #000000; margin: 6px 0; }
+                hr { border: none; border-top: 1px dashed #000000; margin: 5px 0; }
             </style></head><body>`;
             
             html += `<h3>${titulo}</h3>`;
-            html += `<p>CNPJ: 00.000.000/0001-00</p>`;
+            html += `<p>CNPJ: 12.345.678/0001-99</p>`;
             html += `<p>Data: ${new Date().toLocaleString('pt-BR')}</p>`;
             html += `<p>Cliente: ${cliente}</p>`;
             html += `<hr>`;
-            html += `<table><tr><th>Item</th><th>Qtd</th><th>Unit</th><th>Total</th></tr>`;
+            html += `<table>`;
+            html += `<tr><th class="col-item">Item</th><th class="col-qtd">Qtd</th><th class="col-unit">Unit</th><th class="col-total">Total</th></tr>`;
             
             itens.forEach(item => {
                 let un = Number.isInteger(item.qtd) ? 'UN' : 'KG';
                 let qtdFormatada = Number.isInteger(item.qtd) ? item.qtd : item.qtd.toFixed(3);
-                html += `<tr><td>${item.nome}</td><td>${qtdFormatada} ${un}</td><td>${item.unit.toFixed(2)}</td><td>${item.total.toFixed(2)}</td></tr>`;
+                html += `<tr>`;
+                html += `<td class="col-item">${item.nome}</td>`;
+                html += `<td class="col-qtd">${qtdFormatada}${un}</td>`;
+                html += `<td class="col-unit">${item.unit.toFixed(2)}</td>`;
+                html += `<td class="col-total">${item.total.toFixed(2)}</td>`;
+                html += `</tr>`;
             });
             
             html += `</table>`;
@@ -718,11 +718,11 @@
             html += `<hr>`;
             html += `<div class="qrcode-box">`;
             html += `<img src="${qrCodeUrl}" alt="QR Code da Venda"><br>`;
-            html += `<span style="font-size: 9px;">Consulta via Chave de Acesso</span>`;
+            html += `<span style="font-size: 8px;">Consulta via Chave de Acesso NFC-e</span>`;
             html += `</div>`;
 
             if(isNfce) {
-                html += `<p style="font-size: 10px; text-align: center;">Nota Fiscal de Consumidor Eletrônica</p>`;
+                html += `<p style="font-size: 9px; text-align: center;">Consumidor Eletrônica</p>`;
             }
             
             html += `<hr><p style="text-align:center;">Obrigado pela preferência!</p>`;
@@ -780,7 +780,6 @@
             res.innerHTML = html || '<div style="padding:10px; color:var(--erro);">Nenhum produto encontrado.</div>';
         }
 
-        // ALTERAR PREÇO E CÓDIGO
         function abrirModalPreco() { 
             document.getElementById('modal-editar-preco').classList.add('ativo'); 
             document.getElementById('edit-busca-prod').value = '';
