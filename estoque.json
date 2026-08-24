@@ -241,7 +241,7 @@
   },
   "64": {
     "nome": "OVOS BRANCO EXTRA BJ COM 15UN",
-    "preco": 10
+    "preco": 9.5
   },
   "65": {
     "nome": "OVOS UNIDADE",
@@ -1210,10 +1210,6 @@
   "7898961932637": {
     "nome": "BANDEJA MULTIUSO - ICASA",
     "preco": 9.9
-  },
-  "70330729858": {
-    "nome": "BARBEADOR BIC INTENSITY 3 LAMINAS",
-    "preco": 3.5
   },
   "70330713406": {
     "nome": "BARBEADOR BIC SUAVE UN",
@@ -6609,7 +6605,7 @@
   },
   "7898912405029": {
     "nome": "OVOS BRANCO EXTRA AVIPEC COM 30UN",
-    "preco": 17.99
+    "preco": 16.99
   },
   "7898286565336": {
     "nome": "OVOS BRANCO GRANDE BOM TODO COM 30UN",
@@ -9422,5 +9418,17 @@
   "7891150007406": {
     "nome": "SHAMPOO CLEAR MEN ICE COOL MENTHOL 200ML",
     "preco": 21.49
+  },
+  "070330729858": {
+    "nome": "BARBEADOR BIC INTENSITY 3 LAMINAS",
+    "preco": 3.5
+  },
+  "7897047004091": {
+    "nome": "DOCE DE AMENDOIM CHOKREM 30G",
+    "preco": 1
+  },
+  "7891152501551": {
+    "nome": "MARGARINA PURO SABOR 1KG",
+    "preco": 10.5
   }
 }
