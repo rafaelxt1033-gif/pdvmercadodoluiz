@@ -3705,7 +3705,7 @@
   },
   "7896010006360": {
     "nome": "DREHER CONHAQUE",
-    "preco": 24.99
+    "preco": 25.99
   },
   "7891134004018": {
     "nome": "DS ALMA DE FLORES 90ML ORIGINAL",
@@ -9406,5 +9406,21 @@
   "7896607100532": {
     "nome": "PITU LATAO 710ML",
     "preco": 10
+  },
+  "7891150099289": {
+    "nome": "SHAMPOO CLEAR MEN HIDRAT/CAMPEÃ 200ML",
+    "preco": 21.49
+  },
+  "7891150001077": {
+    "nome": "SHAMPOO CLEAR MEN QUEDA CONTROL 200ML",
+    "preco": 21.49
+  },
+  "7891150019508": {
+    "nome": "SHAMPOO CLEAR MEN LIMPEZA PROFUNDA 200ML",
+    "preco": 21.49
+  },
+  "7891150007406": {
+    "nome": "SHAMPOO CLEAR MEN ICE COOL MENTHOL 200ML",
+    "preco": 21.49
   }
 }
