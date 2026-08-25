@@ -69,7 +69,7 @@
   },
   "18": {
     "nome": "LIMAO KG",
-    "preco": 6.99
+    "preco": 8.99
   },
   "19": {
     "nome": "LARANJA KG",
@@ -1721,7 +1721,7 @@
   },
   "7898258310216": {
     "nome": "BOLACHA RAINHA 250G",
-    "preco": 4.99
+    "preco": 5.25
   },
   "7898376590040": {
     "nome": "BOLACHA RAINHA DOCE 300G",
@@ -1801,15 +1801,11 @@
   },
   "7898258310209": {
     "nome": "BOLACHAS DELICIA DE MANA 250G",
-    "preco": 4.99
+    "preco": 5.25
   },
   "7895099184761": {
     "nome": "BOLDO DO CHILE LESN 10G",
     "preco": 1.75
-  },
-  "40141634375": {
-    "nome": "BOLINHO 140G",
-    "preco": 3.5
   },
   "7890055600026": {
     "nome": "BOLINHO BANDEJA C/ 10",
@@ -1997,7 +1993,7 @@
   },
   "7896045109074": {
     "nome": "CAFE SANTA CLARA EXTRA FORTE 250G",
-    "preco": 14.99
+    "preco": 15.5
   },
   "7896045116126": {
     "nome": "CAFE SANTA CLARA GRANULADO 40G",
@@ -4339,10 +4335,6 @@
     "nome": "FILE DE PEITO FRANGO PERDIGAO 1KG",
     "preco": 24.99
   },
-  "7891515563516": {
-    "nome": "FILE DE PEITO SADIA1K",
-    "preco": 21.99
-  },
   "7896419728870": {
     "nome": "FILE PEITO FRANGO LAR 1KG",
     "preco": 21.99
@@ -5809,7 +5801,7 @@
   },
   "7898387120380": {
     "nome": "LEITE LONGA NATIVILLE 1LT",
-    "preco": 6.5
+    "preco": 6.99
   },
   "7896085307010": {
     "nome": "LEITE LONGA VIDA VALE DOURADO INTEGRAL 1 L",
@@ -9438,5 +9430,49 @@
   "7896056402027": {
     "nome": "SABAO EM PASTA URCA 200G",
     "preco": 4.5
+  },
+  "2135700012997": {
+    "nome": "BOLO DE LARANJA 540G",
+    "preco": 11
+  },
+  "2135600012998": {
+    "nome": "BOLO DE OVOS 540G",
+    "preco": 11
+  },
+  "2135500012999": {
+    "nome": "BOLO DE QUEIJO 540G",
+    "preco": 11
+  },
+  "2135900012995": {
+    "nome": "BOLO DE CHOCOLATE 540G",
+    "preco": 11
+  },
+  "2135800012996": {
+    "nome": "BOLO FORMIGUIRO 540G",
+    "preco": 11
+  },
+  "0074468769830": {
+    "nome": "BOLINHO 140G",
+    "preco": 3.5
+  },
+  "7893000482401": {
+    "nome": "FILE DE PEITO SADIA1K",
+    "preco": 21.99
+  },
+  "7898948243022": {
+    "nome": "BOLACHA 7CAPAS SÃO FRANCISCO 250G",
+    "preco": 6.75
+  },
+  "7898948243152": {
+    "nome": "BOLACHA MARAVILHA SÃO FRANCISCO 250G",
+    "preco": 6.9
+  },
+  "7898948243121": {
+    "nome": "BOLACHA SAO FRANCISCO SABOR QUEIJO 200G",
+    "preco": 6.25
+  },
+  "7898948243114": {
+    "nome": "BOLACHA PINGO SAO FRANCISCO 250G",
+    "preco": 5.9
   }
 }
