@@ -2857,7 +2857,7 @@
   },
   "7898095296018": {
     "nome": "COTTON LINE PALINETE",
-    "preco": 2.5
+    "preco": 3.25
   },
   "7896733302633": {
     "nome": "COXINHA DA ASA ENVELOPADA LAR KG",
@@ -4173,7 +4173,7 @@
   },
   "7891095911486": {
     "nome": "FAROFA PRONTA YOKI 400G",
-    "preco": 10.9
+    "preco": 11.99
   },
   "7892718543237": {
     "nome": "FAROFA TRADIONAL KI-PUREZA 300G",
@@ -8685,7 +8685,7 @@
   },
   "7898005510777": {
     "nome": "SORVETE DUETO NATA C/MORANGO 1L",
-    "preco": 14.49
+    "preco": 12.99
   },
   "7898005510883": {
     "nome": "SORVETE DUETO NATA/UVA 1L",
@@ -8858,10 +8858,6 @@
   "7896806700069": {
     "nome": "TALCO BARLA 80GS",
     "preco": 4.99
-  },
-  "95188874505": {
-    "nome": "TAMPICO FRUTAS CITRICAS 450ML",
-    "preco": 3.99
   },
   "95188870347": {
     "nome": "TAMPICO FRUTAS CITRICOS 1L",
@@ -9474,5 +9470,17 @@
   "7898948243114": {
     "nome": "BOLACHA PINGO SAO FRANCISCO 250G",
     "preco": 5.9
+  },
+  "7897517917555": {
+    "nome": "BARBEADOR ENOX 2LAMINAS",
+    "preco": 6.99
+  },
+  "095188874505": {
+    "nome": "TAMPICO FRUTAS CITRICAS 450ML",
+    "preco": 3.99
+  },
+  "7500435122764": {
+    "nome": "CREME DENTAL ORAL B 4EM1 70G",
+    "preco": 4.5
   }
 }
