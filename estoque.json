@@ -1981,11 +1981,11 @@
   },
   "7896224803069": {
     "nome": "CAFE SANTA CLARA 100G",
-    "preco": 6.5
+    "preco": 6.99
   },
   "7896224813082": {
     "nome": "CAFE SANTA CLARA CLASSICO 250G",
-    "preco": 15.99
+    "preco": 16.99
   },
   "7896045112968": {
     "nome": "CAFE SANTA CLARA CLASSICO SOLUVEL 40G",
@@ -1993,7 +1993,7 @@
   },
   "7896045109074": {
     "nome": "CAFE SANTA CLARA EXTRA FORTE 250G",
-    "preco": 15.5
+    "preco": 15.99
   },
   "7896045116126": {
     "nome": "CAFE SANTA CLARA GRANULADO 40G",
@@ -3545,7 +3545,7 @@
   },
   "7891022640007": {
     "nome": "DETERGENTE LIMPOL COCO 500ML",
-    "preco": 2.49
+    "preco": 2.75
   },
   "7891022860955": {
     "nome": "DETERGENTE LIMPOL LAVANADA 500ML",
@@ -3553,15 +3553,15 @@
   },
   "7891022637007": {
     "nome": "DETERGENTE LIMPOL LIMAO 500ML",
-    "preco": 2.49
+    "preco": 2.75
   },
   "7891022639001": {
     "nome": "DETERGENTE LIMPOL MACA 500ML",
-    "preco": 2.49
+    "preco": 2.75
   },
   "7891022638004": {
     "nome": "DETERGENTE LIMPOL NEUTRO 500ML",
-    "preco": 2.49
+    "preco": 2.75
   },
   "7897664130029": {
     "nome": "DETERGENTE MINUANO LIMAO 500ML",
@@ -6481,7 +6481,7 @@
   },
   "7898942636578": {
     "nome": "OLEO CAPILAR AMENDOAS 80ML",
-    "preco": 8.5
+    "preco": 8.99
   },
   "7898942636547": {
     "nome": "OLEO CAPILAR BABOSA TUTIAMORE 80ML",
@@ -6489,11 +6489,11 @@
   },
   "7898942636523": {
     "nome": "OLEO CAPILAR JABORANDI TUTIAMORE 80ML",
-    "preco": 7.99
+    "preco": 8.99
   },
   "7898942636554": {
     "nome": "OLEO CAPILAR TUTI AMORE QUERATINA 80ML",
-    "preco": 8.5
+    "preco": 8.99
   },
   "7896235354048": {
     "nome": "OLEO DE CORPO PAIXAO FLOR DE BAUNILHA 100ML",
@@ -6597,7 +6597,7 @@
   },
   "7898912405029": {
     "nome": "OVOS BRANCO EXTRA AVIPEC COM 30UN",
-    "preco": 16.99
+    "preco": 17.99
   },
   "7898286565336": {
     "nome": "OVOS BRANCO GRANDE BOM TODO COM 30UN",
@@ -9482,5 +9482,13 @@
   "7500435122764": {
     "nome": "CREME DENTAL ORAL B 4EM1 70G",
     "preco": 4.5
+  },
+  "7898942636226": {
+    "nome": "REPARADOR DE PONTAS QUERATINA 30ML",
+    "preco": 8.99
+  },
+  "7898942636127": {
+    "nome": "REPARADOR DE PONTAS CERAMIDAS 30ML",
+    "preco": 8.99
   }
 }
