@@ -9451,10 +9451,6 @@
     "nome": "BOLINHO 140G",
     "preco": 3.5
   },
-  "7893000482401": {
-    "nome": "FILE DE PEITO SADIA1K",
-    "preco": 21.99
-  },
   "7898948243022": {
     "nome": "BOLACHA 7CAPAS SÃO FRANCISCO 250G",
     "preco": 6.75
@@ -9490,5 +9486,9 @@
   "7898942636127": {
     "nome": "REPARADOR DE PONTAS CERAMIDAS 30ML",
     "preco": 8.99
+  },
+  "7891515563516": {
+    "nome": "FILE DE PEITO SADIA1K",
+    "preco": 21.99
   }
 }
