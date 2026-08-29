@@ -3609,7 +3609,7 @@
   },
   "7898643880409": {
     "nome": "DOCE DE GOIABA 200G",
-    "preco": 4.5
+    "preco": 4.99
   },
   "7898199710335": {
     "nome": "DOCE DE LEITE 250G",
@@ -4021,7 +4021,7 @@
   },
   "7896001004511": {
     "nome": "ESPONJA DE LIMPEZA BRILHUS",
-    "preco": 0.9
+    "preco": 1
   },
   "7896001045231": {
     "nome": "ESPONJA ESFREBOM COM 3 UN",
@@ -5593,7 +5593,7 @@
   },
   "7898643880485": {
     "nome": "LANCHINHOS DOCES SO MEL 130",
-    "preco": 4.5
+    "preco": 4.75
   },
   "7898119105326": {
     "nome": "LAPIS ESCREVER GRAFITTE",
@@ -6605,7 +6605,7 @@
   },
   "7897489800015": {
     "nome": "OVOS CODORNA LIRIO DO MATO",
-    "preco": 6.99
+    "preco": 5.99
   },
   "7896417701189": {
     "nome": "OXIGENADA INFA 40",
@@ -8673,15 +8673,15 @@
   },
   "7898005510890": {
     "nome": "SORVETE DUETO ABACAXI/COCO 1L",
-    "preco": 14.49
+    "preco": 12.99
   },
   "7898005510784": {
     "nome": "SORVETE DUETO MORANGO/CHOCOLATE 1L",
-    "preco": 14.49
+    "preco": 12.99
   },
   "7898005510760": {
     "nome": "SORVETE DUETO NATA C/CHOCOLATE 1L",
-    "preco": 14.49
+    "preco": 12.99
   },
   "7898005510777": {
     "nome": "SORVETE DUETO NATA C/MORANGO 1L",
@@ -8689,7 +8689,7 @@
   },
   "7898005510883": {
     "nome": "SORVETE DUETO NATA/UVA 1L",
-    "preco": 14.49
+    "preco": 12.99
   },
   "7898005510340": {
     "nome": "SORVETE STERKONE STERNINHO TRUFADO 120ML",
@@ -9490,5 +9490,17 @@
   "7891515563516": {
     "nome": "FILE DE PEITO SADIA1K",
     "preco": 21.99
+  },
+  "7897518200021": {
+    "nome": "TEMPERO CASEIRO SADIO 500G",
+    "preco": 1.99
+  },
+  "7895226150027": {
+    "nome": "COLHER REFEIÇAO PLAZAPEL 50UN",
+    "preco": 4.99
+  },
+  "7895226180024": {
+    "nome": "GARFO REFEIÇAO PLAZAPEL 50UN",
+    "preco": 4.99
   }
 }
