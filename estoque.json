@@ -25,7 +25,7 @@
   },
   "7": {
     "nome": "BATATA INGRESA KG",
-    "preco": 6.99
+    "preco": 10
   },
   "8": {
     "nome": "BATATA DOCE",
@@ -41,7 +41,7 @@
   },
   "11": {
     "nome": "CENOURA KG",
-    "preco": 8.99
+    "preco": 7.99
   },
   "12": {
     "nome": "CHUCHU KG",
@@ -73,7 +73,7 @@
   },
   "19": {
     "nome": "LARANJA KG",
-    "preco": 2.99
+    "preco": 3.99
   },
   "20": {
     "nome": "INHAME CARA KG",
@@ -253,7 +253,7 @@
   },
   "67": {
     "nome": "SABAO EM BARRA MINUANO UN",
-    "preco": 3
+    "preco": 3.25
   },
   "68": {
     "nome": "SABAO EM BARRA ABSOLUTO/MARILUX UN",
@@ -285,7 +285,7 @@
   },
   "75": {
     "nome": "SABAO YPE BARRA UN",
-    "preco": 3
+    "preco": 3.25
   },
   "76": {
     "nome": "CARNE CHACHADO FEIJOADA 200G",
@@ -1889,7 +1889,7 @@
   },
   "7622210596413": {
     "nome": "BOMBOM LACTA CAIXA 250G",
-    "preco": 16.99
+    "preco": 15.99
   },
   "7891008414127": {
     "nome": "BOMBOM SERENATA DE AMOR",
@@ -3167,17 +3167,13 @@
     "nome": "CREMOGEMA MORANGO 180G",
     "preco": 5.99
   },
-  "7891150068261": {
-    "nome": "CREMOGEMA TRADICIONAL 180G",
-    "preco": 4.99
-  },
   "7891150085879": {
     "nome": "CREMOGEMA TRADICIONAL 380G",
     "preco": 9.75
   },
   "7891079013052": {
     "nome": "CUP NOODLES CARNE DEFUMADA 69G",
-    "preco": 6.75
+    "preco": 5.99
   },
   "7891079013113": {
     "nome": "CUP NOODLES CHEDDAR 69G",
@@ -3193,7 +3189,7 @@
   },
   "7891079013038": {
     "nome": "CUP NOODLES GALINHA CAIPIRA 69G",
-    "preco": 6.75
+    "preco": 5.99
   },
   "7891079013106": {
     "nome": "CUP NOODLES YAKISSOBA 70G",
@@ -3342,10 +3338,6 @@
   "7896806790626": {
     "nome": "DESD- ANTIT- LEITE DE ROSAS TRAD 50ML",
     "preco": 8.5
-  },
-  "7891024194102": {
-    "nome": "DESENFETANTE PINHO SOL 500ML",
-    "preco": 9.75
   },
   "7896060400255": {
     "nome": "DESENFETANTE UFE 750ML",
@@ -5345,7 +5337,7 @@
   },
   "7896102502909": {
     "nome": "KETCHUP QUERO TRADICIONAL 300G",
-    "preco": 5.25
+    "preco": 4.99
   },
   "7898005861640": {
     "nome": "KI CHURRASCO 80G",
@@ -6381,7 +6373,7 @@
   },
   "7897517207595": {
     "nome": "MOSTARDA ORIGINAL FUGINI 180G",
-    "preco": 3.25
+    "preco": 3.75
   },
   "7896102509144": {
     "nome": "MOSTARDA QUERO 190GR",
@@ -6409,10 +6401,6 @@
   },
   "7891000319628": {
     "nome": "MUCILON DE ARROZ 180G",
-    "preco": 6.99
-  },
-  "7891000368183": {
-    "nome": "MUCILON MULTICEREAIS 180G",
     "preco": 6.99
   },
   "7891000438466": {
@@ -7889,7 +7877,7 @@
   },
   "7896098905937": {
     "nome": "SABAO EM BARRA AZUL 800G",
-    "preco": 14.5
+    "preco": 15.99
   },
   "7898906717107": {
     "nome": "SABAO EM BARRA ESPUMIL AZUL1 K",
@@ -8017,7 +8005,7 @@
   },
   "7908324402865": {
     "nome": "SABAO MINUANO NEUTRO 900G",
-    "preco": 13.99
+    "preco": 14.99
   },
   "7891150064539": {
     "nome": "SABAO OMO 800G",
@@ -8033,15 +8021,15 @@
   },
   "7896098905975": {
     "nome": "SABAO YPE FLORES E FRUTAS 800G",
-    "preco": 14.5
+    "preco": 15.99
   },
   "7896098905951": {
     "nome": "SABAO YPE FRESH 900G",
-    "preco": 14.5
+    "preco": 15.99
   },
   "7896098905906": {
     "nome": "SABAO YPE NEUTRO 800G",
-    "preco": 14.5
+    "preco": 14.99
   },
   "7897664171725": {
     "nome": "SABNETE ALBANY OLEO DE MACADAMIA 85G",
@@ -9502,5 +9490,17 @@
   "7895226180024": {
     "nome": "GARFO REFEIÇAO PLAZAPEL 50UN",
     "preco": 4.99
+  },
+  "7891024194249": {
+    "nome": "DESENFETANTE PINHO SOL 500ML",
+    "preco": 9.75
+  },
+  "7891150071780": {
+    "nome": "CREMOGEMA TRADICIONAL 180G",
+    "preco": 4.99
+  },
+  "7891000319505": {
+    "nome": "MUCILON MULTICEREAIS 180G",
+    "preco": 6.99
   }
 }
