@@ -1437,7 +1437,7 @@
   },
   "7898008913216": {
     "nome": "BISCOITO 3 DE MAIO DOCE 300G",
-    "preco": 4.99
+    "preco": 4.75
   },
   "7898008910208": {
     "nome": "BISCOITO 3 DE MAIO MARIA 350G",
@@ -1601,7 +1601,7 @@
   },
   "7898008913209": {
     "nome": "BOLACHA AGUA E SAL 3 DE MAIO 350G",
-    "preco": 4.99
+    "preco": 4.75
   },
   "7896181909620": {
     "nome": "BOLACHA AMANTEIGADA 600G",
@@ -4121,7 +4121,7 @@
   },
   "7896090082087": {
     "nome": "FARINHA DE TRIGO FINNA COM FRER- 1KG",
-    "preco": 4.99
+    "preco": 5.25
   },
   "7896090082063": {
     "nome": "FARINHA DE TRIGO FINNA TRADICIONAL 1KG",
@@ -4277,7 +4277,7 @@
   },
   "7898258740594": {
     "nome": "FEIJAO PRETO DN MARIQ 1KG",
-    "preco": 7.99
+    "preco": 8.5
   },
   "7896401100097": {
     "nome": "FEIJAO PRETO MAXIMO 1KG",
@@ -5092,7 +5092,7 @@
     "preco": 1.25
   },
   "7894904500383": {
-    "nome": "HAMBURGUER TEXAS BURGER SADIA",
+    "nome": "HAMBURGER TEXAS TRADICIONAL 56G",
     "preco": 1.35
   },
   "7891035524189": {
@@ -5997,7 +5997,7 @@
   },
   "7896213006686": {
     "nome": "MACARRAO VITARELLA FINO 400G",
-    "preco": 3.25
+    "preco": 2.99
   },
   "7898562588950": {
     "nome": "MACAXEIRA CONGELADA1KG",
@@ -6441,7 +6441,7 @@
   },
   "7891000412855": {
     "nome": "NESCAU 2.0 350G",
-    "preco": 12.99
+    "preco": 13.75
   },
   "7891000359822": {
     "nome": "NESCAU ACTIVE-GO BLACTEA 180ML",
@@ -9502,5 +9502,33 @@
   "7891000319505": {
     "nome": "MUCILON MULTICEREAIS 180G",
     "preco": 6.99
+  },
+  "7894904605002": {
+    "nome": "LASANHA A BOLONHESA SEARA 300G",
+    "preco": 9.5
+  },
+  "7894904268573": {
+    "nome": "MORTANDELA DEFUMADA FATIADA 180G",
+    "preco": 7.99
+  },
+  "7894904009749": {
+    "nome": "LINGUIÇA CALABRESA SEARA KG",
+    "preco": 26.99
+  },
+  "7894904577873": {
+    "nome": "EMPANADO DE FRANGO RESENDE 10G",
+    "preco": 1.75
+  },
+  "7891167099685": {
+    "nome": "SARDINHA 88 RALADA TOMATE 110G",
+    "preco": 5.99
+  },
+  "7891167099678": {
+    "nome": "SARDINHA 88 RALADA OLEO 110G",
+    "preco": 5.99
+  },
+  "7898972821081": {
+    "nome": "BODY SPLASH EKOPURE AMOREH 200ML",
+    "preco": 22.99
   }
 }
