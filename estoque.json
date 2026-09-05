@@ -261,7 +261,7 @@
   },
   "69": {
     "nome": "GOMA DE BREJINHO 1KG",
-    "preco": 7
+    "preco": 6.5
   },
   "70": {
     "nome": "FIGADO BOVINO KG",
@@ -3633,7 +3633,7 @@
   },
   "7898034920134": {
     "nome": "DOCE DE LEITE ISIS 350G",
-    "preco": 10.5
+    "preco": 10.9
   },
   "7898034924088": {
     "nome": "DOCE DE LEITE ISIS AMEIXA 3501G",
@@ -4157,7 +4157,7 @@
   },
   "7898916695013": {
     "nome": "FARINHA MANDIOCA AMARELA 1KG",
-    "preco": 5.99
+    "preco": 6.25
   },
   "7892718570943": {
     "nome": "FAROFA CROCANTE KI-PUREZA 300G",
@@ -5185,7 +5185,7 @@
   },
   "7898034920776": {
     "nome": "IOGURTE ISINHO 360G",
-    "preco": 8.75
+    "preco": 8.99
   },
   "7898034920066": {
     "nome": "IOGURTE ISIS AMEIXA 180 G",
@@ -5217,7 +5217,7 @@
   },
   "7898034920110": {
     "nome": "IOGURTE ISIS MORANGO 120G",
-    "preco": 1
+    "preco": 1.25
   },
   "7898034920028": {
     "nome": "IOGURTE ISIS MORANGO 170G",
@@ -5241,7 +5241,7 @@
   },
   "7898034922343": {
     "nome": "IOGURTE LARANJA E CENOURA 150G",
-    "preco": 3.99
+    "preco": 4.25
   },
   "7898034922350": {
     "nome": "IOGURTE NATURAL PARCIALMENTE DESNATADO ISIS 150G",
@@ -8085,7 +8085,7 @@
   },
   "7898422746759": {
     "nome": "SABONETE DOVE ORIGINAL 90G",
-    "preco": 5.25
+    "preco": 5.99
   },
   "7896013107880": {
     "nome": "SABONETE EVEN ALOE VERA MENTA 85G",
@@ -8229,7 +8229,7 @@
   },
   "7898415550035": {
     "nome": "SACO DE LIXO EXTRUSA/PACK 50L",
-    "preco": 9.99
+    "preco": 11
   },
   "7898415550028": {
     "nome": "SACO DE LIXO PACK AZUL 30L",
@@ -9530,5 +9530,21 @@
   "7898972821081": {
     "nome": "BODY SPLASH EKOPURE AMOREH 200ML",
     "preco": 22.99
+  },
+  "7899452032133": {
+    "nome": "LAMPADA LED AVANT 15W",
+    "preco": 6.99
+  },
+  "4058075783904": {
+    "nome": "LAMPADA LEDVANCE 9W",
+    "preco": 4.99
+  },
+  "7899561901573": {
+    "nome": "ESCOVA DENTAL STRIKE MEDIA",
+    "preco": 2.5
+  },
+  "7891991000826": {
+    "nome": "GUARANA ANTARCTICA 350ML",
+    "preco": 3.5
   }
 }
