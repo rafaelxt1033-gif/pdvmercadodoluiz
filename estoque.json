@@ -69,7 +69,7 @@
   },
   "18": {
     "nome": "LIMAO KG",
-    "preco": 8.99
+    "preco": 15
   },
   "19": {
     "nome": "LARANJA KG",
@@ -85,11 +85,11 @@
   },
   "22": {
     "nome": "MARACUJA KG",
-    "preco": 12.99
+    "preco": 11
   },
   "23": {
     "nome": "PIMENTAO KG",
-    "preco": 7.99
+    "preco": 5.99
   },
   "25": {
     "nome": "RAÃAO PARA CAES",
@@ -125,7 +125,7 @@
   },
   "34": {
     "nome": "CARNE CHARQUE CAICO",
-    "preco": 48.99
+    "preco": 51.99
   },
   "35": {
     "nome": "CARNE CHARQUE PONTA DE AGULHA KG",
@@ -353,7 +353,7 @@
   },
   "119": {
     "nome": "TOMATE KG",
-    "preco": 6.99
+    "preco": 5.99
   },
   "199": {
     "nome": "PEIXE SARDINHA SEM CABEÃA KG",
@@ -553,7 +553,7 @@
   },
   "7896902209114": {
     "nome": "ACETONA FARMAX 100ML",
-    "preco": 3.79
+    "preco": 3.99
   },
   "7898994026976": {
     "nome": "ACHOC DAMARE CHOCOLATE 200ML",
@@ -761,7 +761,7 @@
   },
   "7896013100461": {
     "nome": "AGUA SANITARIA OLIMPO 1LT",
-    "preco": 1.99
+    "preco": 2.99
   },
   "7896013105619": {
     "nome": "AGUA SANITARIA OLIMPO 2L",
@@ -937,7 +937,7 @@
   },
   "7896056401112": {
     "nome": "AMACIANTE URCA BRISA PRIMA 2 L",
-    "preco": 8.75
+    "preco": 8.99
   },
   "7896056406858": {
     "nome": "AMACIANTE URCA BRISA/PRIMAVERA 500ML",
@@ -1109,7 +1109,7 @@
   },
   "7898208480242": {
     "nome": "ASA DE FRANGO CONGELADA KG",
-    "preco": 13.99
+    "preco": 14.99
   },
   "7893000436992": {
     "nome": "ASA DE FRANGO SADIA 1KG",
@@ -1529,7 +1529,7 @@
   },
   "7891152801781": {
     "nome": "BISCOITO RICHERTER AMORI CHOCOLATE 125G",
-    "preco": 2.75
+    "preco": 2.25
   },
   "7896213005818": {
     "nome": "BISCOITO TRELOSO BEM-CASADO 37G",
@@ -2237,7 +2237,7 @@
   },
   "7891000070673": {
     "nome": "CEREAL NESCAU MATINAL SACHET 120G",
-    "preco": 6.75
+    "preco": 7.99
   },
   "7898367980010": {
     "nome": "CERV EISENBAHN PILSEN LNECK 355 ML",
@@ -7949,7 +7949,7 @@
   },
   "7898031174653": {
     "nome": "SABAO EM PO BEM TE VI COCO 400G",
-    "preco": 3.25
+    "preco": 3.5
   },
   "7898031173199": {
     "nome": "SABAO EM PO BEM TE VI COCO 500G",
@@ -7965,7 +7965,7 @@
   },
   "7898031174691": {
     "nome": "SABAO EM PO BEM TI VI FLORES 400G",
-    "preco": 3.25
+    "preco": 3.5
   },
   "7898031171539": {
     "nome": "SABAO EM PO BEM-TE-VI PO LAVAN 1KG",
@@ -8013,11 +8013,11 @@
   },
   "7898031174707": {
     "nome": "SABAO PO BEMT SUPERBRANCO 400G",
-    "preco": 3.25
+    "preco": 3.5
   },
   "7898031174660": {
     "nome": "SABAO PO BEM-TE-VI LAVANDA 400G",
-    "preco": 3.25
+    "preco": 3.5
   },
   "7896098905975": {
     "nome": "SABAO YPE FLORES E FRUTAS 800G",
@@ -9546,5 +9546,9 @@
   "7891991000826": {
     "nome": "GUARANA ANTARCTICA 350ML",
     "preco": 3.5
+  },
+  "630941579305": {
+    "nome": "FAROFA DE OURO DO LEAO 400G",
+    "preco": 11
   }
 }
