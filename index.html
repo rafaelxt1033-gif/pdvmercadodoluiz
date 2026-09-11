@@ -91,7 +91,7 @@
             <div><strong>CAIXA 01</strong> | Operador: <span id="caixa-nome-status">Eduardo</span></div>
             <div style="display: flex; gap: 8px;">
                 <button class="btn-universal" onclick="abrirModalBusca()" style="background: var(--sucesso); padding: 8px; width: auto;">Cons. Preço</button>
-                <button class="btn-universal" onclick="abrirModalPreco()" style="background: var(--secundaria); padding: 8px; width: auto;">Mudar Preço</button>
+                <button class="btn-universal" onclick="abrirModalPreco()" style="background: var(--secundaria); padding: 8px; width: auto;">Mudar Preço/Nome</button>
                 <button class="btn-universal" id="btn-painel-atalho" onclick="mostrarTela('tela-adm')" style="background: var(--alerta); padding: 8px; display: none; width: auto;">Painel ADM</button>
                 <button class="btn-universal" onclick="cancelarCupom()" style="background: var(--erro); padding: 8px; width: auto;">Cancelar Compra</button>
                 <button class="btn-universal" onclick="sair()" style="background: #475569; padding: 8px; width: auto;">Sair</button>
@@ -245,19 +245,32 @@
         </div>
     </div>
 
-    <!-- MODAL MUDAR PREÇO E CÓDIGO -->
+    <!-- MODAL MUDAR PREÇO, CÓDIGO E NOME -->
     <div id="modal-editar-preco" class="modal-bg">
         <div class="modal-card">
-            <h3 style="color: var(--secundaria); margin-bottom: 5px;">Mudar Preço e Código</h3>
+            <h3 style="color: var(--secundaria); margin-bottom: 5px;">Mudar Preço, Código e Nome</h3>
             <div class="input-group" style="position: relative;">
-                <label>Buscar Produto (Nome ou Código)</label>
+                <label>Buscar Produto (Nome ou Código Atual)</label>
                 <input type="text" id="edit-busca-prod" placeholder="Digite para buscar..." oninput="buscarProdEdicao(this.value)" autocomplete="off">
                 <input type="hidden" id="edit-cod-antigo">
                 <div id="dropdown-edicao" class="dropdown-busca" style="top: 100%; bottom: auto;"></div>
             </div>
-            <div class="input-group"><label>Novo Código / Código de Barras</label><input type="text" id="edit-cod-novo"></div>
-            <div class="input-group"><label>Novo Preço (R$)</label><input type="number" id="edit-preco" step="0.01"></div>
-            <div class="input-group"><label>Senha do Gerente</label><input type="password" id="edit-senha" onkeypress="if(event.key === 'Enter') salvarNovoPrecoCodigo()"></div>
+            <div class="input-group">
+                <label>Novo Nome do Produto</label>
+                <input type="text" id="edit-nome-novo" placeholder="Ex: ARROZ TIO JOAO 5KG">
+            </div>
+            <div class="input-group">
+                <label>Novo Código / Código de Barras</label>
+                <input type="text" id="edit-cod-novo">
+            </div>
+            <div class="input-group">
+                <label>Novo Preço (R$)</label>
+                <input type="number" id="edit-preco" step="0.01">
+            </div>
+            <div class="input-group">
+                <label>Senha do Gerente</label>
+                <input type="password" id="edit-senha" onkeypress="if(event.key === 'Enter') salvarNovoPrecoCodigo()">
+            </div>
             <div style="display: flex; gap: 10px;">
                 <button class="btn-universal" style="background: var(--erro);" onclick="fecharModalPreco()">Cancelar</button>
                 <button class="btn-universal" style="background: var(--sucesso);" onclick="salvarNovoPrecoCodigo()">Salvar Alterações</button>
@@ -648,7 +661,6 @@
             setTimeout(() => document.getElementById('codigo-barras').focus(), 300);
         }
 
-        // IMPRESSÃO COM GERADOR LOCAL DE QR CODE (Qrcode.js) E CNPJ CORRETO
         function imprimirComprovante(itens, total, pagamento, cliente, isNfce) {
             let janelaImpressao = window.open('', '', 'height=650,width=400');
             let titulo = isNfce ? "MERCADINHO DOIS IRMÃOS - NFC-e" : "MERCADINHO DOIS IRMÃOS - CUPOM NÃO FISCAL";
@@ -709,7 +721,6 @@
             
             html += `<hr><p style="text-align:center;">Obrigado pela preferência!</p>`;
             
-            // Script para desenhar o QR code localmente antes da impressão
             html += `<script>` +
                 `window.onload = function() {` +
                 `  new QRCode(document.getElementById("qrcode"), {` +
@@ -769,10 +780,12 @@
             res.innerHTML = html || '<div style="padding:10px; color:var(--erro);">Nenhum produto encontrado.</div>';
         }
 
+        // ALTERAÇÃO COMPLETA: NOME, CÓDIGO E PREÇO
         function abrirModalPreco() { 
             document.getElementById('modal-editar-preco').classList.add('ativo'); 
             document.getElementById('edit-busca-prod').value = '';
             document.getElementById('edit-cod-antigo').value = '';
+            document.getElementById('edit-nome-novo').value = '';
             document.getElementById('edit-cod-novo').value = '';
             document.getElementById('edit-preco').value = '';
             document.getElementById('edit-senha').value = '';
@@ -803,34 +816,38 @@
             let p = estoqueCloud[cod];
             document.getElementById('edit-busca-prod').value = p.nome;
             document.getElementById('edit-cod-antigo').value = cod;
+            document.getElementById('edit-nome-novo').value = p.nome;
             document.getElementById('edit-cod-novo').value = cod;
             document.getElementById('edit-preco').value = p.preco.toFixed(2);
             document.getElementById('dropdown-edicao').style.display = 'none';
-            document.getElementById('edit-cod-novo').focus();
+            document.getElementById('edit-nome-novo').focus();
         }
 
         function salvarNovoPrecoCodigo() {
             let codAntigo = document.getElementById('edit-cod-antigo').value.trim();
+            let nomeNovo = document.getElementById('edit-nome-novo').value.trim().toUpperCase();
             let codNovo = document.getElementById('edit-cod-novo').value.trim();
             let preco = parseFloat(document.getElementById('edit-preco').value.replace(',', '.'));
             let senha = document.getElementById('edit-senha').value.trim();
 
             if (!codAntigo || !estoqueCloud[codAntigo]) return alert("Selecione um produto válido para editar!");
-            if (!codNovo) return alert("O novo código não pode estar vazio!");
+            if (!nomeNovo) return alert("O nome do produto não pode ficar em branco!");
+            if (!codNovo) return alert("O código não pode ficar em branco!");
             if (isNaN(preco) || preco <= 0) return alert("Digite um preço válido!");
             if (senha !== 'kd041022') return alert("Senha do gerente incorreta!");
 
-            let nomeProd = estoqueCloud[codAntigo].nome;
-
+            // Se o código foi modificado, remove a chave antiga
             if (codAntigo !== codNovo) {
                 delete estoqueCloud[codAntigo];
             }
-            estoqueCloud[codNovo] = { nome: nomeProd, preco: preco };
+            
+            // Grava os novos dados com o novo nome
+            estoqueCloud[codNovo] = { nome: nomeNovo, preco: preco };
 
             localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
             atualizarContadorProdutos();
             fecharModalPreco();
-            alert("Preço e Código atualizados com sucesso!");
+            alert("Produto atualizado com sucesso (Nome, Código e Preço)!");
         }
 
         function pularDaUnidadeProBipe(e) { if(e.key === 'Enter') document.getElementById('codigo-barras').focus(); }
