@@ -661,14 +661,15 @@
             setTimeout(() => document.getElementById('codigo-barras').focus(), 300);
         }
 
+        // IMPRESSÃO INTELIGENTE: CNPJ E QR CODE SOMENTE NA NFC-e (F4). NA NOTA AVULSA (F2) NÃO SAI CNPJ NEM QR CODE.
         function imprimirComprovante(itens, total, pagamento, cliente, isNfce) {
             let janelaImpressao = window.open('', '', 'height=650,width=400');
             let titulo = isNfce ? "MERCADINHO DOIS IRMÃOS - NFC-e" : "MERCADINHO DOIS IRMÃOS - CUPOM NÃO FISCAL";
             let dadosQrCode = `MERCADINHO DOIS IRMAOS|CNPJ:44.133.465/0001-96|TOTAL:R$${total.toFixed(2)}|DATA:${new Date().toISOString()}`;
             let totalQtdItens = itens.reduce((acc, item) => acc + item.qtd, 0);
 
-            let html = `<html><head><title>Cupom Fiscal</title>` +
-                `<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>` +
+            let html = `<html><head><title>Cupom</title>` +
+                (isNfce ? `<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>` : ``) +
                 `<style>` +
                 `@page { size: 58mm auto; margin: 0; }` +
                 `body { font-family: 'Courier New', Courier, monospace; font-size: 11px; width: 56mm; margin: 0 auto; padding: 4px; color: #000; background: #fff; line-height: 1.2; }` +
@@ -687,7 +688,12 @@
                 `</style></head><body>`;
             
             html += `<h3>${titulo}</h3>`;
-            html += `<p>CNPJ: 44.133.465/0001-96</p>`;
+            
+            // Só imprime o CNPJ se for NFC-e
+            if (isNfce) {
+                html += `<p>CNPJ: 44.133.465/0001-96</p>`;
+            }
+            
             html += `<p>Data: ${new Date().toLocaleString('pt-BR')}</p>`;
             html += `<p>Cliente: ${cliente}</p>`;
             html += `<hr>`;
@@ -711,26 +717,35 @@
             html += `<p style="text-align: left;">Forma de Pagto: ${pagamento}</p>`;
             html += `<p class="total">TOTAL: R$ ${total.toFixed(2)}</p>`;
             
-            html += `<hr>`;
-            html += `<div class="qrcode-box" id="qrcode"></div>`;
-            html += `<div style="text-align:center; font-size:8px;">Consulta via Chave de Acesso NFC-e</div>`;
-
-            if(isNfce) {
-                html += `<p style="font-size: 9px; text-align: center;">Consumidor Eletrônica</p>`;
+            // Só imprime QR Code e rodapé fiscal se for NFC-e
+            if (isNfce) {
+                html += `<hr>`;
+                html += `<div class="qrcode-box" id="qrcode"></div>`;
+                html += `<div style="text-align:center; font-size:8px;">Consulta via Chave de Acesso NFC-e</div>`;
+                html += `<p style="font-size: 9px; text-align: center;">Nota Fiscal de Consumidor Eletrônica</p>`;
             }
             
             html += `<hr><p style="text-align:center;">Obrigado pela preferência!</p>`;
             
-            html += `<script>` +
-                `window.onload = function() {` +
-                `  new QRCode(document.getElementById("qrcode"), {` +
-                `    text: "${dadosQrCode}",` +
-                `    width: 95,` +
-                `    height: 95` +
-                `  });` +
-                `  setTimeout(function() { window.print(); window.close(); }, 500);` +
-                `};` +
-                `<\/script>`;
+            if (isNfce) {
+                html += `<script>` +
+                    `window.onload = function() {` +
+                    `  new QRCode(document.getElementById("qrcode"), {` +
+                    `    text: "${dadosQrCode}",` +
+                    `    width: 95,` +
+                    `    height: 95` +
+                    `  });` +
+                    `  setTimeout(function() { window.print(); window.close(); }, 500);` +
+                    `};` +
+                    `<\/script>`;
+            } else {
+                html += `<script>` +
+                    `window.onload = function() {` +
+                    `  setTimeout(function() { window.print(); window.close(); }, 300);` +
+                    `};` +
+                    `<\/script>`;
+            }
+            
             html += `</body></html>`;
 
             janelaImpressao.document.write(html);
@@ -780,7 +795,6 @@
             res.innerHTML = html || '<div style="padding:10px; color:var(--erro);">Nenhum produto encontrado.</div>';
         }
 
-        // ALTERAÇÃO COMPLETA: NOME, CÓDIGO E PREÇO
         function abrirModalPreco() { 
             document.getElementById('modal-editar-preco').classList.add('ativo'); 
             document.getElementById('edit-busca-prod').value = '';
@@ -836,12 +850,10 @@
             if (isNaN(preco) || preco <= 0) return alert("Digite um preço válido!");
             if (senha !== 'kd041022') return alert("Senha do gerente incorreta!");
 
-            // Se o código foi modificado, remove a chave antiga
             if (codAntigo !== codNovo) {
                 delete estoqueCloud[codAntigo];
             }
             
-            // Grava os novos dados com o novo nome
             estoqueCloud[codNovo] = { nome: nomeNovo, preco: preco };
 
             localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
