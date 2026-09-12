@@ -25,7 +25,7 @@
   },
   "7": {
     "nome": "BATATA INGRESA KG",
-    "preco": 10
+    "preco": 8.99
   },
   "8": {
     "nome": "BATATA DOCE",
@@ -80,7 +80,7 @@
     "preco": 5
   },
   "21": {
-    "nome": "MAÃA",
+    "nome": "MAÇÃ",
     "preco": 12.99
   },
   "22": {
@@ -92,7 +92,7 @@
     "preco": 5.99
   },
   "25": {
-    "nome": "RAÃAO PARA CAES",
+    "nome": "RAÇÃO PARA CAES",
     "preco": 11.99
   },
   "27": {
@@ -765,7 +765,7 @@
   },
   "7896013105619": {
     "nome": "AGUA SANITARIA OLIMPO 2L",
-    "preco": 5.75
+    "preco": 5.99
   },
   "7896221600180": {
     "nome": "AGUA SANT CLORITO 2L",
@@ -4303,10 +4303,6 @@
     "nome": "FIGADO DE FRANGO JAGUAR 1KG",
     "preco": 6.5
   },
-  "7898304254495": {
-    "nome": "FIGADO DE GALINHA JAGUA 1KG",
-    "preco": 5.5
-  },
   "7891515531331": {
     "nome": "FIGADO DE GALINHA PERDIGAO 1KG",
     "preco": 6.99
@@ -4316,8 +4312,8 @@
     "preco": 4.25
   },
   "7891515503659": {
-    "nome": "FILE DE F. PERDIGAO 1KG",
-    "preco": 21.99
+    "nome": "FILE DE PEITO CONGELADO 1KG",
+    "preco": 18.99
   },
   "7898312041278": {
     "nome": "FILE DE PEITO CONG-AVIVAR BJ 1KG",
@@ -5585,7 +5581,7 @@
   },
   "7898643880485": {
     "nome": "LANCHINHOS DOCES SO MEL 130",
-    "preco": 4.75
+    "preco": 4.99
   },
   "7898119105326": {
     "nome": "LAPIS ESCREVER GRAFITTE",
@@ -6632,7 +6628,7 @@
     "preco": 0.5
   },
   "7898956846154": {
-    "nome": "PAÃOQUINHA MENDOQUITA UN",
+    "nome": "PAÇOQUINHA MENDOQUITA UN",
     "preco": 0.5
   },
   "7896384518254": {
@@ -8833,7 +8829,7 @@
   },
   "7898643880515": {
     "nome": "TABLETE DE LEITE 160G",
-    "preco": 4.75
+    "preco": 4.99
   },
   "7898961932606": {
     "nome": "TABUA PARA CARNE",
@@ -9550,5 +9546,9 @@
   "630941579305": {
     "nome": "FAROFA DE OURO DO LEAO 400G",
     "preco": 11
+  },
+  "7898668210496": {
+    "nome": "FIGADO DE GALINHA SOMAVE 1KG",
+    "preco": 6.99
   }
 }
