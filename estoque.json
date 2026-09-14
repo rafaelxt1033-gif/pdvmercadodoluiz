@@ -85,7 +85,7 @@
   },
   "22": {
     "nome": "MARACUJA KG",
-    "preco": 11
+    "preco": 9
   },
   "23": {
     "nome": "PIMENTAO KG",
@@ -1253,7 +1253,7 @@
   },
   "7898117962082": {
     "nome": "BATATA PALHA REI DE OURO 80G",
-    "preco": 4.25
+    "preco": 4.75
   },
   "7891091063370": {
     "nome": "BATATA PALHA SCRUSCH 105G",
@@ -2653,7 +2653,7 @@
   },
   "7509546702605": {
     "nome": "COLGATE TOTAL PREVENCAO ATIVA 90G",
-    "preco": 11.99
+    "preco": 12.99
   },
   "7897240575435": {
     "nome": "COLHER AZUL S-SAMARINO",
@@ -5597,15 +5597,15 @@
   },
   "7897274410245": {
     "nome": "LAVA LOUCAS GUARANI LIMAO 500ML",
-    "preco": 1.99
+    "preco": 2.25
   },
   "7897274410214": {
     "nome": "LAVA LOUCAS GUARANI MACA 500ML",
-    "preco": 1.99
+    "preco": 2.25
   },
   "7897274410276": {
     "nome": "LAVA LOUCAS GUARANI NEUTRO 500ML",
-    "preco": 1.99
+    "preco": 2.25
   },
   "7897274411310": {
     "nome": "LAVA PISOS GUARANI FRA FLORAL 750ML",
@@ -5737,7 +5737,7 @@
   },
   "7898403782929": {
     "nome": "LEITE EM PO BETANIA INTEGRAL 750G",
-    "preco": 32.99
+    "preco": 33.99
   },
   "7898080640376": {
     "nome": "LEITE EM PO ITALAC INTEGRAL 200G",
@@ -5805,7 +5805,7 @@
   },
   "7891000342176": {
     "nome": "LEITE NINHO INTEG 750G",
-    "preco": 35.99
+    "preco": 38.99
   },
   "7891000340981": {
     "nome": "LEITE NINHO INTEGRAL 380G",
@@ -6702,10 +6702,6 @@
   "7898975304024": {
     "nome": "PAO DE FORMA LEITE MASSAS NORDESTINA",
     "preco": 7.25
-  },
-  "7898913869172": {
-    "nome": "PAO DE FORMA TRADICIONAL 400G",
-    "preco": 6.99
   },
   "7899011132250": {
     "nome": "PAO DE LEITE 250G",
@@ -9550,5 +9546,13 @@
   "0074468769793": {
     "nome": "BOLO SARDINHA 300G",
     "preco": 5.5
+  },
+  "7898975304000": {
+    "nome": "PAO DE FORMA TRADICIONAL NORDESTINAS 400G",
+    "preco": 7.5
+  },
+  "7896013107941": {
+    "nome": "SABONETE EVEN MORANGO E CHANTILY 85G",
+    "preco": 2.25
   }
 }
