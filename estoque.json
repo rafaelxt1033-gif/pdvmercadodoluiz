@@ -164,11 +164,11 @@
     "preco": 27.99
   },
   "44": {
-    "nome": "LINGUIÃA TOSCANA AURORA KG",
+    "nome": "LINGUIÇA TOSCANA AURORA KG",
     "preco": 21.99
   },
   "45": {
-    "nome": "LINGUIÃA DE FRANGO AURORA KG",
+    "nome": "LINGUIÇA DE FRANGO AURORA KG",
     "preco": 19.99
   },
   "46": {
@@ -1862,10 +1862,6 @@
   "7897787870031": {
     "nome": "BOLO DELICIA QUEIJO 600G",
     "preco": 11.99
-  },
-  "619205104941": {
-    "nome": "BOLO SARDINHA 300G",
-    "preco": 5.5
   },
   "7825485452259": {
     "nome": "BOLOS SABORES DIVERSOS 300G",
@@ -5669,7 +5665,7 @@
   },
   "7891164027711": {
     "nome": "LEITE AURORA INTEGRAL 200 G",
-    "preco": 8.5
+    "preco": 8.75
   },
   "7898403782394": {
     "nome": "LEITE BETANIA DESNATADO 1L",
@@ -7420,19 +7416,19 @@
     "preco": 3
   },
   "7898224821524": {
-    "nome": "RAÃAO NHAC GATO MIX KG",
+    "nome": "RAÇÃO NHAC GATO MIX KG",
     "preco": 17.99
   },
   "7898224824785": {
-    "nome": "RAÃAO NHAC P/CAES FILHOTES 1KG",
+    "nome": "RAÇÃO NHAC P/CAES FILHOTES 1KG",
     "preco": 15.99
   },
   "798190256498": {
-    "nome": "RAÃAO P/CAES ADULTO TIM/TIM CARNE",
+    "nome": "RAÇÃO P/CAES ADULTO TIM/TIM CARNE",
     "preco": 6.99
   },
   "7896029077245": {
-    "nome": "RAÃAO P/GATO WHISKAS CARNE 1KG",
+    "nome": "RAÇÃO P/GATO WHISKAS CARNE 1KG",
     "preco": 22.99
   },
   "7897990129148": {
@@ -7440,7 +7436,7 @@
     "preco": 7.99
   },
   "7896268414603": {
-    "nome": "RAÃAO PARA GATO CHANIN KG",
+    "nome": "RAÇÃO PARA GATO CHANIN KG",
     "preco": 13.99
   },
   "7897990129070": {
@@ -7448,15 +7444,15 @@
     "preco": 5.99
   },
   "7898203020177": {
-    "nome": "RAÃAO SABOROSSO CARNE/LEITE FILHOTE KG",
+    "nome": "RAÇÃO SABOROSSO CARNE/LEITE FILHOTE KG",
     "preco": 14.99
   },
   "7898203020160": {
-    "nome": "RAÃAO SABOROSSO CERNE/CHIPS ADULTOS KG",
+    "nome": "RAÇÃO SABOROSSO CERNE/CHIPS ADULTOS KG",
     "preco": 12.99
   },
   "7898203020023": {
-    "nome": "RAÃAO TUTTI CANIS SELECT KG",
+    "nome": "RAÇÃO TUTTI CANIS SELECT KG",
     "preco": 12.99
   },
   "7898203020016": {
@@ -7464,7 +7460,7 @@
     "preco": 13.99
   },
   "5901234123457": {
-    "nome": "RAÃAO TUTTI CATIS GATO CASTRADO KG",
+    "nome": "RAÇÃO TUTTI CATIS GATO CASTRADO KG",
     "preco": 17.99
   },
   "7893232565255": {
@@ -9550,5 +9546,9 @@
   "7898668210496": {
     "nome": "FIGADO DE GALINHA SOMAVE 1KG",
     "preco": 6.99
+  },
+  "0074468769793": {
+    "nome": "BOLO SARDINHA 300G",
+    "preco": 5.5
   }
 }
