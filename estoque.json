@@ -41,7 +41,7 @@
   },
   "11": {
     "nome": "CENOURA KG",
-    "preco": 7.99
+    "preco": 6.99
   },
   "12": {
     "nome": "CHUCHU KG",
@@ -49,11 +49,11 @@
   },
   "13": {
     "nome": "CEBOLA ROXA",
-    "preco": 7.99
+    "preco": 8.99
   },
   "14": {
     "nome": "CEBOLA BRANCA KG",
-    "preco": 6.99
+    "preco": 8.99
   },
   "15": {
     "nome": "COCO SECO",
@@ -737,11 +737,11 @@
   },
   "7896013102342": {
     "nome": "AGUA SANITARIA BRILUX AZUL 1L",
-    "preco": 5.5
+    "preco": 5.99
   },
   "7896013105657": {
     "nome": "AGUA SANITARIA BRILUX BRANCA 1L",
-    "preco": 3.99
+    "preco": 4.25
   },
   "7896221600159": {
     "nome": "AGUA SANITARIA CLORITO 1L",
@@ -2417,7 +2417,7 @@
   },
   "7899970402876": {
     "nome": "CHOCOLATE HERSHEYS OVOMALTINE 77G",
-    "preco": 8.99
+    "preco": 9.99
   },
   "7896423438727": {
     "nome": "CHOCOLATE M/M 40G",
@@ -2781,11 +2781,11 @@
   },
   "7898371005563": {
     "nome": "COPOBRAS DESCARTAVEL TRANSPARENTE C/100",
-    "preco": 4.99
+    "preco": 5.5
   },
   "7896030893360": {
     "nome": "COPOS COPOBRAS 150ML",
-    "preco": 6.5
+    "preco": 6.99
   },
   "7898939720044": {
     "nome": "COPOS CRISTALCOPO 150ML",
@@ -4289,7 +4289,7 @@
   },
   "7896041104011": {
     "nome": "FIAMBRE BOVINA ODERICH 320G",
-    "preco": 8.25
+    "preco": 8.75
   },
   "7896031203359": {
     "nome": "FIAMBRE KITUT 320 G",
@@ -4381,11 +4381,11 @@
   },
   "7908228804994": {
     "nome": "FINI ROLLER 20 G",
-    "preco": 3.25
+    "preco": 3
   },
   "7908228805007": {
     "nome": "FINI ROLLER 20G",
-    "preco": 3.25
+    "preco": 3
   },
   "7898591459498": {
     "nome": "FINI TUBES CORES ACIDO",
@@ -5141,7 +5141,7 @@
   },
   "7899970404160": {
     "nome": "HERSHEYS MEIO AMARGO 75G",
-    "preco": 8.99
+    "preco": 9.99
   },
   "7897042010974": {
     "nome": "HIDRATACAO SKALA OLEO DE COCO 1KG",
@@ -5825,7 +5825,7 @@
   },
   "7898403782387": {
     "nome": "LEITE UHT INTEGRAL BETANIA 1L",
-    "preco": 6.99
+    "preco": 7.25
   },
   "7896085307034": {
     "nome": "LEITE VALE DOURADO DESNATADO 1L",
@@ -9558,5 +9558,25 @@
   "7500435244688": {
     "nome": "PRESTOBARBA GILLETTE 3 LAM/SUAVE",
     "preco": 6.5
+  },
+  "7509546695396": {
+    "nome": "SAB- PALMOLIVE ARGILA PRETA OLEO/EUCALIPTO 150G",
+    "preco": 4.99
+  },
+  "7896029046609": {
+    "nome": "WHISKAS CARNE 85G",
+    "preco": 3
+  },
+  "7896029046173": {
+    "nome": "WHISKAS FRANGO 85G",
+    "preco": 3
+  },
+  "7896029056387": {
+    "nome": "CHAMP FRANGO FILHOTE 85G",
+    "preco": 3
+  },
+  "7896029046494": {
+    "nome": "KITEKAT CORDEIRO 70G",
+    "preco": 3
   }
 }
