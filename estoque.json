@@ -9,7 +9,7 @@
   },
   "3": {
     "nome": "ALHO",
-    "preco": 29.99
+    "preco": 31.99
   },
   "4": {
     "nome": "ABACAXI PQ",
@@ -33,7 +33,7 @@
   },
   "9": {
     "nome": "BETERRABA KG",
-    "preco": 7.99
+    "preco": 5.99
   },
   "10": {
     "nome": "COENTRO",
@@ -69,7 +69,7 @@
   },
   "18": {
     "nome": "LIMAO KG",
-    "preco": 15
+    "preco": 11.99
   },
   "19": {
     "nome": "LARANJA KG",
@@ -137,7 +137,7 @@
   },
   "37": {
     "nome": "COXA-SOBRECOXA KG",
-    "preco": 9.99
+    "preco": 10.99
   },
   "38": {
     "nome": "BACON KG",
@@ -193,7 +193,7 @@
   },
   "51": {
     "nome": "PEITO DE FRANGO KG",
-    "preco": 11.99
+    "preco": 12.99
   },
   "52": {
     "nome": "GALINHA CONGELADA KG",
@@ -241,7 +241,7 @@
   },
   "64": {
     "nome": "OVOS BRANCO EXTRA BJ COM 15UN",
-    "preco": 9.5
+    "preco": 9
   },
   "65": {
     "nome": "OVOS UNIDADE",
@@ -353,7 +353,7 @@
   },
   "119": {
     "nome": "TOMATE KG",
-    "preco": 5.99
+    "preco": 6.99
   },
   "199": {
     "nome": "PEIXE SARDINHA SEM CABEÃÂÃÂÃÂÃÂA KG",
@@ -644,7 +644,7 @@
     "preco": 3.75
   },
   "7891910030101": {
-    "nome": "AÃÂÃÂÃÂÃÂUCAR UNIAO DEMERARA 1KG",
+    "nome": "AÇUCAR UNIAO DEMERARA 1KG",
     "preco": 6.75
   },
   "7898663741377": {
@@ -918,10 +918,6 @@
   "7896013106333": {
     "nome": "AMACIANTE SONHO LAVANDA 2L",
     "preco": 12.99
-  },
-  "7896013100898": {
-    "nome": "AMACIANTE SONHO LAVANDA 500ML",
-    "preco": 4.49
   },
   "7896013105435": {
     "nome": "AMACIANTE SONHO MAGIA 500ML",
@@ -1450,10 +1446,6 @@
   "618231390199": {
     "nome": "BISCOITO COQUINHO 200G",
     "preco": 2.5
-  },
-  "70341969878": {
-    "nome": "BISCOITO DE ANJO 190G",
-    "preco": 5.75
   },
   "7897934600061": {
     "nome": "BISCOITO DOCE BEIJA FLOR 400G",
@@ -6541,7 +6533,7 @@
   },
   "7896785450788": {
     "nome": "OLEO SINGER MULTIUSO 100ML",
-    "preco": 7.99
+    "preco": 9.9
   },
   "7892300030060": {
     "nome": "OLEO SOJA SINHA PET 900ML",
@@ -6577,7 +6569,7 @@
   },
   "7898912405029": {
     "nome": "OVOS BRANCO EXTRA AVIPEC COM 30UN",
-    "preco": 17.99
+    "preco": 16.99
   },
   "7898286565336": {
     "nome": "OVOS BRANCO GRANDE BOM TODO COM 30UN",
@@ -7741,15 +7733,15 @@
   },
   "7898949346487": {
     "nome": "REQUEIJAO JUCURUTU CHEDDAR 200G",
-    "preco": 8.99
+    "preco": 9.9
   },
   "7898949346463": {
     "nome": "REQUEIJAO JUCURUTU LIGHT 200G",
-    "preco": 8.99
+    "preco": 9.9
   },
   "7898949346456": {
     "nome": "REQUEIJAO TRAD. SERTAO JUCURUTU",
-    "preco": 8.99
+    "preco": 9.9
   },
   "7898912485427": {
     "nome": "REQUEIJAO VACA LIGHT 200G",
@@ -9578,5 +9570,17 @@
   "7896029046494": {
     "nome": "KITEKAT CORDEIRO 70G",
     "preco": 3
+  },
+  "0070341969878": {
+    "nome": "BISCOITO DE ANJO 190G",
+    "preco": 5.75
+  },
+  "7896013106319": {
+    "nome": "AMACIANTE SONHO LAVANDA 500ML",
+    "preco": 4.49
+  },
+  "7897075186141": {
+    "nome": "RAPADURA AMARELA 400G",
+    "preco": 3.75
   }
 }
