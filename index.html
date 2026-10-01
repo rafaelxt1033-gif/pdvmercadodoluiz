@@ -41,6 +41,7 @@
         .area-balanca { background: #e2e8f0; padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; gap: 10px; align-items: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
         .area-balanca input { padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; outline: none; }
         .input-codigo { width: 100%; padding: 22px; font-size: 38px; text-align: center; border: 3px solid var(--primaria); border-radius: 12px; outline: none; font-weight: bold; }
+        
         .dropdown-busca { display: none; position: absolute; left: 0; width: 100%; background: white; border: 2px solid var(--secundaria); border-radius: 8px; max-height: 250px; overflow-y: auto; z-index: 999; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         .opcao-busca { padding: 14px; cursor: pointer; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; }
         .opcao-busca:hover, .opcao-busca.selecionada { background: #eff6ff; color: var(--secundaria); }
@@ -286,6 +287,20 @@
         let clientesDB = {}; 
         let listaFiltrada = [];
         let faturamentoOculto = false;
+        let itemIndexSelecionado = -1;
+
+        // AUXILIARES DE SUPORTE COMPLETO A UTF-8 (ACENTOS / TIL / CEDILHA)
+        function utf8_to_b64(str) {
+            return window.btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+                return String.fromCharCode('0x' + p1);
+            }));
+        }
+
+        function b64_to_utf8(str) {
+            return decodeURIComponent(Array.prototype.map.call(window.atob(str), function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+        }
 
         window.onload = function() {
             const vendasSalvas = localStorage.getItem('vendas') || localStorage.getItem('vendas_realizadas');
@@ -315,16 +330,21 @@
             if (!token || !repo) return alert("Preencha o Token e o Repositório do GitHub!");
 
             try {
+                let log = document.getElementById('log-sistema');
+                if(log) log.innerHTML += `<div>[NUVEM] Baixando estoque do GitHub... Aguarde.</div>`;
+                
                 let res = await fetch(`https://api.github.com/repos/${repo}/contents/estoque.json`, {
                     headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
                 });
                 if (!res.ok) throw new Error("Arquivo estoque.json não encontrado no repositório.");
                 let data = await res.json();
-                let decoded = JSON.parse(atob(data.content));
-                estoqueCloud = decoded;
+                
+                let jsonTexto = b64_to_utf8(data.content.replace(/\s/g, ''));
+                estoqueCloud = JSON.parse(jsonTexto);
+                
                 localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
                 atualizarContadorProdutos();
-                alert("Estoque baixado com sucesso da nuvem do GitHub!");
+                alert("Estoque baixado com sucesso da nuvem (Acentuação Corrigida)!");
             } catch (err) {
                 alert("Erro ao baixar do GitHub: " + err.message);
             }
@@ -337,6 +357,9 @@
             if (Object.keys(estoqueCloud).length === 0) return alert("Nenhum produto no estoque para enviar.");
 
             try {
+                let log = document.getElementById('log-sistema');
+                if(log) log.innerHTML += `<div>[NUVEM] Enviando estoque para o GitHub... Aguarde.</div>`;
+
                 let sha = '';
                 let getRes = await fetch(`https://api.github.com/repos/${repo}/contents/estoque.json`, {
                     headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
@@ -346,7 +369,9 @@
                     sha = fileData.sha;
                 }
 
-                let contentEncoded = btoa(unescape(encodeURIComponent(JSON.stringify(estoqueCloud, null, 2))));
+                let jsonTexto = JSON.stringify(estoqueCloud, null, 2);
+                let contentEncoded = utf8_to_b64(jsonTexto);
+
                 let bodyData = {
                     message: "Atualização de estoque via PDV Luiz",
                     content: contentEncoded,
@@ -466,7 +491,7 @@
                 drop.style.display = 'block';
                 lista.forEach((c) => {
                     let p = estoqueCloud[c];
-                    drop.innerHTML += `<div class="opcao-busca" onclick="addCupomBalanca('${c}')"><span>⚖️ [${c}] ${p.nome}</span> <span>R$ ${p.preco.toFixed(2)}/kg</span></div>`;
+                    drop.innerHTML += `<div class="opcao-busca" onclick="addCupomBalanca('${c}')"><span>⚖️ [${c}]${p.nome}</span> <span>R$ ${p.preco.toFixed(2)}/kg</span></div>`;
                 });
             } else {
                 drop.style.display = 'none';
@@ -562,6 +587,8 @@
             const txt = val.toLowerCase().trim(); 
             const drop = document.getElementById('dropdown-sugestoes'); 
             drop.innerHTML = '';
+            itemIndexSelecionado = -1;
+
             if(!txt) { drop.style.display = 'none'; return; }
             
             listaFiltrada = [];
@@ -578,9 +605,9 @@
             if(listaFiltrada.length > 0) { 
                 drop.style.display = 'block'; 
                 let qtd = parseFloat(document.getElementById('input-qtd-manual').value || 1); 
-                listaFiltrada.forEach((c) => {
+                listaFiltrada.forEach((c, idx) => {
                     let p = estoqueCloud[c];
-                    drop.innerHTML += `<div class="opcao-busca" onclick="addCupom('${c}', ${qtd})"><span>📦 [${c}] ${p.nome}</span> <span>R$ ${p.preco.toFixed(2)}</span></div>`;
+                    drop.innerHTML += `<div class="opcao-busca" id="sugestao-item-${idx}" onclick="addCupom('${c}',${qtd})"><span>📦 [${c}]${p.nome}</span> <span>R$ ${p.preco.toFixed(2)}</span></div>`;
                 }); 
             } else { 
                 drop.style.display = 'none'; 
@@ -588,6 +615,25 @@
         }
 
         function navegarSugestoes(e) {
+            const drop = document.getElementById('dropdown-sugestoes');
+
+            // NAVEGAÇÃO COM AS SETAS PARA BAIXO / PARA CIMA
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (listaFiltrada.length > 0) {
+                    itemIndexSelecionado = (itemIndexSelecionado + 1) % listaFiltrada.length;
+                    atualizarDestaqueSugestao();
+                }
+                return;
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (listaFiltrada.length > 0) {
+                    itemIndexSelecionado = (itemIndexSelecionado - 1 + listaFiltrada.length) % listaFiltrada.length;
+                    atualizarDestaqueSugestao();
+                }
+                return;
+            }
+
             if (e.key === 'Enter') {
                 e.preventDefault(); 
                 let txt = document.getElementById('codigo-barras').value.trim();
@@ -596,6 +642,12 @@
                 let cod = txt;
                 if(txt.includes('*')) { qtd = parseFloat(txt.split('*')[0]); cod = txt.split('*')[1].trim(); }
                 
+                // Se algum item foi selecionado com as setas do teclado
+                if (itemIndexSelecionado >= 0 && itemIndexSelecionado < listaFiltrada.length) {
+                    addCupom(listaFiltrada[itemIndexSelecionado], qtd);
+                    return;
+                }
+
                 if(estoqueCloud[cod]) { 
                     addCupom(cod, qtd); 
                 } else {
@@ -612,12 +664,25 @@
             }
         }
 
+        function atualizarDestaqueSugestao() {
+            let divs = document.querySelectorAll('#dropdown-sugestoes .opcao-busca');
+            divs.forEach((div, i) => {
+                if (i === itemIndexSelecionado) {
+                    div.classList.add('selecionada');
+                    div.scrollIntoView({ block: 'nearest' });
+                } else {
+                    div.classList.remove('selecionada');
+                }
+            });
+        }
+
         function addCupom(cod, qtd) {
             const p = estoqueCloud[cod]; 
             cupomAtual.push({ cod, nome: p.nome, qtd, unit: p.preco, total: p.preco * qtd });
             document.getElementById('codigo-barras').value = ''; 
             document.getElementById('dropdown-sugestoes').style.display = 'none'; 
             document.getElementById('input-qtd-manual').value = '1';
+            itemIndexSelecionado = -1;
             renderizarCupom(); 
             document.getElementById('codigo-barras').focus();
         }
@@ -661,11 +726,10 @@
             setTimeout(() => document.getElementById('codigo-barras').focus(), 300);
         }
 
-        // IMPRESSÃO INTELIGENTE: CNPJ E QR CODE SOMENTE NA NFC-e (F4). NA NOTA AVULSA (F2) NÃO SAI CNPJ NEM QR CODE.
         function imprimirComprovante(itens, total, pagamento, cliente, isNfce) {
             let janelaImpressao = window.open('', '', 'height=650,width=400');
             let titulo = isNfce ? "MERCADINHO DOIS IRMÃOS - NFC-e" : "MERCADINHO DOIS IRMÃOS - CUPOM NÃO FISCAL";
-            let dadosQrCode = `MERCADINHO DOIS IRMAOS|CNPJ:44.133.465/0001-96|TOTAL:R$${total.toFixed(2)}|DATA:${new Date().toISOString()}`;
+            let dadosQrCode = `MERCADINHO DOIS IRMAOS|CNPJ:44.133.465/0001-96|TOTAL:R$${total.toFixed(2)}\vert{}DATA:${new Date().toISOString()}`;
             let totalQtdItens = itens.reduce((acc, item) => acc + item.qtd, 0);
 
             let html = `<html><head><title>Cupom</title>` +
@@ -689,7 +753,6 @@
             
             html += `<h3>${titulo}</h3>`;
             
-            // Só imprime o CNPJ se for NFC-e
             if (isNfce) {
                 html += `<p>CNPJ: 44.133.465/0001-96</p>`;
             }
@@ -717,7 +780,6 @@
             html += `<p style="text-align: left;">Forma de Pagto: ${pagamento}</p>`;
             html += `<p class="total">TOTAL: R$ ${total.toFixed(2)}</p>`;
             
-            // Só imprime QR Code e rodapé fiscal se for NFC-e
             if (isNfce) {
                 html += `<hr>`;
                 html += `<div class="qrcode-box" id="qrcode"></div>`;
