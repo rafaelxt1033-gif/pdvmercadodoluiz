@@ -29,7 +29,7 @@
   },
   "8": {
     "nome": "BATATA DOCE",
-    "preco": 5.99
+    "preco": 4.99
   },
   "9": {
     "nome": "BETERRABA KG",
@@ -164,11 +164,11 @@
     "preco": 27.99
   },
   "44": {
-    "nome": "LINGUIÃÂÃÂA TOSCANA AURORA KG",
+    "nome": "LINGUIÇA TOSCANA AURORA KG",
     "preco": 21.99
   },
   "45": {
-    "nome": "LINGUIÃÂÃÂA DE FRANGO AURORA KG",
+    "nome": "LINGUIÇA DE FRANGO AURORA KG",
     "preco": 19.99
   },
   "46": {
@@ -4293,7 +4293,7 @@
   },
   "7891515531331": {
     "nome": "FIGADO DE GALINHA PERDIGAO 1KG",
-    "preco": 6.99
+    "preco": 6.5
   },
   "7896419729211": {
     "nome": "FIGADO GALINHA LAR  700G",
@@ -9586,5 +9586,9 @@
   "7791293025537": {
     "nome": "DESODORANTE REXONA MEN ANTIBAC 150ML",
     "preco": 15.99
+  },
+  "7898247780006": {
+    "nome": "OLEO DE SOJA ABC 900ML",
+    "preco": 8.75
   }
 }
