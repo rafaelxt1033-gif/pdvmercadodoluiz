@@ -110,7 +110,7 @@
                 <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Pronto para vendas. Bipe ou digite o código/nome.</div></div>
                 
                 <div class="area-balanca">
-                    <span style="font-size: 24px;">⚖️</span>
+                    <span style="font-size: 24px;">⚖️️</span>
                     <input type="number" id="peso-balanca" placeholder="Peso (ex: 0.450)" style="width: 140px;" step="0.001">
                     <div style="position: relative; flex: 1;">
                         <input type="text" id="codigo-balanca" placeholder="Nome da fruta/verdura..." style="width: 100%;" oninput="filtrarNomeBalanca(this.value)" autocomplete="off">
@@ -289,7 +289,7 @@
         let faturamentoOculto = false;
         let itemIndexSelecionado = -1;
 
-        // AUXILIARES DE SUPORTE COMPLETO A UTF-8 (ACENTOS / TIL / CEDILHA)
+        // AUXILIARES UTF-8
         function utf8_to_b64(str) {
             return window.btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
                 return String.fromCharCode('0x' + p1);
@@ -302,6 +302,23 @@
             }).join(''));
         }
 
+        // LIMPEZA AUTOMÁTICA DOS CARACTERES ESTRAGADOS
+        function limparCaracteresEstragados(texto) {
+            if (!texto) return '';
+            let t = String(texto);
+            t = t.replace(/(Ã□|Ã|Â|□)+/g, 'Ã');
+            t = t.replace(/Ã+/g, 'Ã');
+            return t;
+        }
+
+        function sanitizarEstoque() {
+            for (let c in estoqueCloud) {
+                if (estoqueCloud[c] && estoqueCloud[c].nome) {
+                    estoqueCloud[c].nome = limparCaracteresEstragados(estoqueCloud[c].nome);
+                }
+            }
+        }
+
         window.onload = function() {
             const vendasSalvas = localStorage.getItem('vendas') || localStorage.getItem('vendas_realizadas');
             if (vendasSalvas) { try { vendasRealizadas = JSON.parse(vendasSalvas); } catch(e) { vendasRealizadas = []; } }
@@ -309,7 +326,13 @@
             if (clientesSalvos) clientesDB = JSON.parse(clientesSalvos);
             
             const local = localStorage.getItem('estoque_mercado');
-            if (local) { try { estoqueCloud = JSON.parse(local); } catch(e) {} atualizarContadorProdutos(); }
+            if (local) { 
+                try { 
+                    estoqueCloud = JSON.parse(local); 
+                    sanitizarEstoque();
+                } catch(e) {} 
+                atualizarContadorProdutos(); 
+            }
             
             if (localStorage.getItem('git_token')) document.getElementById('git-token').value = localStorage.getItem('git_token');
             if (localStorage.getItem('git_repo')) document.getElementById('git-repo').value = localStorage.getItem('git_repo');
@@ -342,9 +365,11 @@
                 let jsonTexto = b64_to_utf8(data.content.replace(/\s/g, ''));
                 estoqueCloud = JSON.parse(jsonTexto);
                 
+                sanitizarEstoque(); // Corrigir e higienizar textos assim que baixar
+
                 localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
                 atualizarContadorProdutos();
-                alert("Estoque baixado com sucesso da nuvem (Acentuação Corrigida)!");
+                alert("Estoque baixado e corrigido com sucesso!");
             } catch (err) {
                 alert("Erro ao baixar do GitHub: " + err.message);
             }
@@ -360,6 +385,8 @@
                 let log = document.getElementById('log-sistema');
                 if(log) log.innerHTML += `<div>[NUVEM] Enviando estoque para o GitHub... Aguarde.</div>`;
 
+                sanitizarEstoque();
+
                 let sha = '';
                 let getRes = await fetch(`https://api.github.com/repos/${repo}/contents/estoque.json`, {
                     headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
@@ -373,7 +400,7 @@
                 let contentEncoded = utf8_to_b64(jsonTexto);
 
                 let bodyData = {
-                    message: "Atualização de estoque via PDV Luiz",
+                    message: "Atualização de estoque limpo via PDV Luiz",
                     content: contentEncoded,
                     branch: "main"
                 };
@@ -418,15 +445,15 @@
             document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa')); 
             document.getElementById(id).classList.add('ativa');
             if (id === 'tela-pdv') setTimeout(() => document.getElementById('codigo-barras').focus(), 100);
-            if (id === 'tela-adm') atualizarPainelVendasAdm(); 
+            if (id === 'tela-adm') setTimeout(() => atualizarPainelVendasAdm(), 50); // Executa sem travar a navegação
         }
 
+        // CARREGAMENTO OTIMIZADO / RÁPIDO DO PAINEL ADM
         function atualizarPainelVendasAdm() {
             const tbody = document.getElementById('tabela-vendas-adm');
             const spanTotal = document.getElementById('faturamento-diario-valor');
             if (!tbody || !spanTotal) return;
 
-            tbody.innerHTML = '';
             const hojeStr = new Date().toLocaleDateString('pt-BR');
             let totalHoje = 0;
 
@@ -436,19 +463,22 @@
                 return;
             }
 
-            let vendasInvertidas = [...vendasRealizadas].reverse();
+            // Apenas renderiza as últimas 30 vendas para velocidade instantânea
+            let ultimasVendas = vendasRealizadas.slice(-30).reverse();
+            let htmlHTML = '';
 
-            vendasInvertidas.forEach(v => {
+            vendasRealizadas.forEach(v => {
                 let dataVendaApenas = v.data.split(',')[0].trim();
-                let valorVenda = v.total || 0;
-
                 if (dataVendaApenas === hojeStr) {
-                    totalHoje += valorVenda;
+                    totalHoje += (v.total || 0);
                 }
+            });
 
+            ultimasVendas.forEach(v => {
+                let valorVenda = v.total || 0;
                 let valorFormatado = faturamentoOculto ? 'R$ ••••••' : `R$ ${valorVenda.toFixed(2)}`;
 
-                tbody.innerHTML += `
+                htmlHTML += `
                     <tr>
                         <td>${v.data}</td>
                         <td>${v.pagamento}</td>
@@ -458,15 +488,14 @@
                 `;
             });
 
+            tbody.innerHTML = htmlHTML;
             spanTotal.innerText = faturamentoOculto ? 'R$ ••••••' : `R$ ${totalHoje.toFixed(2)}`;
         }
 
         function toggleVisibilidadeFaturamento() {
             faturamentoOculto = !faturamentoOculto;
             const btn = document.getElementById('btn-olho');
-            if (btn) {
-                btn.innerText = faturamentoOculto ? '🙈' : '👁️';
-            }
+            if (btn) btn.innerText = faturamentoOculto ? '🙈' : '👁️';
             atualizarPainelVendasAdm();
         }
 
@@ -518,7 +547,7 @@
 
         function adicionarProdutoManual() {
             let cod = document.getElementById('novo-cod').value.trim();
-            let nome = document.getElementById('novo-nome').value.trim().toUpperCase();
+            let nome = limparCaracteresEstragados(document.getElementById('novo-nome').value.trim().toUpperCase());
             let preco = parseFloat(document.getElementById('novo-preco').value.replace(',', '.'));
             if(!cod || !nome || isNaN(preco)) return alert("Preencha código, nome e preço!");
             estoqueCloud[cod] = { nome: nome, preco: preco };
@@ -544,7 +573,7 @@
                         if (!l || l.length < 2) continue;
 
                         let cod = String(l[0] || '').trim();
-                        let nome = String(l[1] || '').trim().toUpperCase();
+                        let nome = limparCaracteresEstragados(String(l[1] || '').trim().toUpperCase());
                         let precoBruto = String(l[3] !== undefined ? l[3] : (l[2] !== undefined ? l[2] : '0'));
                         let preco = parseFloat(precoBruto.replace(',', '.')) || 0;
 
@@ -617,7 +646,6 @@
         function navegarSugestoes(e) {
             const drop = document.getElementById('dropdown-sugestoes');
 
-            // NAVEGAÇÃO COM AS SETAS PARA BAIXO / PARA CIMA
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 if (listaFiltrada.length > 0) {
@@ -642,7 +670,6 @@
                 let cod = txt;
                 if(txt.includes('*')) { qtd = parseFloat(txt.split('*')[0]); cod = txt.split('*')[1].trim(); }
                 
-                // Se algum item foi selecionado com as setas do teclado
                 if (itemIndexSelecionado >= 0 && itemIndexSelecionado < listaFiltrada.length) {
                     addCupom(listaFiltrada[itemIndexSelecionado], qtd);
                     return;
@@ -752,60 +779,32 @@
                 `</style></head><body>`;
             
             html += `<h3>${titulo}</h3>`;
-            
-            if (isNfce) {
-                html += `<p>CNPJ: 44.133.465/0001-96</p>`;
-            }
-            
+            if (isNfce) html += `<p>CNPJ: 44.133.465/0001-96</p>`;
             html += `<p>Data: ${new Date().toLocaleString('pt-BR')}</p>`;
-            html += `<p>Cliente: ${cliente}</p>`;
-            html += `<hr>`;
-            html += `<table>`;
+            html += `<p>Cliente: ${cliente}</p><hr><table>`;
             html += `<tr><th class="col-item">Item</th><th class="col-qtd">Qtd</th><th class="col-unit">Unit</th><th class="col-total">Total</th></tr>`;
             
             itens.forEach(item => {
                 let un = Number.isInteger(item.qtd) ? 'UN' : 'KG';
                 let qtdFormatada = Number.isInteger(item.qtd) ? item.qtd : item.qtd.toFixed(3);
-                html += `<tr>`;
-                html += `<td class="col-item">${item.nome}</td>`;
-                html += `<td class="col-qtd">${qtdFormatada}${un}</td>`;
-                html += `<td class="col-unit">${item.unit.toFixed(2)}</td>`;
-                html += `<td class="col-total">${item.total.toFixed(2)}</td>`;
-                html += `</tr>`;
+                html += `<tr><td class="col-item">${item.nome}</td><td class="col-qtd">${qtdFormatada}${un}</td><td class="col-unit">${item.unit.toFixed(2)}</td><td class="col-total">${item.total.toFixed(2)}</td></tr>`;
             });
             
-            html += `</table>`;
-            html += `<hr>`;
+            html += `</table><hr>`;
             html += `<p style="text-align: left;">Qtde Total de Itens: ${totalQtdItens % 1 === 0 ? totalQtdItens : totalQtdItens.toFixed(3)}</p>`;
             html += `<p style="text-align: left;">Forma de Pagto: ${pagamento}</p>`;
             html += `<p class="total">TOTAL: R$ ${total.toFixed(2)}</p>`;
             
             if (isNfce) {
-                html += `<hr>`;
-                html += `<div class="qrcode-box" id="qrcode"></div>`;
-                html += `<div style="text-align:center; font-size:8px;">Consulta via Chave de Acesso NFC-e</div>`;
-                html += `<p style="font-size: 9px; text-align: center;">Nota Fiscal de Consumidor Eletrônica</p>`;
+                html += `<hr><div class="qrcode-box" id="qrcode"></div><div style="text-align:center; font-size:8px;">Consulta via Chave de Acesso NFC-e</div><p style="font-size: 9px; text-align: center;">Nota Fiscal de Consumidor Eletrônica</p>`;
             }
             
             html += `<hr><p style="text-align:center;">Obrigado pela preferência!</p>`;
             
             if (isNfce) {
-                html += `<script>` +
-                    `window.onload = function() {` +
-                    `  new QRCode(document.getElementById("qrcode"), {` +
-                    `    text: "${dadosQrCode}",` +
-                    `    width: 95,` +
-                    `    height: 95` +
-                    `  });` +
-                    `  setTimeout(function() { window.print(); window.close(); }, 500);` +
-                    `};` +
-                    `<\/script>`;
+                html += `<script>window.onload = function() { new QRCode(document.getElementById("qrcode"), { text: "${dadosQrCode}", width: 95, height: 95 }); setTimeout(function() { window.print(); window.close(); }, 500); };<\/script>`;
             } else {
-                html += `<script>` +
-                    `window.onload = function() {` +
-                    `  setTimeout(function() { window.print(); window.close(); }, 300);` +
-                    `};` +
-                    `<\/script>`;
+                html += `<script>window.onload = function() { setTimeout(function() { window.print(); window.close(); }, 300); };<\/script>`;
             }
             
             html += `</body></html>`;
@@ -901,7 +900,7 @@
 
         function salvarNovoPrecoCodigo() {
             let codAntigo = document.getElementById('edit-cod-antigo').value.trim();
-            let nomeNovo = document.getElementById('edit-nome-novo').value.trim().toUpperCase();
+            let nomeNovo = limparCaracteresEstragados(document.getElementById('edit-nome-novo').value.trim().toUpperCase());
             let codNovo = document.getElementById('edit-cod-novo').value.trim();
             let preco = parseFloat(document.getElementById('edit-preco').value.replace(',', '.'));
             let senha = document.getElementById('edit-senha').value.trim();
