@@ -1,7 +1,7 @@
 {
   "1": {
     "nome": "ABACATE KG",
-    "preco": 8.99
+    "preco": 6.99
   },
   "2": {
     "nome": "ALFACE",
@@ -45,7 +45,7 @@
   },
   "12": {
     "nome": "CHUCHU KG",
-    "preco": 4.99
+    "preco": 3.99
   },
   "13": {
     "nome": "CEBOLA ROXA",
@@ -73,27 +73,27 @@
   },
   "19": {
     "nome": "LARANJA KG",
-    "preco": 3.99
+    "preco": 2.99
   },
   "20": {
     "nome": "INHAME CARA KG",
     "preco": 5
   },
   "21": {
-    "nome": "MAÇÃ",
+    "nome": "MAÇA",
     "preco": 12.99
   },
   "22": {
     "nome": "MARACUJA KG",
-    "preco": 9
+    "preco": 8.99
   },
   "23": {
     "nome": "PIMENTAO KG",
     "preco": 5.99
   },
   "25": {
-    "nome": "RAÃÃO PARA CAES",
-    "preco": 12.99
+    "nome": "RAÇAO PARA CAES",
+    "preco": 11.99
   },
   "27": {
     "nome": "CARNE MOIDA",
@@ -117,7 +117,7 @@
   },
   "32": {
     "nome": "COSTELA DO PEITO",
-    "preco": 28.49
+    "preco": 28.5
   },
   "33": {
     "nome": "COSTELA CERRADA KG",
@@ -164,11 +164,11 @@
     "preco": 27.99
   },
   "44": {
-    "nome": "LINGUIÃA TOSCANA AURORA KG",
+    "nome": "LINGUIÇA TOSCANA AURORA KG",
     "preco": 21.99
   },
   "45": {
-    "nome": "LINGUIÃA DE FRANGO AURORA KG",
+    "nome": "LINGUIÇA DE FRANGO AURORA KG",
     "preco": 19.99
   },
   "46": {
@@ -209,7 +209,7 @@
   },
   "55": {
     "nome": "QUEIJO MUSSARELA KG",
-    "preco": 48.99
+    "preco": 51.99
   },
   "56": {
     "nome": "QUEIJO COALHO KG",
@@ -220,7 +220,7 @@
     "preco": 44.99
   },
   "58": {
-    "nome": "PRESUNTO SADIA/PERDIGAO KG",
+    "nome": "PRESUNTO SADIA/PERDIGAO/SEARA KG",
     "preco": 35.99
   },
   "59": {
@@ -285,7 +285,7 @@
   },
   "75": {
     "nome": "SABAO YPE BARRA UN",
-    "preco": 3.25
+    "preco": 3
   },
   "76": {
     "nome": "CARNE CHACHADO FEIJOADA 200G",
@@ -356,7 +356,7 @@
     "preco": 6.99
   },
   "199": {
-    "nome": "PEIXE SARDINHA SEM CABEÇÃ KG",
+    "nome": "PEIXE SARDINHA SEM CABEÇA KG",
     "preco": 11.99
   },
   "200": {
@@ -507,6 +507,10 @@
     "nome": "ABRIDOR DE LATAS ISQ",
     "preco": 6.9
   },
+  "7500435127226": {
+    "nome": "ABS ALWAYS COM ABAS",
+    "preco": 4.99
+  },
   "7500435127264": {
     "nome": "ABS ALWAYS SUPER PROTECAO",
     "preco": 4.99
@@ -527,12 +531,12 @@
     "nome": "ABSORVENE  SYM C/ ABAS SUAVE",
     "preco": 4.9
   },
-  "7891010503024": {
+  "7891010973483": {
     "nome": "ABSORVENT SEMPRE LIVRE ESP ADAPT COM ABAS =",
-    "preco": 4.99
+    "preco": 4.75
   },
   "7898907499262": {
-    "nome": "AÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃAFRAO 8G",
+    "nome": "AÇAFRAO 8G",
     "preco": 0.8
   },
   "7895099184570": {
@@ -549,7 +553,7 @@
   },
   "7896417700632": {
     "nome": "ACETONA 90ML",
-    "preco": 3.79
+    "preco": 4.75
   },
   "7896902209114": {
     "nome": "ACETONA FARMAX 100ML",
@@ -584,11 +588,11 @@
     "preco": 1.5
   },
   "7896224803106": {
-    "nome": "ACHOCOLATADO CHOCOLATTO 3 CORAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃ- 200G",
-    "preco": 5.25
+    "nome": "ACHOCOLATADO CHOCOLATTO 3 CORAÇ- 200G",
+    "preco": 5.5
   },
   "7896045104147": {
-    "nome": "ACHOCOLATADO CHOCOLATTO 3 CORAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃ-560G",
+    "nome": "ACHOCOLATADO CHOCOLATTO 3 CORAÇ-560G",
     "preco": 15.99
   },
   "7898286200787": {
@@ -636,7 +640,7 @@
     "preco": 5.75
   },
   "7898185050049": {
-    "nome": "ACUCAR REFINADO ECOÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃUCAR 1KG",
+    "nome": "ACUCAR REFINADO ECOÇUCAR 1KG",
     "preco": 3.49
   },
   "7896106900053": {
@@ -644,7 +648,7 @@
     "preco": 3.75
   },
   "7891910030101": {
-    "nome": "AÃUCAR UNIAO DEMERARA 1KG",
+    "nome": "AÇUCAR UNIAO DEMERARA 1KG",
     "preco": 6.75
   },
   "7898663741377": {
@@ -919,6 +923,10 @@
     "nome": "AMACIANTE SONHO LAVANDA 2L",
     "preco": 12.99
   },
+  "7896013106319": {
+    "nome": "AMACIANTE SONHO LAVANDA 500ML",
+    "preco": 4.49
+  },
   "7896013105435": {
     "nome": "AMACIANTE SONHO MAGIA 500ML",
     "preco": 4.49
@@ -1025,7 +1033,7 @@
   },
   "7898948451090": {
     "nome": "ARROZ BLUE VALE PARBOILIZADO 1KG",
-    "preco": 3.99
+    "preco": 4.99
   },
   "7898902428410": {
     "nome": "ARROZ BOM PRATO BRANCO 1KG",
@@ -1069,7 +1077,7 @@
   },
   "7896389600107": {
     "nome": "ARROZ PARBO FAZENDA DE 1 KG",
-    "preco": 4.39
+    "preco": 4.75
   },
   "7896012300213": {
     "nome": "ARROZ PARBOILIZADO EMOCOES 1KG",
@@ -1207,6 +1215,14 @@
     "nome": "BANDEJA MULTIUSO - ICASA",
     "preco": 9.9
   },
+  "70330703629": {
+    "nome": "BARBEADOR AMARELO BIC",
+    "preco": 1.75
+  },
+  "70330729858": {
+    "nome": "BARBEADOR BIC INTENSITY 3 LAMINAS",
+    "preco": 3.5
+  },
   "70330713406": {
     "nome": "BARBEADOR BIC SUAVE UN",
     "preco": 2.5
@@ -1216,7 +1232,7 @@
     "preco": 8.99
   },
   "7898034920486": {
-    "nome": "BAT GUT ISIS BANANA E MAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃA 900G",
+    "nome": "BAT GUT ISIS BANANA E MAÇA 900G",
     "preco": 6.5
   },
   "7898034920103": {
@@ -1409,7 +1425,7 @@
   },
   "7897934602331": {
     "nome": "BISC VITAFLOR COCO",
-    "preco": 2.9
+    "preco": 2.99
   },
   "7896264670577": {
     "nome": "BISC. CREAM CRACKER ESTRELA 350G",
@@ -1421,7 +1437,7 @@
   },
   "7898376590286": {
     "nome": "BISC. REAL SABOR SOBERANO DOCE 200G",
-    "preco": 2.49
+    "preco": 2.5
   },
   "7898941474034": {
     "nome": "BISC.BOM JESUS SUICA 300G",
@@ -1446,6 +1462,10 @@
   "618231390199": {
     "nome": "BISCOITO COQUINHO 200G",
     "preco": 2.5
+  },
+  "70341969878": {
+    "nome": "BISCOITO DE ANJO 190G",
+    "preco": 5.75
   },
   "7897934600061": {
     "nome": "BISCOITO DOCE BEIJA FLOR 400G",
@@ -1521,7 +1541,7 @@
   },
   "7891152801781": {
     "nome": "BISCOITO RICHERTER AMORI CHOCOLATE 125G",
-    "preco": 2.25
+    "preco": 2.75
   },
   "7896213005818": {
     "nome": "BISCOITO TRELOSO BEM-CASADO 37G",
@@ -1587,9 +1607,17 @@
     "nome": "BISNAGUINHA  INTEGRAL 350G",
     "preco": 6
   },
+  "7898972821081": {
+    "nome": "BODY SPLASH EKOPURE AMOREH 200ML",
+    "preco": 22.99
+  },
   "7898929348012": {
     "nome": "BOLACH. DENTE DE LEITE 250G",
     "preco": 4.99
+  },
+  "7898948243022": {
+    "nome": "BOLACHA 7 CAPAS SAO FRANCISCO 300G",
+    "preco": 6.75
   },
   "7898008913209": {
     "nome": "BOLACHA AGUA E SAL 3 DE MAIO 350G",
@@ -1683,6 +1711,10 @@
     "nome": "BOLACHA MANTEIGA/SERTAO S/F 200G",
     "preco": 6.25
   },
+  "7898948243152": {
+    "nome": "BOLACHA MARAVILHA DOCE SAO FRANCISCO 250G",
+    "preco": 6.9
+  },
   "7898908222333": {
     "nome": "BOLACHA MASSAS JUCURUTU-200G",
     "preco": 4.99
@@ -1702,6 +1734,10 @@
   "7892933445514": {
     "nome": "BOLACHA PINGO DE MEL DOIS IRMAOS 300G",
     "preco": 5.75
+  },
+  "7898948243114": {
+    "nome": "BOLACHA PINGO SAO FRANCISCO 250 G",
+    "preco": 5.9
   },
   "7891286932627": {
     "nome": "BOLACHA POTIGUARES 210G",
@@ -1747,6 +1783,10 @@
     "nome": "BOLACHA SALGADA PRINCESA 200G",
     "preco": 2.5
   },
+  "7898948243121": {
+    "nome": "BOLACHA SAO FRANCISCO SABOR QUEIJO 200G",
+    "preco": 6.25
+  },
   "7898948243145": {
     "nome": "BOLACHA SERTANEJA 200G",
     "preco": 4.99
@@ -1760,7 +1800,7 @@
     "preco": 5.5
   },
   "7896566677007": {
-    "nome": "BOLACHA SUIÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃA MANA DO CEU 250G",
+    "nome": "BOLACHA SUIÇA MANA DO CEU 250G",
     "preco": 5.75
   },
   "7898939941142": {
@@ -1799,6 +1839,10 @@
     "nome": "BOLDO DO CHILE LESN 10G",
     "preco": 1.75
   },
+  "74468769830": {
+    "nome": "BOLINHO 140G",
+    "preco": 3.5
+  },
   "7890055600026": {
     "nome": "BOLINHO BANDEJA C/ 10",
     "preco": 6.5
@@ -1835,6 +1879,18 @@
     "nome": "BOLO CASEIRO LO 300G",
     "preco": 6
   },
+  "2135900012995": {
+    "nome": "BOLO CHOCOLATE 540",
+    "preco": 11
+  },
+  "2135700012997": {
+    "nome": "BOLO DE LARANJA 540G",
+    "preco": 11
+  },
+  "2135500012999": {
+    "nome": "BOLO DE QUEIJO 540G",
+    "preco": 11
+  },
   "7897787870000": {
     "nome": "BOLO DELICIA GOIABA 600G",
     "preco": 11.99
@@ -1854,6 +1910,18 @@
   "7897787870031": {
     "nome": "BOLO DELICIA QUEIJO 600G",
     "preco": 11.99
+  },
+  "2135800012996": {
+    "nome": "BOLO FORMIGUEIRO 540G",
+    "preco": 11
+  },
+  "2135600012998": {
+    "nome": "BOLO LARANJA 540G",
+    "preco": 11
+  },
+  "619205104941": {
+    "nome": "BOLO SARDINHA 300G",
+    "preco": 5.5
   },
   "7825485452259": {
     "nome": "BOLOS SABORES DIVERSOS 300G",
@@ -1919,6 +1987,14 @@
     "nome": "BORRIFADOR SPRAY PLAST 350ML",
     "preco": 8.99
   },
+  "7600000364473": {
+    "nome": "BROWNIE CACAU E AVELA 80G",
+    "preco": 5.49
+  },
+  "7600000364480": {
+    "nome": "BROWNIE SABOR LEITE EM PO 80G",
+    "preco": 5.49
+  },
   "7891150058446": {
     "nome": "C/DENTAL CLOSEU PPROTECAO ANTI ACUCAR 70G",
     "preco": 3.49
@@ -1931,7 +2007,7 @@
     "nome": "CACHACA GOSTOSA 480 ML",
     "preco": 3.5
   },
-  "7896087200593": {
+  "7896087201477": {
     "nome": "CACHACA GOSTOSA LIMAO 480ML",
     "preco": 3.75
   },
@@ -1957,7 +2033,7 @@
   },
   "7896224807098": {
     "nome": "CAFE KIMIMO FORTE E ENCORPADO 250G",
-    "preco": 14.99
+    "preco": 15.5
   },
   "7898286200060": {
     "nome": "CAFE MARATA 250 G",
@@ -1989,7 +2065,7 @@
   },
   "7891091011913": {
     "nome": "CAFE SAO BRAZ ALMOFADA 250G",
-    "preco": 14.99
+    "preco": 15.75
   },
   "7891000307120": {
     "nome": "CAFE SOLUVEL NESCAFE ORIGINAL 40G SACHE",
@@ -2331,6 +2407,10 @@
     "nome": "CHAMP ADULTO FRANGO 85G",
     "preco": 3
   },
+  "7896029056387": {
+    "nome": "CHAMP FILHOTE FRANGO 85G",
+    "preco": 3
+  },
   "7898280620215": {
     "nome": "CHAMPANHE LIDER MACA  660 ML",
     "preco": 14.99
@@ -2416,7 +2496,7 @@
     "preco": 5.25
   },
   "7896005804391": {
-    "nome": "CHOCOLATTO 3 CORAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃOES 300G",
+    "nome": "CHOCOLATTO 3 CORAÇOES 300G",
     "preco": 6.5
   },
   "7891000462300": {
@@ -2493,11 +2573,11 @@
   },
   "7898005514720": {
     "nome": "COBERTURA SORVETE CHOCOLATE STER BOM 300 G",
-    "preco": 7.99
+    "preco": 8.99
   },
   "7898005514713": {
     "nome": "COBERTURA SORVETE STER BOM MORANGO 300 G",
-    "preco": 7.99
+    "preco": 8.99
   },
   "7908411900908": {
     "nome": "COBRE TUDO SORTIDO",
@@ -2659,6 +2739,10 @@
     "nome": "COLHER MESA MILLENIUM  PRETO",
     "preco": 4.99
   },
+  "7895226150027": {
+    "nome": "COLHER PLAZAPEL REFEICAO 50UN",
+    "preco": 4.99
+  },
   "7896343070243": {
     "nome": "COLHER REF.PREMIUM BRANCA 50UN",
     "preco": 3.99
@@ -2736,7 +2820,7 @@
     "preco": 4.75
   },
   "7891150037366": {
-    "nome": "COND-SEDA OLEO HIDRATAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃAO 325ML",
+    "nome": "COND-SEDA OLEO HIDRATAÇAO 325ML",
     "preco": 10.99
   },
   "7898961932484": {
@@ -2752,7 +2836,7 @@
     "preco": 12.99
   },
   "7898961932477": {
-    "nome": "CONJUNTO TAPI. 3 PEÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃAS",
+    "nome": "CONJUNTO TAPI. 3 PEÇAS",
     "preco": 16.99
   },
   "7896031253347": {
@@ -2792,7 +2876,7 @@
     "preco": 3.99
   },
   "7893000437029": {
-    "nome": "CORAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃAO DE FRANGO 1KG",
+    "nome": "CORAÇAO DE FRANGO 1KG",
     "preco": 34.99
   },
   "7891812773106": {
@@ -3016,12 +3100,16 @@
     "preco": 6.49
   },
   "7891024132005": {
-    "nome": "CREME DENTAL COLGATE TRIPLA AÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃAO 90G",
+    "nome": "CREME DENTAL COLGATE TRIPLA AÇAO 90G",
     "preco": 6.5
   },
   "7500435150279": {
     "nome": "CREME DENTAL ORAL-B ANTIACUCAR 70G",
     "preco": 3.25
+  },
+  "7500435122764": {
+    "nome": "CREME DENTAL ORAL-B MENTA FRESCA 70G",
+    "preco": 4.5
   },
   "7891528029498": {
     "nome": "CREME DENTAL SORRISO TRIPLA LIMPEZA COMPLETA",
@@ -3052,7 +3140,7 @@
     "preco": 9.99
   },
   "7897042020690": {
-    "nome": "CREME PENTEAR SKALA AÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃAI 1K",
+    "nome": "CREME PENTEAR SKALA AÇAI 1K",
     "preco": 13.99
   },
   "7897042020683": {
@@ -3155,6 +3243,10 @@
     "nome": "CREMOGEMA MORANGO 180G",
     "preco": 5.99
   },
+  "7891150071780": {
+    "nome": "CREMOGEMA TRADICIONAL 180G",
+    "preco": 4.99
+  },
   "7891150085879": {
     "nome": "CREMOGEMA TRADICIONAL 380G",
     "preco": 9.75
@@ -3204,7 +3296,7 @@
     "preco": 22.99
   },
   "7898952198622": {
-    "nome": "CUSCUZEIRO POLIDO NÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃº18",
+    "nome": "CUSCUZEIRO POLIDO Nº18",
     "preco": 31.99
   },
   "7898952198615": {
@@ -3326,6 +3418,10 @@
   "7896806790626": {
     "nome": "DESD- ANTIT- LEITE DE ROSAS TRAD 50ML",
     "preco": 8.5
+  },
+  "7891024194249": {
+    "nome": "DESENFETANTE PINHO SOL 500ML",
+    "preco": 9.75
   },
   "7896060400255": {
     "nome": "DESENFETANTE UFE 750ML",
@@ -3483,6 +3579,10 @@
     "nome": "DESODORANTE REXONA MEN AEROSOL 90G",
     "preco": 15.99
   },
+  "7791293025537": {
+    "nome": "DESODORANTE REXONA MEN ANTIBACTERIAL 150ML",
+    "preco": 15.99
+  },
   "7896281054008": {
     "nome": "DESODORANTTE SANITATRIO PIHO",
     "preco": 2.5
@@ -3512,7 +3612,7 @@
     "preco": 1.5
   },
   "7898924826058": {
-    "nome": "DETERG TOP CLEAR MAÃÃ 500ML",
+    "nome": "DETERG TOP CLEAR MAÇA 500ML",
     "preco": 1.5
   },
   "7898924825136": {
@@ -3529,7 +3629,7 @@
   },
   "7891022860955": {
     "nome": "DETERGENTE LIMPOL LAVANADA 500ML",
-    "preco": 2.49
+    "preco": 2.75
   },
   "7891022637007": {
     "nome": "DETERGENTE LIMPOL LIMAO 500ML",
@@ -3548,7 +3648,7 @@
     "preco": 2.49
   },
   "7897664130012": {
-    "nome": "DETERGENTE MINUANO MAÃÃ 500ML",
+    "nome": "DETERGENTE MINUANO MAÇA 500ML",
     "preco": 2.49
   },
   "7897664130036": {
@@ -3578,6 +3678,10 @@
   "7897047003919": {
     "nome": "DOCE DE AMENDOIM CASEIRO 50G",
     "preco": 1.5
+  },
+  "7897047004091": {
+    "nome": "DOCE DE AMENDOIM CHOKREM 30G",
+    "preco": 1
   },
   "7891012200020": {
     "nome": "DOCE DE CAJU LECY 250G",
@@ -3755,9 +3859,17 @@
     "nome": "ENERGETICO RED BULL 250 ML",
     "preco": 10
   },
+  "7897517917555": {
+    "nome": "ENOX DESCARTAVEL PACK 5UND",
+    "preco": 6.99
+  },
   "7898907499071": {
     "nome": "ERVA DOCE 9G",
     "preco": 0.8
+  },
+  "7893595108113": {
+    "nome": "ERVA DOCE EM GRAO 7G",
+    "preco": 1
   },
   "7895099184686": {
     "nome": "ERVA DOCE LESN 10G",
@@ -3802,6 +3914,10 @@
   "7898920552203": {
     "nome": "ESCOVA CLIP UNHA LIMPAMANIA",
     "preco": 3.99
+  },
+  "7891024024386": {
+    "nome": "ESCOVA COLGATE ESSENCIAL CLEAN",
+    "preco": 6.5
   },
   "7891055337318": {
     "nome": "ESCOVA CONDOR PLUS MEDIA",
@@ -3861,7 +3977,7 @@
   },
   "7897517925512": {
     "nome": "ESCOVA DENTAL KESS MEDIA  ACTION",
-    "preco": 3.5
+    "preco": 3.99
   },
   "7899454445610": {
     "nome": "ESCOVA DENTAL MEDIA MAXPRO",
@@ -3878,6 +3994,10 @@
   "7891528016504": {
     "nome": "ESCOVA DENTAL SORRISO",
     "preco": 5.5
+  },
+  "7899561901573": {
+    "nome": "ESCOVA DENTAL STRIKE MEDIA",
+    "preco": 2.5
   },
   "7899561901580": {
     "nome": "ESCOVA DENTAL STRIKE ORANGE",
@@ -3902,6 +4022,10 @@
   "7898965061029": {
     "nome": "ESCOVA DENTE UNOCO MEDIA",
     "preco": 2.99
+  },
+  "7899561901610": {
+    "nome": "ESCOVA INFANTIL STRIKE",
+    "preco": 2.75
   },
   "7897517925314": {
     "nome": "ESCOVA KESS MEDIAS UN",
@@ -4001,7 +4125,7 @@
   },
   "7896001004511": {
     "nome": "ESPONJA DE LIMPEZA BRILHUS",
-    "preco": 1
+    "preco": 0.9
   },
   "7896001045231": {
     "nome": "ESPONJA ESFREBOM COM 3 UN",
@@ -4056,7 +4180,7 @@
     "preco": 4.99
   },
   "7899441501534": {
-    "nome": "FACA WOOD 8\" SQ AÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃO",
+    "nome": "FACA WOOD 8\" SQ AÇO",
     "preco": 18.99
   },
   "7894900031713": {
@@ -4136,11 +4260,11 @@
     "preco": 6.25
   },
   "7896807012222": {
-    "nome": "FARINHA LINHAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃA DOURADA 200G",
+    "nome": "FARINHA LINHAÇA DOURADA 200G",
     "preco": 8.5
   },
   "7896807013335": {
-    "nome": "FARINHA LINHAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃA MARRON 200G",
+    "nome": "FARINHA LINHAÇA MARRON 200G",
     "preco": 8.5
   },
   "7898916695013": {
@@ -4150,6 +4274,10 @@
   "7892718570943": {
     "nome": "FAROFA CROCANTE KI-PUREZA 300G",
     "preco": 11.5
+  },
+  "630941579305": {
+    "nome": "FAROFA OURO DO LEAO 400G",
+    "preco": 11
   },
   "7891095911486": {
     "nome": "FAROFA PRONTA YOKI 400G",
@@ -4295,21 +4423,29 @@
     "nome": "FIGADO DE GALINHA PERDIGAO 1KG",
     "preco": 6.5
   },
+  "7898668210496": {
+    "nome": "FIGADO DE GALINHA SOMAVE 1KG",
+    "preco": 6.99
+  },
   "7896419729211": {
     "nome": "FIGADO GALINHA LAR  700G",
     "preco": 4.25
-  },
-  "7891515503659": {
-    "nome": "FILE DE PEITO CONGELADO 1KG",
-    "preco": 18.99
   },
   "7898312041278": {
     "nome": "FILE DE PEITO CONG-AVIVAR BJ 1KG",
     "preco": 21
   },
+  "7891515503659": {
+    "nome": "FILE DE PEITO CONGELADO 1KG",
+    "preco": 18.99
+  },
   "7891515614072": {
     "nome": "FILE DE PEITO FRANGO PERDIGAO 1KG",
     "preco": 24.99
+  },
+  "7891515563516": {
+    "nome": "FILE DE PEITO SADIA1K",
+    "preco": 21.99
   },
   "7896419728870": {
     "nome": "FILE PEITO FRANGO LAR 1KG",
@@ -4394,6 +4530,10 @@
   "7896444211118": {
     "nome": "FIO DENTAL HILLO 100M",
     "preco": 6.5
+  },
+  "7896444210623": {
+    "nome": "FIO DENTAL HILLO 125M",
+    "preco": 7.75
   },
   "7898909332253": {
     "nome": "FIO DENTAL USE MENTA 100MTS",
@@ -4537,27 +4677,27 @@
   },
   "7896061995910": {
     "nome": "FRALDA BABYSEC MEGA TAMANHO G 40UN",
-    "preco": 46.99
+    "preco": 49.99
+  },
+  "7896061995903": {
+    "nome": "FRALDA BABYSEC MEGA TAMANHO M 44UN",
+    "preco": 49.99
   },
   "7896061995927": {
     "nome": "FRALDA BABYSEC MEGA TAMANHO XG 38UN",
-    "preco": 46.99
+    "preco": 49.99
+  },
+  "7896061995477": {
+    "nome": "FRALDA BABYSEC MEGA TAMANHO XXG 30",
+    "preco": 49.99
   },
   "7896061990069": {
     "nome": "FRALDA BABYSEC TAM P",
     "preco": 24.99
   },
-  "7896061995903": {
-    "nome": "FRALDA BABYSEC TAMANHO M 44UN",
-    "preco": 46.99
-  },
   "7898064036393": {
     "nome": "FRALDA CREMER BABY DISNEY PRATICA XXG",
     "preco": 24.99
-  },
-  "7896061995477": {
-    "nome": "FRALDA DESC BABYSEC XXG 30",
-    "preco": 46.99
   },
   "7899700800927": {
     "nome": "FRALDA ESTRELINHA BABY TAM XXG 12 UND",
@@ -4639,8 +4779,12 @@
     "nome": "FRALDAS CREMER JUMBINHO XG",
     "preco": 23.99
   },
+  "7896012881804": {
+    "nome": "FRALDAS CREMER JUMBO M",
+    "preco": 24.99
+  },
   "7896012881811": {
-    "nome": "FRALDAS CREMER MAGIC CARE JUMBO G C/20UN",
+    "nome": "FRALDAS CREMER MAGIC CARE JUMBO G",
     "preco": 24.99
   },
   "7898133019241": {
@@ -4799,13 +4943,17 @@
     "nome": "GARFO REFEICAO BRANCA 50 UN",
     "preco": 3.99
   },
+  "7895226180024": {
+    "nome": "GARFO REFEIÇAO PLAZAPEL 50UN",
+    "preco": 4.99
+  },
   "7891008124071": {
     "nome": "GAROTO CROCANTE BARRA 80GR",
     "preco": 8.99
   },
   "7891008124026": {
     "nome": "GAROTO MEIO AMARGO 80G",
-    "preco": 8.75
+    "preco": 8.99
   },
   "7898590170639": {
     "nome": "GARRAFA PARA AGUA QUALITY",
@@ -4961,7 +5109,7 @@
   },
   "7898029656833": {
     "nome": "GOIABADA LARA 500G",
-    "preco": 5.75
+    "preco": 5.99
   },
   "7898186841516": {
     "nome": "GOIABADA POTENGI 250G",
@@ -5043,6 +5191,10 @@
     "nome": "GUARANA ANTARCTICA 2L",
     "preco": 9.99
   },
+  "7891991000826": {
+    "nome": "GUARANA ANTARCTICA LATA 350 ML",
+    "preco": 3.5
+  },
   "7894900920017": {
     "nome": "GUARANA KUAT ZERO LATA 350ML",
     "preco": 3.99
@@ -5076,7 +5228,7 @@
     "preco": 1.25
   },
   "7894904500383": {
-    "nome": "HAMBURGER TEXAS TRADICIONAL 56G",
+    "nome": "HAMBURGUER TEXAS TRADICIONAL 56G",
     "preco": 1.35
   },
   "7891035524189": {
@@ -5232,7 +5384,7 @@
     "preco": 4.25
   },
   "7898034920905": {
-    "nome": "ISINHO BANANA/MAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃA 70G",
+    "nome": "ISINHO BANANA/MAÇA 70G",
     "preco": 1.25
   },
   "7898034920899": {
@@ -5264,23 +5416,23 @@
     "preco": 22.99
   },
   "602883582781": {
-    "nome": "JG DE ASSADEIRA C/TAMPA 3PÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃ",
+    "nome": "JG DE ASSADEIRA C/TAMPA 3PÇ",
     "preco": 149
   },
   "602883582712": {
-    "nome": "JG DE FRIGIDEIRA POLIDA C/3PÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃ",
+    "nome": "JG DE FRIGIDEIRA POLIDA C/3PÇ",
     "preco": 58.99
   },
   "609963566945": {
-    "nome": "JG DE PANELA 05 PÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃS A/A CRAQ COD 403",
+    "nome": "JG DE PANELA 05 PÇS A/A CRAQ COD 403",
     "preco": 139.9
   },
   "609963566785": {
-    "nome": "JG DE PANELA 05 PÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃS ALÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃA ALUMINIO COD 221",
+    "nome": "JG DE PANELA 05 PÇS ALÇA ALUMINIO COD 221",
     "preco": 119.9
   },
   "602883582675": {
-    "nome": "JG LEITEIRA CRAQ S/TAMPA 3 PÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃ",
+    "nome": "JG LEITEIRA CRAQ S/TAMPA 3 PÇ",
     "preco": 61.99
   },
   "7898096080937": {
@@ -5344,7 +5496,7 @@
     "preco": 13.99
   },
   "7898996419103": {
-    "nome": "KIT BACIAS 3 PÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃ",
+    "nome": "KIT BACIAS 3 PÇ",
     "preco": 13.99
   },
   "7898996419318": {
@@ -5368,7 +5520,7 @@
     "preco": 4.99
   },
   "7898965248550": {
-    "nome": "KIT INFANTIL 5 PÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃ",
+    "nome": "KIT INFANTIL 5 PÇ",
     "preco": 13.99
   },
   "7891000248768": {
@@ -5439,6 +5591,14 @@
     "nome": "KIT TESOURA 3 UNIDADES",
     "preco": 16.99
   },
+  "7896029018064": {
+    "nome": "KITE KAT FRANGO 70G",
+    "preco": 3
+  },
+  "7896029046494": {
+    "nome": "KITEKAT CORDEIRO 70G",
+    "preco": 3
+  },
   "7896029018101": {
     "nome": "KITEKAT PEIXE 70G.",
     "preco": 3
@@ -5453,31 +5613,31 @@
   },
   "7898940958108": {
     "nome": "KRO CEBOLA 70G",
-    "preco": 2.5
+    "preco": 2.75
   },
   "7898940959068": {
     "nome": "KRO CHURRASCO 70G",
-    "preco": 2.5
+    "preco": 2.75
   },
   "7898940959075": {
     "nome": "KRO COSTELA NA BRASA 70G",
-    "preco": 2.5
+    "preco": 2.75
   },
   "7898940958092": {
     "nome": "KRO GALINHA 70G",
-    "preco": 2.5
+    "preco": 2.75
   },
   "7898940958085": {
     "nome": "KRO PRESUNTO",
-    "preco": 2.5
+    "preco": 2.75
   },
   "7898940958078": {
     "nome": "KRO QUEIJO 80G",
-    "preco": 2.5
+    "preco": 2.75
   },
   "7898940958122": {
     "nome": "KRO REQUEIJAO 70G",
-    "preco": 2.5
+    "preco": 2.75
   },
   "7894900910391": {
     "nome": "KUAT 220ML",
@@ -5535,8 +5695,16 @@
     "nome": "LAMPADA LED 9W TRAMONTINA",
     "preco": 7.99
   },
+  "7899452032133": {
+    "nome": "LAMPADA LED AVANT 15W",
+    "preco": 6.99
+  },
   "7899452018625": {
     "nome": "LAMPADA LED AVANT 9W",
+    "preco": 4.99
+  },
+  "4058075783904": {
+    "nome": "LAMPADA LED LEDVANCE 9W",
     "preco": 4.99
   },
   "7898200180010": {
@@ -5554,6 +5722,10 @@
   "7893595177911": {
     "nome": "LANCHE SAN VALLE 160G",
     "preco": 4.99
+  },
+  "7894904577774": {
+    "nome": "LANCHE SUINO WILSON KG",
+    "preco": 18.99
   },
   "7897976514029": {
     "nome": "LANCHINHO LECY 180 G",
@@ -5574,6 +5746,10 @@
   "7898119105326": {
     "nome": "LAPIS ESCREVER GRAFITTE",
     "preco": 1
+  },
+  "7894904605002": {
+    "nome": "LASANHA BOLONHESA 300G",
+    "preco": 9.5
   },
   "7896264601410": {
     "nome": "LASANHA ESTRELA 500G",
@@ -5763,6 +5939,10 @@
     "nome": "LEITE INTEGRAL BETANIA 1LT",
     "preco": 5.99
   },
+  "7898215151708": {
+    "nome": "LEITE INTEGRAL PIRACANJUBA 1L",
+    "preco": 6.99
+  },
   "7898080643094": {
     "nome": "LEITE ITALAC EM PO INTEGRAL 750G",
     "preco": 31.99
@@ -5879,8 +6059,16 @@
     "nome": "LINGUICA CALAB DEF 500G",
     "preco": 16.5
   },
+  "7894904009749": {
+    "nome": "LINGUICA CALABRESA SEARA KG",
+    "preco": 26.99
+  },
+  "7894904578252": {
+    "nome": "LINGUIÇA CHURRASCO REZENDE KG",
+    "preco": 16.99
+  },
   "7891164135492": {
-    "nome": "LINGUIÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃA DE FRANGO NOBRE KG",
+    "nome": "LINGUIÇA DE FRANGO NOBRE KG",
     "preco": 16.9
   },
   "7891020957497": {
@@ -5977,7 +6165,7 @@
   },
   "7896213006709": {
     "nome": "MACARRAO VITARELA FURADINHO MEDIO 400G",
-    "preco": 3.75
+    "preco": 3.5
   },
   "7896213006686": {
     "nome": "MACARRAO VITARELLA FINO 400G",
@@ -6115,6 +6303,10 @@
     "nome": "MARGARINA PRIMOR 500G.",
     "preco": 6.75
   },
+  "7891152501551": {
+    "nome": "MARGARINA PURO SABOR 1KG",
+    "preco": 10.5
+  },
   "7896213000059": {
     "nome": "MASSA DE SEMOLA LASANHA VITARELA 500G",
     "preco": 8.99
@@ -6173,6 +6365,10 @@
   },
   "7895144208442": {
     "nome": "MENTOS STICK FANTA",
+    "preco": 2.5
+  },
+  "7898920241077": {
+    "nome": "MILHO EM GRAOS QUERO MAIS KG",
     "preco": 2.5
   },
   "7896292340503": {
@@ -6295,6 +6491,10 @@
     "nome": "MOLHO DE PIZZA MARATA 300G",
     "preco": 2.99
   },
+  "7896102503692": {
+    "nome": "MOLHO DE TOMATE PIZZA 240",
+    "preco": 3.25
+  },
   "7896102503661": {
     "nome": "MOLHO DE TOMATE QUERO SACHE 300G",
     "preco": 2.49
@@ -6338,6 +6538,10 @@
   "7893000017832": {
     "nome": "MORTADELA SADIA KG",
     "preco": 12.99
+  },
+  "7894904268573": {
+    "nome": "MORTANDELA DEFUMADA SEARA 180G",
+    "preco": 7.99
   },
   "7891164006846": {
     "nome": "MORTANDELA MISTA AURORA 400GR",
@@ -6387,7 +6591,11 @@
     "nome": "MUCILON DE ARROZ 180G",
     "preco": 6.99
   },
-  "7891000438466": {
+  "7891000319505": {
+    "nome": "MUCILON MULTICEREAIS 180G",
+    "preco": 6.99
+  },
+  "7891000086131": {
     "nome": "MUCILON MULTICEREAIS 600G",
     "preco": 21.99
   },
@@ -6475,9 +6683,9 @@
     "nome": "OLEO DE PEROBA 100ML",
     "preco": 10.5
   },
-  "7896279600538": {
-    "nome": "OLEO DE SOJA COAMO 900ML",
-    "preco": 6.75
+  "7898247780006": {
+    "nome": "OLEO DE SOJA ABC 900ML",
+    "preco": 8.75
   },
   "7896036090244": {
     "nome": "OLEO DE SOJA LIZA 900ML",
@@ -6489,7 +6697,7 @@
   },
   "7896248100816": {
     "nome": "OLEO DE SOJA SIOL 500ML",
-    "preco": 5.75
+    "preco": 6.25
   },
   "7891107101621": {
     "nome": "OLEO DE SOJA SOYA 900ML",
@@ -6577,7 +6785,7 @@
   },
   "7897489800015": {
     "nome": "OVOS CODORNA LIRIO DO MATO",
-    "preco": 5.99
+    "preco": 4.99
   },
   "7896417701189": {
     "nome": "OXIGENADA INFA 40",
@@ -6604,19 +6812,19 @@
     "preco": 8.9
   },
   "7898994895954": {
-    "nome": "PAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃOQUINHA DAS MARIAS",
+    "nome": "PAÇOQUINHA DAS MARIAS",
     "preco": 0.4
   },
   "40141727589": {
-    "nome": "PAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃOQUINHA DENNYS 15G",
+    "nome": "PAÇOQUINHA DENNYS 15G",
     "preco": 0.5
   },
   "7898026000257": {
-    "nome": "PAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃOQUINHA KIGAROT 15G",
+    "nome": "PAÇOQUINHA KIGAROT 15G",
     "preco": 0.5
   },
   "7898956846154": {
-    "nome": "PAÃÃÃÃÃÃÃÃOQUINHA MENDOQUITA UN",
+    "nome": "PAÇOQUINHA MENDOQUITA UN",
     "preco": 0.5
   },
   "7896384518254": {
@@ -6692,8 +6900,12 @@
     "preco": 7.5
   },
   "7898975304024": {
-    "nome": "PAO DE FORMA LEITE MASSAS NORDESTINA",
-    "preco": 7.25
+    "nome": "PAO DE FORMA LEITE MASSAS NORDESTINA 400G",
+    "preco": 7.5
+  },
+  "7898975304000": {
+    "nome": "PAO DE FORMA TRADICIONAL NORDESTINA 400G",
+    "preco": 7.5
   },
   "7899011132250": {
     "nome": "PAO DE LEITE 250G",
@@ -7116,7 +7328,7 @@
     "preco": 1.5
   },
   "7896707343501": {
-    "nome": "PIRULITO POP/ENERGY/CORAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃAO",
+    "nome": "PIRULITO POP/ENERGY/CORAÇAO",
     "preco": 0.5
   },
   "7896607100174": {
@@ -7135,6 +7347,10 @@
     "nome": "PITU LATAO 473 ML",
     "preco": 6.75
   },
+  "7896607100532": {
+    "nome": "PITU LATAO 710ML",
+    "preco": 10
+  },
   "7896607100280": {
     "nome": "PITU LIMAO 350ML",
     "preco": 5.99
@@ -7142,6 +7358,18 @@
   "7896607100877": {
     "nome": "PITU LIMAO E MEL 350ML",
     "preco": 5.5
+  },
+  "7894904325702": {
+    "nome": "PIZZA DE FRANGO C/CATUPIRY SEARA 460G",
+    "preco": 19.9
+  },
+  "7894904578566": {
+    "nome": "PIZZA DE LOMBO COM CATUPIRY SEARA 460G",
+    "preco": 19.9
+  },
+  "7894904326044": {
+    "nome": "PIZZA SEARA CALABRESA 460G",
+    "preco": 19.9
   },
   "7896221807084": {
     "nome": "PO DESC- MARCIA OLEO/COCO",
@@ -7287,6 +7515,10 @@
     "nome": "PRENDEDOR EM PLASTICO",
     "preco": 2.5
   },
+  "7500435244688": {
+    "nome": "PRESTOBARBA GILETTE 3LAM/SUAVE",
+    "preco": 6.5
+  },
   "7500435154437": {
     "nome": "PRESTOBARBA GILETTE UN",
     "preco": 3.5
@@ -7361,7 +7593,7 @@
   },
   "7898920160897": {
     "nome": "QUEIJO RALADO PAMPULHA 50G",
-    "preco": 4.75
+    "preco": 4.99
   },
   "7897373157003": {
     "nome": "QUEIJO RALADO PARMESAO 50G",
@@ -7384,7 +7616,7 @@
     "preco": 0.5
   },
   "7897990129155": {
-    "nome": "RAÃÃO CALOPSITA E AGAPORNIS 500G",
+    "nome": "RAÇAO CALOPSITA E AGAPORNIS 500G",
     "preco": 6.5
   },
   "7898129520157": {
@@ -7395,28 +7627,24 @@
     "nome": "RACAO GALO DE CAMPINA 500G",
     "preco": 6.5
   },
-  "7896029018064": {
-    "nome": "RAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃAO KIT KAT FRANGO 70G",
-    "preco": 3
-  },
   "7896029018057": {
-    "nome": "RAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃAO KITE KAT CARNE 70G",
+    "nome": "RAÇAO KITE KAT CARNE 70G",
     "preco": 3
   },
   "7898224821524": {
-    "nome": "RAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃO NHAC GATO MIX KG",
+    "nome": "RAÇAO NHAC GATO MIX KG",
     "preco": 17.99
   },
   "7898224824785": {
-    "nome": "RAÃÃO NHAC P/CAES FILHOTES 1KG",
+    "nome": "RAÇAO NHAC P/CAES FILHOTES 1KG",
     "preco": 15.99
   },
   "798190256498": {
-    "nome": "RAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃO P/CAES ADULTO TIM/TIM CARNE",
+    "nome": "RAÇAO P/CAES ADULTO TIM/TIM CARNE",
     "preco": 6.99
   },
   "7896029077245": {
-    "nome": "RAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃO P/GATO WHISKAS CARNE 1KG",
+    "nome": "RAÇAO P/GATO WHISKAS CARNE 1KG",
     "preco": 22.99
   },
   "7897990129148": {
@@ -7424,7 +7652,7 @@
     "preco": 7.99
   },
   "7896268414603": {
-    "nome": "RAÇÃO PARA GATO CHANIN KG",
+    "nome": "RAÇAO PARA GATO CHANIN KG",
     "preco": 13.99
   },
   "7897990129070": {
@@ -7432,32 +7660,36 @@
     "preco": 5.99
   },
   "7898203020177": {
-    "nome": "RAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃO SABOROSSO CARNE/LEITE FILHOTE KG",
+    "nome": "RAÇAO SABOROSSO CARNE/LEITE FILHOTE KG",
     "preco": 14.99
   },
   "7898203020160": {
-    "nome": "RAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃO SABOROSSO CERNE/CHIPS ADULTOS KG",
+    "nome": "RAÇAO SABOROSSO CERNE/CHIPS ADULTOS KG",
     "preco": 12.99
   },
   "7898203020023": {
-    "nome": "RAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃO TUTTI CANIS SELECT KG",
+    "nome": "RAÇAO TUTTI CANIS SELECT KG",
     "preco": 12.99
   },
   "7898203020016": {
-    "nome": "RAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃAO TUTTI CAT MIX DE CARNE KG",
+    "nome": "RAÇAO TUTTI CAT MIX DE CARNE KG",
     "preco": 13.99
   },
   "5901234123457": {
-    "nome": "RAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃO TUTTI CATIS GATO CASTRADO KG",
+    "nome": "RAÇAO TUTTI CATIS GATO CASTRADO KG",
     "preco": 17.99
   },
   "7893232565255": {
     "nome": "RAIVINHA CASEIRA DE COCO 70G",
-    "preco": 2
+    "preco": 2.25
   },
   "7899751102711": {
     "nome": "RALADOR ORIGINAL 1 FACE",
     "preco": 11.99
+  },
+  "7897075186141": {
+    "nome": "RAPADURA AMARELA 400G",
+    "preco": 3.75
   },
   "7892090230718": {
     "nome": "RAPADURA ARTESANAL 470G",
@@ -7683,6 +7915,10 @@
     "nome": "REMOVEDOR DE ESMALTES IDEAL",
     "preco": 4.5
   },
+  "7898942636127": {
+    "nome": "REP. PON. TUTI AMO. CERAMI. 30ML",
+    "preco": 8.99
+  },
   "7897840306125": {
     "nome": "REPARADOR DE PONTA TUTI AMORA TRADICIONAL 30ML",
     "preco": 8.99
@@ -7697,6 +7933,10 @@
   },
   "7898942636363": {
     "nome": "REPARADOR DE PONTAS TUTI AMORE ALOE VERA 30ML",
+    "preco": 8.99
+  },
+  "7898942636226": {
+    "nome": "REPARADOR DE PONTAS TUTI AMORE QUERATINA 30ML",
     "preco": 8.99
   },
   "7898912485410": {
@@ -7811,6 +8051,10 @@
     "nome": "SAB LIQ LUX BUQUE DE JASMIM 250ML",
     "preco": 9.5
   },
+  "7509546695396": {
+    "nome": "SAB PALMOLIVE OLEO DE EUCALIPTO 150 G",
+    "preco": 4.99
+  },
   "7896094905627": {
     "nome": "SAB POM/ POM GLICERINADO 70G",
     "preco": 3.75
@@ -7878,6 +8122,10 @@
   "7897274417282": {
     "nome": "SABAO EM BARRA GUARANI NEUTRO 800G",
     "preco": 11.99
+  },
+  "7896056402027": {
+    "nome": "SABAO EM PASTA URCA 200G",
+    "preco": 4.5
   },
   "7897274416995": {
     "nome": "SABAO EM PO ABSOLUTO 400G",
@@ -8083,6 +8331,10 @@
     "nome": "SABONETE EVEN MEN 85G",
     "preco": 2.25
   },
+  "7896013107941": {
+    "nome": "SABONETE EVEN MORANGO E CHANTILLY 85",
+    "preco": 2.25
+  },
   "7896017718020": {
     "nome": "SABONETE FLORA NENEN 80G",
     "preco": 5.39
@@ -8200,7 +8452,7 @@
     "preco": 4.49
   },
   "7896094905634": {
-    "nome": "SAB-POM/POM LOÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃAO HIDRAT 70G",
+    "nome": "SAB-POM/POM LOÇAO HIDRAT 70G",
     "preco": 3.75
   },
   "7896094905641": {
@@ -8209,7 +8461,7 @@
   },
   "7898415550035": {
     "nome": "SACO DE LIXO EXTRUSA/PACK 50L",
-    "preco": 11
+    "preco": 9.99
   },
   "7898415550028": {
     "nome": "SACO DE LIXO PACK AZUL 30L",
@@ -8221,7 +8473,7 @@
   },
   "7898546004599": {
     "nome": "SACO LIXO 100L 75CM/105CM",
-    "preco": 9.99
+    "preco": 11
   },
   "7896101711326": {
     "nome": "SAL MARLIN GROSSO 1 KG",
@@ -8299,6 +8551,14 @@
     "nome": "SALSA LESN 10G",
     "preco": 1.35
   },
+  "7891167099678": {
+    "nome": "SARDINHA 88 RALADA OLEO 110G",
+    "preco": 5.99
+  },
+  "7891167099685": {
+    "nome": "SARDINHA 88 RALADA TOMATE 110G",
+    "preco": 5.99
+  },
   "7896009301063": {
     "nome": "SARDINHA COQUEIRO COM MOLHO TOMATE 125G",
     "preco": 6.99
@@ -8361,7 +8621,7 @@
   },
   "7891010503031": {
     "nome": "SEMPRE LIVRE SUAVE SEM ABAS 8UN PC",
-    "preco": 4.49
+    "preco": 4.75
   },
   "7899547981209": {
     "nome": "SEQUILHO CASEIRO BOM SABOR 100G",
@@ -8405,10 +8665,10 @@
   },
   "7891024161913": {
     "nome": "SH. PALMOLIVE NUTRI LISS 350 ML",
-    "preco": 11
+    "preco": 11.99
   },
   "7891024171639": {
-    "nome": "SH. PALMOLIVE NUTRIÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃAO EXTRAORDINARIA 350 ML",
+    "nome": "SH. PALMOLIVE NUTRIÇAO EXTRAORDINARIA 350 ML",
     "preco": 11
   },
   "7891150037526": {
@@ -8433,11 +8693,27 @@
   },
   "7891024158609": {
     "nome": "SH.PALMOLIVE PRETO INTENSO 350ML",
-    "preco": 12.99
+    "preco": 11.99
   },
   "7891150101616": {
     "nome": "SHAMPOO AMINO SILK 300ML",
     "preco": 13.99
+  },
+  "7891150001077": {
+    "nome": "SHAMPOO CLEAR ANTICASPA MEN QUEDA CONTROL 200ML",
+    "preco": 21.49
+  },
+  "7891150007406": {
+    "nome": "SHAMPOO CLEAR MEN ICE COOL MENTHOL 200ML",
+    "preco": 21.49
+  },
+  "7891150019508": {
+    "nome": "SHAMPOO CLEAR MEN LIMP/PROFUNDA 200ML",
+    "preco": 21.49
+  },
+  "7891150099289": {
+    "nome": "SHAMPOO CLEAR MEN VINI JR. 200ML",
+    "preco": 21.49
   },
   "7898944166110": {
     "nome": "SHAMPOO GREEN PET OLEO FLOR INDIANA 500ML",
@@ -8449,7 +8725,7 @@
   },
   "7891024042908": {
     "nome": "SHAMPOO PALMOLIVE DETOX 35ML",
-    "preco": 11
+    "preco": 11.99
   },
   "7891024042113": {
     "nome": "SHAMPOO PALMOLIVE KIDS 350ML",
@@ -8604,7 +8880,7 @@
     "preco": 27.99
   },
   "7898005513402": {
-    "nome": "SORV- STER BOM PAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃOCA 2L",
+    "nome": "SORV- STER BOM PAÇOCA 2L",
     "preco": 27.99
   },
   "7898005510289": {
@@ -8670,6 +8946,10 @@
   "7894900681017": {
     "nome": "SPRITE LATA 350ML",
     "preco": 4
+  },
+  "7894904577873": {
+    "nome": "STEAK DE FRANGO REZENDE 100G",
+    "preco": 1.75
   },
   "7898005514485": {
     "nome": "STERBINHO STERBOM 50G",
@@ -8825,7 +9105,11 @@
   },
   "7896806700069": {
     "nome": "TALCO BARLA 80GS",
-    "preco": 4.99
+    "preco": 5.75
+  },
+  "95188874505": {
+    "nome": "TAMPICO FRUTAS CITRICAS 450ML",
+    "preco": 3.99
   },
   "95188870347": {
     "nome": "TAMPICO FRUTAS CITRICOS 1L",
@@ -8853,6 +9137,10 @@
   },
   "7896108300011": {
     "nome": "TEMPERO CASEIRO REGINA 500ML",
+    "preco": 1.99
+  },
+  "7897518200021": {
+    "nome": "TEMPERO CASEIRO SADIO 500ML",
     "preco": 1.99
   },
   "7895099184839": {
@@ -9104,11 +9392,11 @@
     "preco": 14.99
   },
   "6958668616870": {
-    "nome": "UNHA POSTIÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃAS 20UNHAS",
+    "nome": "UNHA POSTIÇAS 20UNHAS",
     "preco": 3.5
   },
   "7899441519485": {
-    "nome": "UNHA POSTIÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃAS FRENCH",
+    "nome": "UNHA POSTIÇAS FRENCH",
     "preco": 3
   },
   "7908076233564": {
@@ -9160,7 +9448,7 @@
     "preco": 12.99
   },
   "7898911634017": {
-    "nome": "VASSOURA PIAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃAVA ESPERANCA N14",
+    "nome": "VASSOURA PIAÇAVA ESPERANCA N14",
     "preco": 13.99
   },
   "7897202120109": {
@@ -9232,11 +9520,11 @@
     "preco": 1.5
   },
   "7896108300226": {
-    "nome": "VINAGRE REGINA MAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃA 500ML",
+    "nome": "VINAGRE REGINA MAÇA 500ML",
     "preco": 2.75
   },
   "7897518206641": {
-    "nome": "VINAGRE SADIO DE MAÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃÃA 500ML",
+    "nome": "VINAGRE SADIO DE MAÇA 500ML",
     "preco": 2.75
   },
   "7898012863033": {
@@ -9327,6 +9615,14 @@
     "nome": "WHISKAS  7+ PEIXE 85G",
     "preco": 4.99
   },
+  "7896029046609": {
+    "nome": "WHISKAS CARNE 85G",
+    "preco": 3
+  },
+  "7896029046173": {
+    "nome": "WHISKAS FRANGO 85G",
+    "preco": 3
+  },
   "7899872102911": {
     "nome": "XAXADO BOM 200G",
     "preco": 4.99
@@ -9338,261 +9634,5 @@
   "7896094910904": {
     "nome": "ZERO CAL ADOCANTE 100ML LIQ.",
     "preco": 9.25
-  },
-  "070330703629": {
-    "nome": "BARBEADOR AMARELO BIC",
-    "preco": 1.75
-  },
-  "7500435127226": {
-    "nome": "ABS ALWAYS COM ABAS",
-    "preco": 4.99
-  },
-  "7896012881804": {
-    "nome": "FRALDAS CREMER TAM M",
-    "preco": 24.99
-  },
-  "7896444210623": {
-    "nome": "FIO DENTAL HILLO 125M",
-    "preco": 7.75
-  },
-  "7896607100532": {
-    "nome": "PITU LATAO 710ML",
-    "preco": 10
-  },
-  "7891150099289": {
-    "nome": "SHAMPOO CLEAR MEN HIDRAT/CAMPEÃÃÃÃÃÃÃÃ 200ML",
-    "preco": 21.49
-  },
-  "7891150001077": {
-    "nome": "SHAMPOO CLEAR MEN QUEDA CONTROL 200ML",
-    "preco": 21.49
-  },
-  "7891150019508": {
-    "nome": "SHAMPOO CLEAR MEN LIMPEZA PROFUNDA 200ML",
-    "preco": 21.49
-  },
-  "7891150007406": {
-    "nome": "SHAMPOO CLEAR MEN ICE COOL MENTHOL 200ML",
-    "preco": 21.49
-  },
-  "070330729858": {
-    "nome": "BARBEADOR BIC INTENSITY 3 LAMINAS",
-    "preco": 3.5
-  },
-  "7897047004091": {
-    "nome": "DOCE DE AMENDOIM CHOKREM 30G",
-    "preco": 1
-  },
-  "7891152501551": {
-    "nome": "MARGARINA PURO SABOR 1KG",
-    "preco": 10.5
-  },
-  "7899561901610": {
-    "nome": "ESCOVA INFANTIL STRIKE",
-    "preco": 2.75
-  },
-  "7896056402027": {
-    "nome": "SABAO EM PASTA URCA 200G",
-    "preco": 4.5
-  },
-  "2135700012997": {
-    "nome": "BOLO DE LARANJA 540G",
-    "preco": 11
-  },
-  "2135600012998": {
-    "nome": "BOLO DE OVOS 540G",
-    "preco": 11
-  },
-  "2135500012999": {
-    "nome": "BOLO DE QUEIJO 540G",
-    "preco": 11
-  },
-  "2135900012995": {
-    "nome": "BOLO DE CHOCOLATE 540G",
-    "preco": 11
-  },
-  "2135800012996": {
-    "nome": "BOLO FORMIGUIRO 540G",
-    "preco": 11
-  },
-  "0074468769830": {
-    "nome": "BOLINHO 140G",
-    "preco": 3.5
-  },
-  "7898948243022": {
-    "nome": "BOLACHA 7CAPAS SÃÃÃÃÃÃÃÃO FRANCISCO 250G",
-    "preco": 6.75
-  },
-  "7898948243152": {
-    "nome": "BOLACHA MARAVILHA SÃÃÃÃÃÃÃÃO FRANCISCO 250G",
-    "preco": 6.9
-  },
-  "7898948243121": {
-    "nome": "BOLACHA SAO FRANCISCO SABOR QUEIJO 200G",
-    "preco": 6.25
-  },
-  "7898948243114": {
-    "nome": "BOLACHA PINGO SAO FRANCISCO 250G",
-    "preco": 5.9
-  },
-  "7897517917555": {
-    "nome": "BARBEADOR ENOX 2LAMINAS",
-    "preco": 6.99
-  },
-  "095188874505": {
-    "nome": "TAMPICO FRUTAS CITRICAS 450ML",
-    "preco": 3.99
-  },
-  "7500435122764": {
-    "nome": "CREME DENTAL ORAL B 4EM1 70G",
-    "preco": 4.5
-  },
-  "7898942636226": {
-    "nome": "REPARADOR DE PONTAS QUERATINA 30ML",
-    "preco": 8.99
-  },
-  "7898942636127": {
-    "nome": "REPARADOR DE PONTAS CERAMIDAS 30ML",
-    "preco": 8.99
-  },
-  "7891515563516": {
-    "nome": "FILE DE PEITO SADIA1K",
-    "preco": 21.99
-  },
-  "7897518200021": {
-    "nome": "TEMPERO CASEIRO SADIO 500G",
-    "preco": 1.99
-  },
-  "7895226150027": {
-    "nome": "COLHER REFEIÃÃÃÃÃÃÃÃAO PLAZAPEL 50UN",
-    "preco": 4.99
-  },
-  "7895226180024": {
-    "nome": "GARFO REFEIÃÃÃÃÃÃÃÃAO PLAZAPEL 50UN",
-    "preco": 4.99
-  },
-  "7891024194249": {
-    "nome": "DESENFETANTE PINHO SOL 500ML",
-    "preco": 9.75
-  },
-  "7891150071780": {
-    "nome": "CREMOGEMA TRADICIONAL 180G",
-    "preco": 4.99
-  },
-  "7891000319505": {
-    "nome": "MUCILON MULTICEREAIS 180G",
-    "preco": 6.99
-  },
-  "7894904605002": {
-    "nome": "LASANHA A BOLONHESA SEARA 300G",
-    "preco": 9.5
-  },
-  "7894904268573": {
-    "nome": "MORTANDELA DEFUMADA FATIADA 180G",
-    "preco": 7.99
-  },
-  "7894904009749": {
-    "nome": "LINGUIÃÃÃÃÃÃÃÃA CALABRESA SEARA KG",
-    "preco": 26.99
-  },
-  "7894904577873": {
-    "nome": "EMPANADO DE FRANGO RESENDE 10G",
-    "preco": 1.75
-  },
-  "7891167099685": {
-    "nome": "SARDINHA 88 RALADA TOMATE 110G",
-    "preco": 5.99
-  },
-  "7891167099678": {
-    "nome": "SARDINHA 88 RALADA OLEO 110G",
-    "preco": 5.99
-  },
-  "7898972821081": {
-    "nome": "BODY SPLASH EKOPURE AMOREH 200ML",
-    "preco": 22.99
-  },
-  "7899452032133": {
-    "nome": "LAMPADA LED AVANT 15W",
-    "preco": 6.99
-  },
-  "4058075783904": {
-    "nome": "LAMPADA LEDVANCE 9W",
-    "preco": 4.99
-  },
-  "7899561901573": {
-    "nome": "ESCOVA DENTAL STRIKE MEDIA",
-    "preco": 2.5
-  },
-  "7891991000826": {
-    "nome": "GUARANA ANTARCTICA 350ML",
-    "preco": 3.5
-  },
-  "630941579305": {
-    "nome": "FAROFA DE OURO DO LEAO 400G",
-    "preco": 11
-  },
-  "7898668210496": {
-    "nome": "FIGADO DE GALINHA SOMAVE 1KG",
-    "preco": 6.99
-  },
-  "0074468769793": {
-    "nome": "BOLO SARDINHA 300G",
-    "preco": 5.5
-  },
-  "7898975304000": {
-    "nome": "PAO DE FORMA TRADICIONAL NORDESTINAS 400G",
-    "preco": 7.5
-  },
-  "7896013107941": {
-    "nome": "SABONETE EVEN MORANGO E CHANTILY 85G",
-    "preco": 2.25
-  },
-  "7500435244688": {
-    "nome": "PRESTOBARBA GILLETTE 3 LAM/SUAVE",
-    "preco": 6.5
-  },
-  "7509546695396": {
-    "nome": "SAB- PALMOLIVE ARGILA PRETA OLEO/EUCALIPTO 150G",
-    "preco": 4.99
-  },
-  "7896029046609": {
-    "nome": "WHISKAS CARNE 85G",
-    "preco": 3
-  },
-  "7896029046173": {
-    "nome": "WHISKAS FRANGO 85G",
-    "preco": 3
-  },
-  "7896029056387": {
-    "nome": "CHAMP FRANGO FILHOTE 85G",
-    "preco": 3
-  },
-  "7896029046494": {
-    "nome": "KITEKAT CORDEIRO 70G",
-    "preco": 3
-  },
-  "0070341969878": {
-    "nome": "BISCOITO DE ANJO 190G",
-    "preco": 5.75
-  },
-  "7896013106319": {
-    "nome": "AMACIANTE SONHO LAVANDA 500ML",
-    "preco": 4.49
-  },
-  "7897075186141": {
-    "nome": "RAPADURA AMARELA 400G",
-    "preco": 3.75
-  },
-  "7791293025537": {
-    "nome": "DESODORANTE REXONA MEN ANTIBAC 150ML",
-    "preco": 15.99
-  },
-  "7898247780006": {
-    "nome": "OLEO DE SOJA ABC 900ML",
-    "preco": 8.75
-  },
-  "7898215151708": {
-    "nome": "LEITE INTEGRAL PIRACANJUBA 1L",
-    "preco": 6.99
   }
 }
