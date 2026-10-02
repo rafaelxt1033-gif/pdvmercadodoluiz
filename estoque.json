@@ -117,7 +117,7 @@
   },
   "32": {
     "nome": "COSTELA DO PEITO",
-    "preco": 28.5
+    "preco": 26.99
   },
   "33": {
     "nome": "COSTELA CERRADA KG",
@@ -2533,7 +2533,7 @@
   },
   "7898928303395": {
     "nome": "COADOR DE CAFE FRANERG G",
-    "preco": 2.5
+    "preco": 2.99
   },
   "7899805334204": {
     "nome": "COADOR DE CAFE GD",
@@ -3021,7 +3021,7 @@
   },
   "7897042004904": {
     "nome": "CREME  SKALA CERAMIDAS 1KG",
-    "preco": 12.99
+    "preco": 13.99
   },
   "7896085862663": {
     "nome": "CREME ALISANTE SFERA ABACATE 90ML",
@@ -3157,7 +3157,7 @@
   },
   "7897042012732": {
     "nome": "CREME SKALA AMIDO DE MILHO 1KG",
-    "preco": 12.99
+    "preco": 13.99
   },
   "7897042007240": {
     "nome": "CREME SKALA ARGILA BRANCA 1000ML",
@@ -3173,11 +3173,11 @@
   },
   "7897042012473": {
     "nome": "CREME SKALA DIVINO POTAO 2EM1 1KG",
-    "preco": 12.99
+    "preco": 13.99
   },
   "7897042013180": {
     "nome": "CREME SKALA DONA SKALA 1KG",
-    "preco": 12.99
+    "preco": 13.99
   },
   "7897042012183": {
     "nome": "CREME SKALA EXPERT BOMBA 1KG",
@@ -6869,11 +6869,11 @@
   },
   "7898952461344": {
     "nome": "PANO DE PRATO SAO JOSE 45CMX75CM",
-    "preco": 3.5
+    "preco": 3.99
   },
   "7908500200001": {
     "nome": "PANO DE PRATO TAM 45CMX75CM",
-    "preco": 3.5
+    "preco": 3.99
   },
   "7898928303456": {
     "nome": "PANO MULTIUSO 49CM X 79CM",
@@ -9634,5 +9634,17 @@
   "7896094910904": {
     "nome": "ZERO CAL ADOCANTE 100ML LIQ.",
     "preco": 9.25
+  },
+  "7898179462230": {
+    "nome": "MAMADEIRA MAMITA BICO PVC",
+    "preco": 9.9
+  },
+  "7897042018093": {
+    "nome": "CREME SKALA  ACACHONADOS 1KG",
+    "preco": 13.99
+  },
+  "7897042018161": {
+    "nome": "CREME SKALA CACAU 1KG",
+    "preco": 13.99
   }
 }
