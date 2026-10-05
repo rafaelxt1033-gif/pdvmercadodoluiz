@@ -25,7 +25,7 @@
   },
   "7": {
     "nome": "BATATA INGRESA KG",
-    "preco": 8.99
+    "preco": 7.99
   },
   "8": {
     "nome": "BATATA DOCE",
@@ -41,7 +41,7 @@
   },
   "11": {
     "nome": "CENOURA KG",
-    "preco": 6.99
+    "preco": 7.99
   },
   "12": {
     "nome": "CHUCHU KG",
@@ -89,7 +89,7 @@
   },
   "23": {
     "nome": "PIMENTAO KG",
-    "preco": 5.99
+    "preco": 10
   },
   "25": {
     "nome": "RAÇAO PARA CAES",
@@ -101,7 +101,7 @@
   },
   "28": {
     "nome": "CARNE DE SOL COXAO MOLE KG",
-    "preco": 48.99
+    "preco": 45.99
   },
   "29": {
     "nome": "CARNE DE SOL POSTA GORDA/LOMBO KG",
@@ -117,7 +117,7 @@
   },
   "32": {
     "nome": "COSTELA DO PEITO",
-    "preco": 26.99
+    "preco": 21.99
   },
   "33": {
     "nome": "COSTELA CERRADA KG",
@@ -201,7 +201,7 @@
   },
   "53": {
     "nome": "OSSO PARA SOPA KG",
-    "preco": 11
+    "preco": 8.99
   },
   "54": {
     "nome": "OSSO MOEDA PACOTE KG",
@@ -2693,11 +2693,11 @@
   },
   "7897464701009": {
     "nome": "COLA BRANCA KOALA 40G",
-    "preco": 2.25
+    "preco": 2.5
   },
   "7897464701030": {
     "nome": "COLA BRANCA KOALA 90G",
-    "preco": 3.75
+    "preco": 4.5
   },
   "7899888409677": {
     "nome": "COLA RATO",
@@ -2953,7 +2953,7 @@
   },
   "7893000488878": {
     "nome": "COXINHA DA ASA SADIA 1KG",
-    "preco": 15.99
+    "preco": 16.99
   },
   "7891528038001": {
     "nome": "CR DENTAL SORRISO DENTES BRANCOS 180GR",
@@ -4321,7 +4321,7 @@
   },
   "7896398910013": {
     "nome": "FEIJAO  CRAVIL 1KG",
-    "preco": 6.99
+    "preco": 8.75
   },
   "7896006744115": {
     "nome": "FEIJAO CARIOCA CAMIL 1KG",
@@ -5901,7 +5901,7 @@
   },
   "7896079500151": {
     "nome": "LEITE ELEGE INTEGRAL 1L",
-    "preco": 6.99
+    "preco": 7.99
   },
   "7898403782929": {
     "nome": "LEITE EM PO BETANIA INTEGRAL 750G",
@@ -6081,7 +6081,7 @@
   },
   "7891151900737": {
     "nome": "LIXA PARA PE MIX",
-    "preco": 5.5
+    "preco": 5.99
   },
   "7895099766844": {
     "nome": "LIXA UNHA MINI",
@@ -6709,7 +6709,7 @@
   },
   "7898247780297": {
     "nome": "OLEO DE SOJA VITALIV 900ML",
-    "preco": 9.99
+    "preco": 9.75
   },
   "7908435500078": {
     "nome": "OLEO FAISAO 200 ML",
@@ -9521,7 +9521,7 @@
   },
   "7896108300226": {
     "nome": "VINAGRE REGINA MAÇA 500ML",
-    "preco": 2.75
+    "preco": 2.99
   },
   "7897518206641": {
     "nome": "VINAGRE SADIO DE MAÇA 500ML",
@@ -9646,5 +9646,17 @@
   "7897042018161": {
     "nome": "CREME SKALA CACAU 1KG",
     "preco": 13.99
+  },
+  "6909684589655": {
+    "nome": "CORTADOR DE UNHA LINX",
+    "preco": 3.99
+  },
+  "7895225141873": {
+    "nome": "FITA ADESIVA TRANSPARENTE",
+    "preco": 2
+  },
+  "7896945400813": {
+    "nome": "CATCHUP TAMBAU 830G",
+    "preco": 8.5
   }
 }
