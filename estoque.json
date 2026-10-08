@@ -117,7 +117,7 @@
   },
   "32": {
     "nome": "COSTELA DO PEITO",
-    "preco": 21.99
+    "preco": 28.5
   },
   "33": {
     "nome": "COSTELA CERRADA KG",
@@ -193,7 +193,7 @@
   },
   "51": {
     "nome": "PEITO DE FRANGO KG",
-    "preco": 12.99
+    "preco": 13.99
   },
   "52": {
     "nome": "GALINHA CONGELADA KG",
@@ -201,7 +201,7 @@
   },
   "53": {
     "nome": "OSSO PARA SOPA KG",
-    "preco": 8.99
+    "preco": 11
   },
   "54": {
     "nome": "OSSO MOEDA PACOTE KG",
@@ -1049,7 +1049,7 @@
   },
   "7896743910019": {
     "nome": "ARROZ BRANCO SAO JOAQUIM 1KG",
-    "preco": 5.5
+    "preco": 6.5
   },
   "7896800777784": {
     "nome": "ARROZ BRILHANTE PARBOILIZADI 1KG",
@@ -1081,7 +1081,7 @@
   },
   "7896012300213": {
     "nome": "ARROZ PARBOILIZADO EMOCOES 1KG",
-    "preco": 5.5
+    "preco": 5.99
   },
   "7896015223113": {
     "nome": "ARROZ PARBOILIZADO PRINCESA 1KG",
@@ -1214,10 +1214,6 @@
   "7898961932637": {
     "nome": "BANDEJA MULTIUSO - ICASA",
     "preco": 9.9
-  },
-  "70330703629": {
-    "nome": "BARBEADOR AMARELO BIC",
-    "preco": 1.75
   },
   "70330729858": {
     "nome": "BARBEADOR BIC INTENSITY 3 LAMINAS",
@@ -1462,10 +1458,6 @@
   "618231390199": {
     "nome": "BISCOITO COQUINHO 200G",
     "preco": 2.5
-  },
-  "70341969878": {
-    "nome": "BISCOITO DE ANJO 190G",
-    "preco": 5.75
   },
   "7897934600061": {
     "nome": "BISCOITO DOCE BEIJA FLOR 400G",
@@ -1729,7 +1721,7 @@
   },
   "7898040821234": {
     "nome": "BOLACHA PINGO DE MEL 300G",
-    "preco": 5.99
+    "preco": 6.25
   },
   "7892933445514": {
     "nome": "BOLACHA PINGO DE MEL DOIS IRMAOS 300G",
@@ -1781,7 +1773,7 @@
   },
   "7898376590095": {
     "nome": "BOLACHA SALGADA PRINCESA 200G",
-    "preco": 2.5
+    "preco": 2.75
   },
   "7898948243121": {
     "nome": "BOLACHA SAO FRANCISCO SABOR QUEIJO 200G",
@@ -2033,7 +2025,7 @@
   },
   "7896224807098": {
     "nome": "CAFE KIMIMO FORTE E ENCORPADO 250G",
-    "preco": 15.5
+    "preco": 14.99
   },
   "7898286200060": {
     "nome": "CAFE MARATA 250 G",
@@ -2953,7 +2945,7 @@
   },
   "7893000488878": {
     "nome": "COXINHA DA ASA SADIA 1KG",
-    "preco": 16.99
+    "preco": 15.99
   },
   "7891528038001": {
     "nome": "CR DENTAL SORRISO DENTES BRANCOS 180GR",
@@ -4125,7 +4117,7 @@
   },
   "7896001004511": {
     "nome": "ESPONJA DE LIMPEZA BRILHUS",
-    "preco": 0.9
+    "preco": 1
   },
   "7896001045231": {
     "nome": "ESPONJA ESFREBOM COM 3 UN",
@@ -5957,7 +5949,7 @@
   },
   "7898387120380": {
     "nome": "LEITE LONGA NATIVILLE 1LT",
-    "preco": 6.99
+    "preco": 7.5
   },
   "7896085307010": {
     "nome": "LEITE LONGA VIDA VALE DOURADO INTEGRAL 1 L",
@@ -5997,7 +5989,7 @@
   },
   "7898403782387": {
     "nome": "LEITE UHT INTEGRAL BETANIA 1L",
-    "preco": 7.25
+    "preco": 7.5
   },
   "7896085307034": {
     "nome": "LEITE VALE DOURADO DESNATADO 1L",
@@ -6937,7 +6929,7 @@
   },
   "7897384700014": {
     "nome": "PAPEL ALUMINIO 7,5M BOREDA",
-    "preco": 5.75
+    "preco": 6.75
   },
   "7897384700083": {
     "nome": "PAPEL ALUMINIO BOREDA 4 MT",
@@ -7729,7 +7721,7 @@
   },
   "7898392900014": {
     "nome": "RAPADURA JAPECANGA 450G",
-    "preco": 4.99
+    "preco": 5.25
   },
   "7896551448391": {
     "nome": "RAPADURA PRETA CUBINHO 300G",
@@ -9658,5 +9650,45 @@
   "7896945400813": {
     "nome": "CATCHUP TAMBAU 830G",
     "preco": 8.5
+  },
+  "0070341969878": {
+    "nome": "BISCOITO DE ANJO 190G",
+    "preco": 5.75
+  },
+  "070330703629": {
+    "nome": "BARBEADOR AMARELO BIC",
+    "preco": 1.75
+  },
+  "7898133019913": {
+    "nome": "FRALDA CREMER SHORTINHO G",
+    "preco": 24.99
+  },
+  "7898133019906": {
+    "nome": "FRALDA CREMER SHORTINHO M",
+    "preco": 24.99
+  },
+  "7898005514577": {
+    "nome": "PICOLE TRES CHOCOLATES 70G",
+    "preco": 8.99
+  },
+  "7891020270800": {
+    "nome": "LINHA COSTURA MAGNA",
+    "preco": 2.5
+  },
+  "7898176832623": {
+    "nome": "MULTIPLICADOR 2P T",
+    "preco": 8.99
+  },
+  "7890016005051": {
+    "nome": "CARRO GIPE FRICÇAO",
+    "preco": 11.99
+  },
+  "7890016005037": {
+    "nome": "CARRO ESPORTIVO SUPER CAR",
+    "preco": 11.99
+  },
+  "7890016004955": {
+    "nome": "CAMINHAO TRUCK",
+    "preco": 11.99
   }
 }
