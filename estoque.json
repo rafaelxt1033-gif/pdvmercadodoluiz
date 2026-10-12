@@ -53,7 +53,7 @@
   },
   "14": {
     "nome": "CEBOLA BRANCA KG",
-    "preco": 8.99
+    "preco": 9.9
   },
   "15": {
     "nome": "COCO SECO",
@@ -89,7 +89,7 @@
   },
   "23": {
     "nome": "PIMENTAO KG",
-    "preco": 10
+    "preco": 9.9
   },
   "25": {
     "nome": "RAÇAO PARA CAES",
@@ -101,7 +101,7 @@
   },
   "28": {
     "nome": "CARNE DE SOL COXAO MOLE KG",
-    "preco": 45.99
+    "preco": 48.99
   },
   "29": {
     "nome": "CARNE DE SOL POSTA GORDA/LOMBO KG",
@@ -353,7 +353,7 @@
   },
   "119": {
     "nome": "TOMATE KG",
-    "preco": 6.99
+    "preco": 8.99
   },
   "199": {
     "nome": "PEIXE SARDINHA SEM CABEÇA KG",
@@ -2349,7 +2349,7 @@
   },
   "7891098000187": {
     "nome": "CHA DE BOLDO LEAO - C/10",
-    "preco": 5.5
+    "preco": 4.99
   },
   "7895099184730": {
     "nome": "CHA DE CAMOMILA LESN 6G",
@@ -4193,7 +4193,7 @@
   },
   "17898366932970": {
     "nome": "FARDO FLOKAO COM 20X400G",
-    "preco": 22.99
+    "preco": 23.99
   },
   "7813202893842": {
     "nome": "FARINHA AMARELA DE BREJINHO 1KG",
@@ -4897,7 +4897,7 @@
   },
   "7895144025117": {
     "nome": "FRUITTELLA CARAMELO 41G",
-    "preco": 2.75
+    "preco": 3
   },
   "7898034920240": {
     "nome": "FRUTISIS 150G",
@@ -6689,11 +6689,11 @@
   },
   "7896248100816": {
     "nome": "OLEO DE SOJA SIOL 500ML",
-    "preco": 6.25
+    "preco": 6.75
   },
   "7891107101621": {
     "nome": "OLEO DE SOJA SOYA 900ML",
-    "preco": 8.99
+    "preco": 9.9
   },
   "7896223709423": {
     "nome": "OLEO DE SOJA VILA VELLHA 900ML",
@@ -7637,7 +7637,7 @@
   },
   "7896029077245": {
     "nome": "RAÇAO P/GATO WHISKAS CARNE 1KG",
-    "preco": 22.99
+    "preco": 19.99
   },
   "7897990129148": {
     "nome": "RACAO PARA CANARIO BELGA COLIBRIR 500G",
@@ -9625,7 +9625,7 @@
   },
   "7896094910904": {
     "nome": "ZERO CAL ADOCANTE 100ML LIQ.",
-    "preco": 9.25
+    "preco": 8.75
   },
   "7898179462230": {
     "nome": "MAMADEIRA MAMITA BICO PVC",
@@ -9690,5 +9690,37 @@
   "7890016004955": {
     "nome": "CAMINHAO TRUCK",
     "preco": 11.99
+  },
+  "2002011779591": {
+    "nome": "SACO PARA DINDIN 4,5/30CM",
+    "preco": 3.5
+  },
+  "7891091063424": {
+    "nome": "BATATA SCRUSCH CEBOLA/SALSA 40G",
+    "preco": 4.5
+  },
+  "7895800430002": {
+    "nome": "TRIDENT TUTTI-FRUTTI",
+    "preco": 2.75
+  },
+  "7895800309780": {
+    "nome": "TRIDENT MELANCIA",
+    "preco": 2.75
+  },
+  "7894900563702": {
+    "nome": "KAPO DEL VALLE LARANJA 200ML",
+    "preco": 2.75
+  },
+  "7500435245845": {
+    "nome": "PRESTOBARBA GILLETTE CARVAO",
+    "preco": 6.5
+  },
+  "7898910048013": {
+    "nome": "LEITE DE COCO INDIANO 500ML",
+    "preco": 7.99
+  },
+  "7896914012245": {
+    "nome": "PAPEL HIGIENICO SUBLIME FOLHA DUPLA 4RL",
+    "preco": 6.99
   }
 }
