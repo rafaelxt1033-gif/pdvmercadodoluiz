@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mercadinho Dois Irmãos - PDV Pro</title>
-    <!-- SheetJS para planilhas e relatórios contábeis -->
+    <!-- SheetJS para exportação de dados contábeis em Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <!-- QRCode.js para gerar o código QR idêntico ao cupom físico -->
+    <!-- QRCode.js para geração do QR Code do cupom térmico -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
@@ -28,9 +28,8 @@
         .top-bar { background: var(--primaria); color: white; padding: 0 25px; height: 65px; display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .pdv-container { display: flex; width: 100%; height: calc(100% - 65px); background: white; }
         
-        /* ESTILO DO CUPOM TÉRMICO IDÊNTICO À FOTO */
+        /* CUPOM TÉRMICO VISUAL */
         .cupom-area { width: 45%; background: white; padding: 25px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; font-family: monospace; font-size: 12px; color: #000; }
-        
         .empresa-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 8px; margin-bottom: 8px; }
         .empresa-header h3 { font-size: 13px; font-weight: bold; }
         .empresa-header p { font-size: 11px; margin-top: 2px; }
@@ -41,7 +40,6 @@
         
         .cupom-rodape { margin-top: 10px; border-top: 1px dashed #000; padding-top: 8px; font-size: 11px; }
         .total-box-cupom { font-size: 16px; font-weight: bold; text-align: center; margin-top: 8px; border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 5px 0; }
-        
         #qrcode-container { display: flex; justify-content: center; margin: 10px 0; }
         
         .operacao-area { width: 55%; padding: 30px; display: flex; flex-direction: column; background: #f8fafc; justify-content: space-between; }
@@ -68,7 +66,7 @@
         .modal-bg.ativo { display: flex; }
         .modal-card { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 440px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
 
-        /* REGRA EXCLUSIVA PARA IMPRESSÃO TÉRMICA DO CUPOM */
+        /* IMPRESSÃO ISOLADA DO CUPOM TÉRMICO */
         @media print {
             body * { visibility: hidden; }
             .cupom-area, .cupom-area * { visibility: visible; }
@@ -172,7 +170,6 @@
             <button class="btn-universal" onclick="mostrarTela('tela-pdv')" style="background: var(--secundaria); width: auto; padding: 8px 15px;">Voltar ao Caixa</button>
         </div>
         <div class="dashboard-area">
-            
             <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #2563eb; margin-bottom: 20px;">
                 <h3 style="color: #2563eb; margin-bottom: 10px;">☁️ Sincronização em Nuvem (GitHub Token)</h3>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
@@ -548,7 +545,6 @@
                 fiscal: fiscal
             };
 
-            // Imprime direto no formato do cupom térmico
             window.print();
 
             vendasRealizadas.push(vendaObj);
