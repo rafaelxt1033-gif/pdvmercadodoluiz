@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mercadinho Dois Irmãos - PDV Pro</title>
+    <!-- SheetJS para importação/exportação de planilhas e relatórios para contabilidade -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    
     <style>
         :root { --primaria: #0f172a; --secundaria: #2563eb; --sucesso: #10b981; --alerta: #f59e0b; --erro: #ef4444; --fundo: #f8fafc; --texto: #1e293b; --fiscal: #7c3aed; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
@@ -22,20 +25,20 @@
         
         .top-bar { background: var(--primaria); color: white; padding: 0 25px; height: 65px; display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .pdv-container { display: flex; width: 100%; height: calc(100% - 65px); background: white; }
+        
         .cupom-area { width: 45%; background: white; padding: 30px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; }
         
-        .empresa-header { text-align: center; border-bottom: 2px dashed var(--primaria); padding-bottom: 10px; margin-bottom: 10px; }
-        .empresa-header h3 { font-size: 16px; color: var(--primaria); font-weight: 800; }
-        .empresa-header p { font-size: 12px; color: #64748b; margin-top: 2px; font-weight: 600; }
+        .empresa-header { text-align: center; border-bottom: 2px dashed #000; padding-bottom: 10px; margin-bottom: 10px; }
+        .empresa-header h3 { font-size: 16px; color: #000; font-weight: 800; }
+        .empresa-header p { font-size: 12px; color: #000; margin-top: 2px; font-weight: 600; }
         
-        .cupom-header { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 40px; font-weight: 600; padding-bottom: 12px; border-bottom: 2px solid var(--primaria); font-size: 14px; }
-        .produtos-lista { flex-grow: 1; overflow-y: auto; margin-top: 10px; }
-        .item-cupom { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 40px; padding: 10px 0; border-bottom: 1px dashed #e2e8f0; font-size: 15px; align-items: center; }
-        .btn-remover { color: var(--erro); background: transparent; border: none; cursor: pointer; font-size: 16px; }
+        .cupom-header { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; font-weight: bold; padding-bottom: 8px; border-bottom: 2px solid #000; font-size: 13px; }
+        .produtos-lista { flex-grow: 1; overflow-y: auto; margin-top: 5px; }
+        .item-cupom { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; padding: 6px 0; border-bottom: 1px dotted #ccc; font-size: 13px; align-items: center; }
         
-        .total-box { background: #ffffff; color: var(--erro); padding: 25px; border-radius: 12px; text-align: center; margin-top: 20px; border: 4px solid var(--erro); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.15); }
-        .total-box h3 { font-size: 16px; letter-spacing: 1px; margin-bottom: 5px; font-weight: 800; }
-        .total-box p { font-size: 42px; font-weight: 900; }
+        .total-box { background: #fff; color: #000; padding: 15px; border-radius: 8px; text-align: center; margin-top: 15px; border: 2px solid #000; }
+        .total-box h3 { font-size: 14px; margin-bottom: 2px; font-weight: 800; }
+        .total-box p { font-size: 28px; font-weight: 900; }
         
         .operacao-area { width: 55%; padding: 30px; display: flex; flex-direction: column; background: #f8fafc; justify-content: space-between; }
         .terminal-log { background: #020617; color: #38bdf8; padding: 15px; border-radius: 8px; height: 110px; overflow-y: auto; font-family: monospace; font-size: 13px; margin-bottom: 15px; }
@@ -60,6 +63,13 @@
         .modal-bg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
         .modal-bg.ativo { display: flex; }
         .modal-card { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 440px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
+
+        /* REGRA EXCLUSIVA PARA IMPRESSÃO TÉRMICA DO CUPOM LIMPO */
+        @media print {
+            body * { visibility: hidden; }
+            .cupom-area, .cupom-area * { visibility: visible; }
+            .cupom-area { position: absolute; left: 0; top: 0; width: 100%; border: none; padding: 5px; box-shadow: none; }
+        }
     </style>
 </head>
 <body>
@@ -88,26 +98,28 @@
             <div style="display: flex; gap: 8px;">
                 <button class="btn-universal" onclick="abrirModalBusca()" style="background: var(--sucesso); padding: 8px; width: auto;">Cons. Preço</button>
                 <button class="btn-universal" onclick="abrirModalPreco()" style="background: var(--secundaria); padding: 8px; width: auto;">Mudar Preço/Nome</button>
-                <button class="btn-universal" id="btn-painel-atalho" onclick="mostrarTela('tela-adm')" style="background: var(--alerta); padding: 8px; width: auto;">Painel ADM</button>
+                <button class="btn-universal" onclick="mostrarTela('tela-adm')" style="background: var(--alerta); padding: 8px; width: auto;">Painel ADM</button>
                 <button class="btn-universal" onclick="cancelarCupom()" style="background: var(--erro); padding: 8px; width: auto;">Cancelar Compra</button>
                 <button class="btn-universal" onclick="sair()" style="background: #475569; padding: 8px; width: auto;">Sair</button>
             </div>
         </div>
         
         <div class="pdv-container">
-            <div class="cupom-area">
+            <div class="cupom-area" id="area-recibo-impressao">
                 <div class="empresa-header">
                     <h3>MERCADINHO DOIS IRMÃOS LTDA</h3>
                     <p>CNPJ: 44.133.465/0001-96</p>
                     <p>Natal - RN</p>
+                    <p id="data-hora-cupom" style="font-size: 11px; margin-top: 4px;"></p>
                 </div>
-                <div class="cupom-header"><span>Item</span><span style="text-align:center;">Qtd</span><span style="text-align:right;">Unit</span><span style="text-align:right;">Total</span><span></span></div>
+                <div class="cupom-header"><span>Item</span><span style="text-align:center;">Qtd</span><span style="text-align:right;">Unit</span><span style="text-align:right;">Total</span></div>
                 <div class="produtos-lista" id="lista-cupom"></div>
+                <div style="margin-top: 10px; font-size: 12px; font-weight: bold;" id="info-pagamento-cupom">Forma de Pagto: Dinheiro</div>
                 <div class="total-box"><h3>TOTAL A PAGAR</h3><p>R$ <span id="valor-total">0.00</span></p></div>
             </div>
             
             <div class="operacao-area">
-                <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Pronto para vendas. Digite o código ou nome do produto.</div></div>
+                <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Caixa pronto. Digite o código ou nome do produto.</div></div>
                 
                 <div style="position: relative; display: flex; gap: 8px; margin-bottom: 15px;">
                     <input type="number" id="input-qtd-manual" value="1" style="width: 80px; text-align: center; font-size: 24px; border: 3px solid var(--primaria); border-radius: 12px; font-weight: bold;">
@@ -120,7 +132,7 @@
                 <div class="fechamento-painel">
                     <div class="input-group" style="margin: 0;">
                         <label class="label-pagamento">Forma de Pagamento (F3)</label>
-                        <select id="forma-pagamento">
+                        <select id="forma-pagamento" onchange="atualizarTextoPagamento()">
                             <option>Dinheiro</option>
                             <option>PIX</option>
                             <option>Cartão</option>
@@ -143,10 +155,34 @@
     <!-- TELA ADM -->
     <div id="tela-adm" class="tela">
         <div class="top-bar">
-            <div><strong>PAINEL GERENCIAL</strong></div>
+            <div><strong>PAINEL GERENCIAL E CONTABILIDADE</strong></div>
             <button class="btn-universal" onclick="mostrarTela('tela-pdv')" style="background: var(--secundaria); width: auto; padding: 8px 15px;">Voltar ao Caixa</button>
         </div>
         <div class="dashboard-area">
+            
+            <!-- SINCRONIZAÇÃO GITHUB / LOCALSTORAGE -->
+            <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #2563eb; margin-bottom: 20px;">
+                <h3 style="color: #2563eb; margin-bottom: 10px;">☁️ Sincronização em Nuvem (GitHub Token)</h3>
+                <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Integração com o repositório para salvar e baixar o estoque completo (`estoque.json`).</p>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+                    <input type="password" id="git-token" placeholder="GitHub Personal Access Token (ghp_...)" style="flex:2; padding:12px; border:1px solid #cbd5e1; border-radius:8px;">
+                    <input type="text" id="git-repo" placeholder="Repositório (ex: usuario/repositorio)" value="rafaelxt1033-gif/pdvmercadodoluiz" style="flex:2; padding:12px; border:1px solid #cbd5e1; border-radius:8px;">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="salvarConfigGitHub()" class="btn-universal" style="background:#475569; width:auto; padding: 10px 15px; font-size:14px;">💾 Salvar Credenciais</button>
+                    <button onclick="baixarEstoqueGitHub()" class="btn-universal" style="background:#2563eb; width:auto; padding: 10px 15px; font-size:14px;">📥 Baixar da Nuvem</button>
+                    <button onclick="enviarEstoqueGitHub()" class="btn-universal" style="background:#10b981; width:auto; padding: 10px 15px; font-size:14px;">☁️ Enviar para Nuvem</button>
+                </div>
+            </div>
+
+            <!-- EXPORTAÇÃO PARA CONTADOR -->
+            <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #0284c7; margin-bottom: 20px;">
+                <h3 style="color: #0284c7; margin-bottom: 10px;">📑 Documento XML / Relatório para o Contador</h3>
+                <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Baixe a planilha consolidada de todas as vendas registradas para envio à contabilidade.</p>
+                <button class="btn-universal" onclick="exportarRelatorioContador()" style="background: #0284c7; width: auto;">📄 Baixar Relatório de Vendas (Excel)</button>
+            </div>
+
+            <!-- ADICIONAR PRODUTO -->
             <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #10b981; margin-bottom: 20px;">
                 <h3 style="color: #10b981; margin-bottom: 10px;">➕ Adicionar ou Atualizar Produto</h3>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -158,7 +194,7 @@
             </div>
 
             <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #7c3aed; margin-bottom: 20px;">
-                <h3 style="color: #7c3aed; margin-bottom: 5px;">📊 Vendas Realizadas</h3>
+                <h3 style="color: #7c3aed; margin-bottom: 5px;">📊 Histórico de Vendas</h3>
                 <div style="max-height: 250px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px; margin-top: 10px;">
                     <table class="tabela-dados" style="margin-top: 0;">
                         <thead>
@@ -228,7 +264,6 @@
             cidade: "Natal"
         };
 
-        // Produtos padrão iniciais para teste imediato
         let estoqueCloud = JSON.parse(localStorage.getItem('estoque_mercado')) || {
             "1": { nome: "ARROZ TIO JOAO 1KG", preco: 6.50 },
             "2": { nome: "FEIJAO MACASSAR 1KG", preco: 8.90 },
@@ -243,7 +278,87 @@
         window.onload = function() {
             atualizarContadorProdutos();
             atualizarPainelVendasAdm();
+            document.getElementById('data-hora-cupom').innerText = new Date().toLocaleString('pt-BR');
+            if (localStorage.getItem('git_token')) document.getElementById('git-token').value = localStorage.getItem('git_token');
+            if (localStorage.getItem('git_repo')) document.getElementById('git-repo').value = localStorage.getItem('git_repo');
         };
+
+        function salvarConfigGitHub() {
+            localStorage.setItem('git_token', document.getElementById('git-token').value.trim());
+            localStorage.setItem('git_repo', document.getElementById('git-repo').value.trim());
+            alert("Credenciais do GitHub salvas com sucesso!");
+        }
+
+        async function baixarEstoqueGitHub() {
+            let token = localStorage.getItem('git_token') || document.getElementById('git-token').value.trim();
+            let repo = localStorage.getItem('git_repo') || document.getElementById('git-repo').value.trim();
+            if (!token || !repo) return alert("Preencha o Token e o Repositório do GitHub no Painel ADM!");
+
+            try {
+                let res = await fetch(`https://api.github.com/repos/${repo}/contents/estoque.json`, {
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+                });
+                if (!res.ok) throw new Error("Arquivo estoque.json não encontrado no repositório.");
+                let data = await res.json();
+                
+                let jsonTexto = decodeURIComponent(escape(window.atob(data.content.replace(/\s/g, ''))));
+                estoqueCloud = JSON.parse(jsonTexto);
+                
+                localStorage.setItem('estoque_mercado', JSON.stringify(estoqueCloud));
+                atualizarContadorProdutos();
+                alert("Estoque baixado com sucesso da nuvem!");
+            } catch (err) {
+                alert("Erro ao baixar do GitHub: " + err.message);
+            }
+        }
+
+        async function enviarEstoqueGitHub() {
+            let token = localStorage.getItem('git_token') || document.getElementById('git-token').value.trim();
+            let repo = localStorage.getItem('git_repo') || document.getElementById('git-repo').value.trim();
+            if (!token || !repo) return alert("Preencha o Token e o Repositório do GitHub no Painel ADM!");
+            if (Object.keys(estoqueCloud).length === 0) return alert("Nenhum produto para enviar.");
+
+            try {
+                let sha = '';
+                let getRes = await fetch(`https://api.github.com/repos/${repo}/contents/estoque.json`, {
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+                });
+                if (getRes.ok) {
+                    let fileData = await getRes.json();
+                    sha = fileData.sha;
+                }
+
+                let jsonTexto = JSON.stringify(estoqueCloud, null, 2);
+                let contentEncoded = window.btoa(unescape(encodeURIComponent(jsonTexto)));
+
+                let bodyData = {
+                    message: "Atualização de estoque via PDV Luiz",
+                    content: contentEncoded,
+                    branch: "main"
+                };
+                if (sha) bodyData.sha = sha;
+
+                let putRes = await fetch(`https://api.github.com/repos/${repo}/contents/estoque.json`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json' },
+                    body: JSON.stringify(bodyData)
+                });
+
+                if (putRes.ok) {
+                    alert("Estoque enviado com sucesso para o GitHub!");
+                } else {
+                    let errJson = await putRes.json();
+                    throw new Error(errJson.message || "Erro desconhecido ao enviar.");
+                }
+            } catch (err) {
+                alert("Erro ao enviar para o GitHub: " + err.message);
+            }
+        }
+
+        function atualizarTextoPagamento() {
+            let f = document.getElementById('forma-pagamento').value;
+            document.getElementById('info-pagamento-cupom').innerText = `Forma de Pagto: ${f}`;
+        }
 
         function fazerLogin() {
             const u = document.getElementById('login-usuario').value.toLowerCase().trim(); 
@@ -260,7 +375,10 @@
         function mostrarTela(id) {
             document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa')); 
             document.getElementById(id).classList.add('ativa');
-            if (id === 'tela-pdv') setTimeout(() => document.getElementById('codigo-barras').focus(), 100);
+            if (id === 'tela-pdv') {
+                document.getElementById('data-hora-cupom').innerText = new Date().toLocaleString('pt-BR');
+                setTimeout(() => document.getElementById('codigo-barras').focus(), 100);
+            }
             if (id === 'tela-adm') atualizarPainelVendasAdm();
         }
 
@@ -306,8 +424,7 @@
         function navegarSugestoes(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                let codigo = e.target.value.trim();
-                processarCodigoBarras(codigo);
+                processarCodigoBarras(e.target.value.trim());
             } else if (e.key === 'F2') {
                 e.preventDefault();
                 finalizarVenda(false);
@@ -315,6 +432,7 @@
                 e.preventDefault();
                 let f = document.getElementById('forma-pagamento');
                 f.selectedIndex = (f.selectedIndex + 1) % f.options.length;
+                atualizarTextoPagamento();
             } else if (e.key === 'F4') {
                 e.preventDefault();
                 finalizarVenda(true);
@@ -362,9 +480,8 @@
                     <div class="item-cupom">
                         <span>${item.nome}</span>
                         <span style="text-align:center;">${item.qtd}</span>
-                        <span style="text-align:right;">R$ ${item.preco.toFixed(2)}</span>
-                        <span style="text-align:right;">R$ ${item.total.toFixed(2)}</span>
-                        <button class="btn-remover" onclick="removerItemCupom(${idx})">🗑️</button>
+                        <span style="text-align:right;">${item.preco.toFixed(2)}</span>
+                        <span style="text-align:right;">${item.total.toFixed(2)}</span>
                     </div>
                 `;
             });
@@ -372,11 +489,6 @@
             lista.innerHTML = html;
             document.getElementById('valor-total').innerText = totalVenda.toFixed(2);
             lista.scrollTop = lista.scrollHeight;
-        }
-
-        function removerItemCupom(idx) {
-            cupomAtual.splice(idx, 1);
-            renderizarCupom();
         }
 
         function cancelarCupom() {
@@ -411,12 +523,11 @@
                 fiscal: fiscal
             };
 
+            // Imprime apenas o cupom limpo
             window.print();
 
             vendasRealizadas.push(vendaObj);
             localStorage.setItem('vendas', JSON.stringify(vendasRealizadas));
-
-            alert(fiscal ? `NFC-e emitida com sucesso para ${EMPRESA_DADOS.cnpj}!` : `Venda finalizada! Total: R$ ${totalVenda.toFixed(2)}`);
 
             cupomAtual = [];
             renderizarCupom();
@@ -433,6 +544,18 @@
                 html += `<tr><td>${v.data}</td><td>${v.pagamento}</td><td style="text-align:right; font-weight:bold;">R$ ${v.total.toFixed(2)}</td></tr>`;
             });
             tbody.innerHTML = html;
+        }
+
+        function exportarRelatorioContador() {
+            if (vendasRealizadas.length === 0) return alert("Nenhuma venda registrada para exportar.");
+            let wsData = [["Empresa", "CNPJ", "Data/Hora", "Forma Pagamento", "Total (R$)"]];
+            vendasRealizadas.forEach(v => {
+                wsData.push([EMPRESA_DADOS.razaoSocial, EMPRESA_DADOS.cnpj, v.data, v.pagamento, v.total]);
+            });
+            let ws = XLSX.utils.aoa_to_sheet(wsData);
+            let wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "VendasContabilidade");
+            XLSX.writeFile(wb, "relatorio_vendas_contador.xlsx");
         }
 
         function adicionarProdutoManual() {
