@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mercadinho Dois Irmãos - PDV Pro</title>
-    <!-- SheetJS para importação/exportação de planilhas e relatórios para contabilidade -->
+    <!-- SheetJS para planilhas e relatórios contábeis -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- QRCode.js para gerar o código QR idêntico ao cupom físico -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --primaria: #0f172a; --secundaria: #2563eb; --sucesso: #10b981; --alerta: #f59e0b; --erro: #ef4444; --fundo: #f8fafc; --texto: #1e293b; --fiscal: #7c3aed; }
@@ -26,19 +28,21 @@
         .top-bar { background: var(--primaria); color: white; padding: 0 25px; height: 65px; display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .pdv-container { display: flex; width: 100%; height: calc(100% - 65px); background: white; }
         
-        .cupom-area { width: 45%; background: white; padding: 30px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; }
+        /* ESTILO DO CUPOM TÉRMICO IDÊNTICO À FOTO */
+        .cupom-area { width: 45%; background: white; padding: 25px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; font-family: monospace; font-size: 12px; color: #000; }
         
-        .empresa-header { text-align: center; border-bottom: 2px dashed #000; padding-bottom: 10px; margin-bottom: 10px; }
-        .empresa-header h3 { font-size: 16px; color: #000; font-weight: 800; }
-        .empresa-header p { font-size: 12px; color: #000; margin-top: 2px; font-weight: 600; }
+        .empresa-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 8px; margin-bottom: 8px; }
+        .empresa-header h3 { font-size: 13px; font-weight: bold; }
+        .empresa-header p { font-size: 11px; margin-top: 2px; }
         
-        .cupom-header { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; font-weight: bold; padding-bottom: 8px; border-bottom: 2px solid #000; font-size: 13px; }
+        .cupom-header-tabela { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; font-weight: bold; padding-bottom: 5px; border-bottom: 1px solid #000; font-size: 11px; }
         .produtos-lista { flex-grow: 1; overflow-y: auto; margin-top: 5px; }
-        .item-cupom { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; padding: 6px 0; border-bottom: 1px dotted #ccc; font-size: 13px; align-items: center; }
+        .item-cupom { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; padding: 4px 0; border-bottom: 1px dotted #ccc; font-size: 11px; align-items: center; }
         
-        .total-box { background: #fff; color: #000; padding: 15px; border-radius: 8px; text-align: center; margin-top: 15px; border: 2px solid #000; }
-        .total-box h3 { font-size: 14px; margin-bottom: 2px; font-weight: 800; }
-        .total-box p { font-size: 28px; font-weight: 900; }
+        .cupom-rodape { margin-top: 10px; border-top: 1px dashed #000; padding-top: 8px; font-size: 11px; }
+        .total-box-cupom { font-size: 16px; font-weight: bold; text-align: center; margin-top: 8px; border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 5px 0; }
+        
+        #qrcode-container { display: flex; justify-content: center; margin: 10px 0; }
         
         .operacao-area { width: 55%; padding: 30px; display: flex; flex-direction: column; background: #f8fafc; justify-content: space-between; }
         .terminal-log { background: #020617; color: #38bdf8; padding: 15px; border-radius: 8px; height: 110px; overflow-y: auto; font-family: monospace; font-size: 13px; margin-bottom: 15px; }
@@ -64,11 +68,11 @@
         .modal-bg.ativo { display: flex; }
         .modal-card { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 440px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
 
-        /* REGRA EXCLUSIVA PARA IMPRESSÃO TÉRMICA DO CUPOM LIMPO */
+        /* REGRA EXCLUSIVA PARA IMPRESSÃO TÉRMICA DO CUPOM */
         @media print {
             body * { visibility: hidden; }
             .cupom-area, .cupom-area * { visibility: visible; }
-            .cupom-area { position: absolute; left: 0; top: 0; width: 100%; border: none; padding: 5px; box-shadow: none; }
+            .cupom-area { position: absolute; left: 0; top: 0; width: 100%; border: none; padding: 0; }
         }
     </style>
 </head>
@@ -107,15 +111,24 @@
         <div class="pdv-container">
             <div class="cupom-area" id="area-recibo-impressao">
                 <div class="empresa-header">
-                    <h3>MERCADINHO DOIS IRMÃOS LTDA</h3>
+                    <h3>MERCADINHO DOIS IRMÃOS - NFC-e</h3>
                     <p>CNPJ: 44.133.465/0001-96</p>
-                    <p>Natal - RN</p>
-                    <p id="data-hora-cupom" style="font-size: 11px; margin-top: 4px;"></p>
+                    <p>Data: <span id="data-hora-cupom"></span></p>
+                    <p>Cliente: Consumidor Final</p>
                 </div>
-                <div class="cupom-header"><span>Item</span><span style="text-align:center;">Qtd</span><span style="text-align:right;">Unit</span><span style="text-align:right;">Total</span></div>
+                <div class="cupom-header-tabela"><span>Item</span><span style="text-align:center;">Qtd</span><span style="text-align:right;">Unit</span><span style="text-align:right;">Total</span></div>
                 <div class="produtos-lista" id="lista-cupom"></div>
-                <div style="margin-top: 10px; font-size: 12px; font-weight: bold;" id="info-pagamento-cupom">Forma de Pagto: Dinheiro</div>
-                <div class="total-box"><h3>TOTAL A PAGAR</h3><p>R$ <span id="valor-total">0.00</span></p></div>
+                
+                <div class="cupom-rodape">
+                    <p>Qtd Total de Itens: <span id="qtd-total-itens">0</span></p>
+                    <p>Forma de Pagto: <span id="info-pagamento-cupom">Dinheiro</span></p>
+                    <div class="total-box-cupom">TOTAL: R$ <span id="valor-total">0.00</span></div>
+                    
+                    <div id="qrcode-container"></div>
+                    
+                    <p style="text-align:center; font-size:10px; margin-top:5px;">Consulte via Chave de Acesso NFC-e<br>Consumidor Eletrônica</p>
+                    <p style="text-align:center; font-size:10px; margin-top:5px; font-weight:bold;">Obrigado pela preferência!</p>
+                </div>
             </div>
             
             <div class="operacao-area">
@@ -160,10 +173,8 @@
         </div>
         <div class="dashboard-area">
             
-            <!-- SINCRONIZAÇÃO GITHUB / LOCALSTORAGE -->
             <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #2563eb; margin-bottom: 20px;">
                 <h3 style="color: #2563eb; margin-bottom: 10px;">☁️ Sincronização em Nuvem (GitHub Token)</h3>
-                <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Integração com o repositório para salvar e baixar o estoque completo (`estoque.json`).</p>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
                     <input type="password" id="git-token" placeholder="GitHub Personal Access Token (ghp_...)" style="flex:2; padding:12px; border:1px solid #cbd5e1; border-radius:8px;">
                     <input type="text" id="git-repo" placeholder="Repositório (ex: usuario/repositorio)" value="rafaelxt1033-gif/pdvmercadodoluiz" style="flex:2; padding:12px; border:1px solid #cbd5e1; border-radius:8px;">
@@ -175,14 +186,11 @@
                 </div>
             </div>
 
-            <!-- EXPORTAÇÃO PARA CONTADOR -->
             <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #0284c7; margin-bottom: 20px;">
                 <h3 style="color: #0284c7; margin-bottom: 10px;">📑 Documento XML / Relatório para o Contador</h3>
-                <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Baixe a planilha consolidada de todas as vendas registradas para envio à contabilidade.</p>
                 <button class="btn-universal" onclick="exportarRelatorioContador()" style="background: #0284c7; width: auto;">📄 Baixar Relatório de Vendas (Excel)</button>
             </div>
 
-            <!-- ADICIONAR PRODUTO -->
             <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #10b981; margin-bottom: 20px;">
                 <h3 style="color: #10b981; margin-bottom: 10px;">➕ Adicionar ou Atualizar Produto</h3>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -279,9 +287,23 @@
             atualizarContadorProdutos();
             atualizarPainelVendasAdm();
             document.getElementById('data-hora-cupom').innerText = new Date().toLocaleString('pt-BR');
+            gerarQRCodeFiscal("https://nfce.sefaz.rn.gov.br/portal/consultar.nut?chNFe=44133465000196");
             if (localStorage.getItem('git_token')) document.getElementById('git-token').value = localStorage.getItem('git_token');
             if (localStorage.getItem('git_repo')) document.getElementById('git-repo').value = localStorage.getItem('git_repo');
         };
+
+        function gerarQRCodeFiscal(texto) {
+            let container = document.getElementById('qrcode-container');
+            container.innerHTML = "";
+            new QRCode(container, {
+                text: texto,
+                width: 90,
+                height: 90,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.L
+            });
+        }
 
         function salvarConfigGitHub() {
             localStorage.setItem('git_token', document.getElementById('git-token').value.trim());
@@ -357,7 +379,7 @@
 
         function atualizarTextoPagamento() {
             let f = document.getElementById('forma-pagamento').value;
-            document.getElementById('info-pagamento-cupom').innerText = `Forma de Pagto: ${f}`;
+            document.getElementById('info-pagamento-cupom').innerText = f;
         }
 
         function fazerLogin() {
@@ -473,13 +495,15 @@
             let lista = document.getElementById('lista-cupom');
             let html = '';
             totalVenda = 0;
+            let qtdTotalItens = 0;
 
             cupomAtual.forEach((item, idx) => {
                 totalVenda += item.total;
+                qtdTotalItens += item.qtd;
                 html += `
                     <div class="item-cupom">
                         <span>${item.nome}</span>
-                        <span style="text-align:center;">${item.qtd}</span>
+                        <span style="text-align:center;">${item.qtd} UN</span>
                         <span style="text-align:right;">${item.preco.toFixed(2)}</span>
                         <span style="text-align:right;">${item.total.toFixed(2)}</span>
                     </div>
@@ -488,6 +512,7 @@
 
             lista.innerHTML = html;
             document.getElementById('valor-total').innerText = totalVenda.toFixed(2);
+            document.getElementById('qtd-total-itens').innerText = qtdTotalItens;
             lista.scrollTop = lista.scrollHeight;
         }
 
@@ -523,7 +548,7 @@
                 fiscal: fiscal
             };
 
-            // Imprime apenas o cupom limpo
+            // Imprime direto no formato do cupom térmico
             window.print();
 
             vendasRealizadas.push(vendaObj);
