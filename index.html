@@ -6,8 +6,6 @@
     <title>Mercadinho Dois Irmãos - PDV Pro</title>
     <!-- SheetJS para exportação de dados contábeis em Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <!-- QRCode.js para geração do QR Code do cupom térmico -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --primaria: #0f172a; --secundaria: #2563eb; --sucesso: #10b981; --alerta: #f59e0b; --erro: #ef4444; --fundo: #f8fafc; --texto: #1e293b; --fiscal: #7c3aed; }
@@ -34,13 +32,13 @@
         .empresa-header h3 { font-size: 13px; font-weight: bold; }
         .empresa-header p { font-size: 11px; margin-top: 2px; }
         
-        .cupom-header-tabela { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; font-weight: bold; padding-bottom: 5px; border-bottom: 1px solid #000; font-size: 11px; }
+        .cupom-header-tabela { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 30px; font-weight: bold; padding-bottom: 5px; border-bottom: 1px solid #000; font-size: 11px; }
         .produtos-lista { flex-grow: 1; overflow-y: auto; margin-top: 5px; }
-        .item-cupom { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; padding: 4px 0; border-bottom: 1px dotted #ccc; font-size: 11px; align-items: center; }
+        .item-cupom { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 30px; padding: 4px 0; border-bottom: 1px dotted #ccc; font-size: 11px; align-items: center; }
+        .btn-remover-item { background: var(--erro); color: white; border: none; border-radius: 4px; width: 22px; height: 22px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 12px; }
         
         .cupom-rodape { margin-top: 10px; border-top: 1px dashed #000; padding-top: 8px; font-size: 11px; }
         .total-box-cupom { font-size: 16px; font-weight: bold; text-align: center; margin-top: 8px; border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 5px 0; }
-        #qrcode-container { display: flex; justify-content: center; margin: 10px 0; }
         
         .operacao-area { width: 55%; padding: 30px; display: flex; flex-direction: column; background: #f8fafc; justify-content: space-between; }
         .terminal-log { background: #020617; color: #38bdf8; padding: 15px; border-radius: 8px; height: 110px; overflow-y: auto; font-family: monospace; font-size: 13px; margin-bottom: 15px; }
@@ -66,11 +64,12 @@
         .modal-bg.ativo { display: flex; }
         .modal-card { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 440px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
 
-        /* IMPRESSÃO ISOLADA DO CUPOM TÉRMICO */
+        /* IMPRESSÃO ISOLADA DO CUPOM TÉRMICO (OCULTA O BOTÃO X NO PAPEL) */
         @media print {
             body * { visibility: hidden; }
             .cupom-area, .cupom-area * { visibility: visible; }
             .cupom-area { position: absolute; left: 0; top: 0; width: 100%; border: none; padding: 0; }
+            .btn-remover-item { display: none !important; }
         }
     </style>
 </head>
@@ -114,7 +113,7 @@
                     <p>Data: <span id="data-hora-cupom"></span></p>
                     <p>Cliente: Consumidor Final</p>
                 </div>
-                <div class="cupom-header-tabela"><span>Item</span><span style="text-align:center;">Qtd</span><span style="text-align:right;">Unit</span><span style="text-align:right;">Total</span></div>
+                <div class="cupom-header-tabela"><span>Item</span><span style="text-align:center;">Qtd</span><span style="text-align:right;">Unit</span><span style="text-align:right;">Total</span><span></span></div>
                 <div class="produtos-lista" id="lista-cupom"></div>
                 
                 <div class="cupom-rodape">
@@ -122,9 +121,7 @@
                     <p>Forma de Pagto: <span id="info-pagamento-cupom">Dinheiro</span></p>
                     <div class="total-box-cupom">TOTAL: R$ <span id="valor-total">0.00</span></div>
                     
-                    <div id="qrcode-container"></div>
-                    
-                    <p style="text-align:center; font-size:10px; margin-top:5px;">Consulte via Chave de Acesso NFC-e<br>Consumidor Eletrônica</p>
+                    <p style="text-align:center; font-size:10px; margin-top:8px;">Consulte via Chave de Acesso NFC-e<br>Consumidor Eletrônica</p>
                     <p style="text-align:center; font-size:10px; margin-top:5px; font-weight:bold;">Obrigado pela preferência!</p>
                 </div>
             </div>
@@ -284,23 +281,9 @@
             atualizarContadorProdutos();
             atualizarPainelVendasAdm();
             document.getElementById('data-hora-cupom').innerText = new Date().toLocaleString('pt-BR');
-            gerarQRCodeFiscal("https://nfce.sefaz.rn.gov.br/portal/consultar.nut?chNFe=44133465000196");
             if (localStorage.getItem('git_token')) document.getElementById('git-token').value = localStorage.getItem('git_token');
             if (localStorage.getItem('git_repo')) document.getElementById('git-repo').value = localStorage.getItem('git_repo');
         };
-
-        function gerarQRCodeFiscal(texto) {
-            let container = document.getElementById('qrcode-container');
-            container.innerHTML = "";
-            new QRCode(container, {
-                text: texto,
-                width: 90,
-                height: 90,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.L
-            });
-        }
 
         function salvarConfigGitHub() {
             localStorage.setItem('git_token', document.getElementById('git-token').value.trim());
@@ -503,6 +486,7 @@
                         <span style="text-align:center;">${item.qtd} UN</span>
                         <span style="text-align:right;">${item.preco.toFixed(2)}</span>
                         <span style="text-align:right;">${item.total.toFixed(2)}</span>
+                        <button class="btn-remover-item" onclick="removerItemCupom(${idx})" title="Remover item">✕</button>
                     </div>
                 `;
             });
@@ -511,6 +495,11 @@
             document.getElementById('valor-total').innerText = totalVenda.toFixed(2);
             document.getElementById('qtd-total-itens').innerText = qtdTotalItens;
             lista.scrollTop = lista.scrollHeight;
+        }
+
+        function removerItemCupom(idx) {
+            cupomAtual.splice(idx, 1);
+            renderizarCupom();
         }
 
         function cancelarCupom() {
