@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mercadinho Dois Irmãos - PDV Pro</title>
-    <!-- SheetJS para exportação de dados contábeis em Excel -->
+    <!-- SheetJS para relatórios em Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- QRCode.js para geração de QR Code exclusivo na NFC-e -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --primaria: #0f172a; --secundaria: #2563eb; --sucesso: #10b981; --alerta: #f59e0b; --erro: #ef4444; --fundo: #f8fafc; --texto: #1e293b; --fiscal: #7c3aed; }
@@ -26,30 +28,34 @@
         .top-bar { background: var(--primaria); color: white; padding: 0 25px; height: 65px; display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .pdv-container { display: flex; width: 100%; height: calc(100% - 65px); background: white; }
         
-        /* CUPOM TÉRMICO VISUAL */
-        .cupom-area { width: 45%; background: white; padding: 25px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; font-family: monospace; font-size: 12px; color: #000; }
-        .empresa-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 8px; margin-bottom: 8px; }
-        .empresa-header h3 { font-size: 13px; font-weight: bold; }
-        .empresa-header p { font-size: 11px; margin-top: 2px; }
+        /* CUPOM TÉRMICO COM LETRAS EXPANDIDAS E NÍTIDAS */
+        .cupom-area { width: 45%; background: white; padding: 20px; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; font-family: monospace; font-size: 14px; color: #000; font-weight: bold; }
+        .empresa-header { text-align: center; border-bottom: 2px dashed #000; padding-bottom: 8px; margin-bottom: 8px; }
+        .empresa-header h3 { font-size: 16px; font-weight: 900; }
+        .empresa-header p { font-size: 13px; margin-top: 2px; }
         
-        .cupom-header-tabela { display: grid; grid-template-columns: 2fr 1.2fr 1fr 1fr 30px; font-weight: bold; padding-bottom: 5px; border-bottom: 1px solid #000; font-size: 11px; }
+        .cupom-header-tabela { display: grid; grid-template-columns: 2fr 1.2fr 1fr 1fr 30px; font-weight: 900; padding-bottom: 5px; border-bottom: 2px solid #000; font-size: 13px; }
         .produtos-lista { flex-grow: 1; overflow-y: auto; margin-top: 5px; }
-        .item-cupom { display: grid; grid-template-columns: 2fr 1.2fr 1fr 1fr 30px; padding: 4px 0; border-bottom: 1px dotted #ccc; font-size: 11px; align-items: center; }
+        .item-cupom { display: grid; grid-template-columns: 2fr 1.2fr 1fr 1fr 30px; padding: 6px 0; border-bottom: 1px dotted #888; font-size: 13px; align-items: center; }
         .btn-remover-item { background: var(--erro); color: white; border: none; border-radius: 4px; width: 22px; height: 22px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 12px; }
         .qtd-link { cursor: pointer; color: var(--secundaria); text-decoration: underline; font-weight: bold; }
         
-        .cupom-rodape { margin-top: 10px; border-top: 1px dashed #000; padding-top: 8px; font-size: 11px; }
-        .total-box-cupom { font-size: 16px; font-weight: bold; text-align: center; margin-top: 8px; border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 5px 0; }
+        .cupom-rodape { margin-top: 10px; border-top: 2px dashed #000; padding-top: 8px; font-size: 13px; }
         
+        /* DESTAQUE EM VERMELHO NO TOTAL DO PAINEL DO CAIXA */
+        .total-box-cupom { font-size: 26px; font-weight: 900; text-align: center; margin-top: 8px; border-top: 3px solid #dc2626; border-bottom: 3px solid #dc2626; padding: 8px 0; color: #dc2626; background: #fef2f2; }
+        
+        #qrcode-container { display: flex; justify-content: center; margin: 10px 0; }
+
         .operacao-area { width: 55%; padding: 30px; display: flex; flex-direction: column; background: #f8fafc; justify-content: space-between; }
-        .terminal-log { background: #020617; color: #38bdf8; padding: 12px 15px; border-radius: 8px; height: 100px; overflow-y: auto; font-family: monospace; font-size: 13px; margin-bottom: 15px; border-left: 4px solid var(--secundaria); }
+        .terminal-log { background: #020617; color: #38bdf8; padding: 12px 15px; border-radius: 8px; height: 100px; overflow-y: auto; font-family: monospace; font-size: 14px; margin-bottom: 15px; border-left: 4px solid var(--secundaria); }
         .input-codigo { width: 100%; padding: 20px; font-size: 34px; text-align: center; border: 3px solid var(--primaria); border-radius: 12px; outline: none; font-weight: bold; }
         
         .painel-balanca-rapida { display: flex; align-items: center; gap: 8px; background: #e0f2fe; padding: 10px 15px; border-radius: 10px; border: 1px solid #7dd3fc; margin-bottom: 10px; }
-        .painel-balanca-rapida label { font-size: 13px; font-weight: 800; color: #0369a1; text-transform: uppercase; }
+        .painel-balanca-rapida label { font-size: 14px; font-weight: 800; color: #0369a1; text-transform: uppercase; }
 
         .dropdown-busca { display: none; position: absolute; left: 0; width: 100%; background: white; border: 2px solid var(--secundaria); border-radius: 8px; max-height: 250px; overflow-y: auto; z-index: 999; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .opcao-busca { padding: 14px; cursor: pointer; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; }
+        .opcao-busca { padding: 14px; cursor: pointer; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: bold; font-size: 15px; }
         .opcao-busca:hover { background: #eff6ff; color: var(--secundaria); }
         
         .fechamento-painel { background: #0f172a; padding: 25px; border-radius: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
@@ -73,10 +79,12 @@
         .modal-bg.ativo { display: flex; }
         .modal-card { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 440px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
 
+        /* REGRAS DE IMPRESSÃO (NO CUPOM TÉRMICO IMPRESSO FICA PRETO PARA ECONOMIA DE TINTA/TERMO) */
         @media print {
             body * { visibility: hidden; }
             .cupom-area, .cupom-area * { visibility: visible; }
-            .cupom-area { position: absolute; left: 0; top: 0; width: 100%; border: none; padding: 0; }
+            .cupom-area { position: absolute; left: 0; top: 0; width: 100%; border: none; padding: 0; font-size: 15px !important; }
+            .total-box-cupom { color: #000 !important; border-color: #000 !important; background: transparent !important; }
             .btn-remover-item { display: none !important; }
         }
     </style>
@@ -116,7 +124,7 @@
         <div class="pdv-container">
             <div class="cupom-area" id="area-recibo-impressao">
                 <div class="empresa-header">
-                    <h3>MERCADINHO DOIS IRMÃOS - NFC-e</h3>
+                    <h3 id="titulo-cupom-header">MERCADINHO DOIS IRMÃOS</h3>
                     <p>CNPJ: 44.133.465/0001-96</p>
                     <p>Data: <span id="data-hora-cupom"></span></p>
                     <p>Cliente: Consumidor Final</p>
@@ -127,16 +135,23 @@
                 <div class="cupom-rodape">
                     <p>Qtd Total de Itens: <span id="qtd-total-itens">0</span></p>
                     <p>Forma de Pagto: <span id="info-pagamento-cupom">Dinheiro</span></p>
+
+                    <!-- TOTAL EM VERMELHO DESTAQUE NO SISTEMA -->
                     <div class="total-box-cupom">TOTAL: R$ <span id="valor-total">0.00</span></div>
                     
-                    <p style="text-align:center; font-size:10px; margin-top:8px;">Consulte via Chave de Acesso NFC-e<br>Consumidor Eletrônica</p>
-                    <p style="text-align:center; font-size:10px; margin-top:5px; font-weight:bold;">Obrigado pela preferência!</p>
+                    <!-- ÁREA DO QR CODE FISCAL EXCLUSIVO DA NFC-E -->
+                    <div id="area-fiscal-nfce" style="display: none;">
+                        <div id="qrcode-container"></div>
+                        <p style="text-align:center; font-size:11px; margin-top:5px;">Consulte via Chave de Acesso NFC-e<br>Consumidor Eletrônica</p>
+                    </div>
+
+                    <p style="text-align:center; font-size:12px; margin-top:8px; font-weight:bold;">Obrigado pela preferência!</p>
                 </div>
             </div>
             
             <div class="operacao-area">
                 <div class="terminal-log" id="log-sistema">
-                    <div>[BALANÇA PRONTA] Digite <b>PESO * CÓDIGO</b> (Ex: <code>0.450*2</code> para 450g do item 2).</div>
+                    <div>[SISTEMA PRONTO] Digite <b>PESO * CÓDIGO</b> (Ex: <code>0.450*2</code> para 450g do item 2).</div>
                 </div>
                 
                 <div class="painel-balanca-rapida">
@@ -583,7 +598,6 @@
             let qtd = parseFloat(document.getElementById('input-qtd-manual').value) || 1;
             let codigo = entrada;
 
-            // SUPORTE AO FORMATO DISSOCIADO DE MULTIPLICADOR/PESO (Ex: 0.450*2)
             if (entrada.includes('*')) {
                 let partes = entrada.split('*');
                 let pesoDigitado = parseFloat(partes[0].replace(',', '.'));
@@ -593,7 +607,6 @@
                 codigo = partes[1].trim();
             }
 
-            // SUPORTE A ETIQUETA IMPRESSA DA BALANÇA (Código 200XXXX...)
             if (codigo.length === 13 && codigo.startsWith('2')) {
                 let codProdutoCurto = parseInt(codigo.substring(1, 6)).toString();
                 let valorOuPeso = parseFloat(codigo.substring(6, 12)) / 100;
@@ -601,7 +614,7 @@
                 if (estoqueCloud[codProdutoCurto]) {
                     codigo = codProdutoCurto;
                     let precoUnit = estoqueCloud[codigo].preco;
-                    qtd = valorOuPeso / precoUnit; // Extrai o peso real baseado no valor impresso
+                    qtd = valorOuPeso / precoUnit;
                 }
             }
 
@@ -693,10 +706,35 @@
             if (e.key === 'Enter') finalizarVenda(false);
         }
 
+        function gerarQRCodeFiscal(texto) {
+            let container = document.getElementById('qrcode-container');
+            container.innerHTML = "";
+            new QRCode(container, {
+                text: texto,
+                width: 100,
+                height: 100,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.L
+            });
+        }
+
         function finalizarVenda(fiscal) {
             if (cupomAtual.length === 0) {
                 alert("O cupom está vazio!");
                 return;
+            }
+
+            let areaFiscal = document.getElementById('area-fiscal-nfce');
+            let tituloCupom = document.getElementById('titulo-cupom-header');
+
+            if (fiscal) {
+                tituloCupom.innerText = "MERCADINHO DOIS IRMÃOS - NFC-e";
+                gerarQRCodeFiscal("https://nfce.sefaz.rn.gov.br/portal/consultar.nut?chNFe=44133465000196");
+                areaFiscal.style.display = "block";
+            } else {
+                tituloCupom.innerText = "MERCADINHO DOIS IRMÃOS";
+                areaFiscal.style.display = "none";
             }
 
             let vendaObj = {
