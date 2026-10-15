@@ -42,7 +42,7 @@
         
         .cupom-rodape { margin-top: 10px; border-top: 2px dashed #000; padding-top: 8px; font-size: 13px; }
         
-        /* DESTAQUE EM VERMELHO NO TOTAL DO PAINEL DO CAIXA */
+        /* TOTAL EM VERMELHO DESTAQUE NO SISTEMA */
         .total-box-cupom { font-size: 26px; font-weight: 900; text-align: center; margin-top: 8px; border-top: 3px solid #dc2626; border-bottom: 3px solid #dc2626; padding: 8px 0; color: #dc2626; background: #fef2f2; }
         
         #qrcode-container { display: flex; justify-content: center; margin: 10px 0; }
@@ -135,11 +135,13 @@
                 <div class="cupom-rodape">
                     <p>Qtd Total de Itens: <span id="qtd-total-itens">0</span></p>
                     <p>Forma de Pagto: <span id="info-pagamento-cupom">Dinheiro</span></p>
+                    <p>Valor Recebido: R$ <span id="cupom-valor-pago">0.00</span></p>
+                    <p style="font-size: 15px; font-weight: 900; color: #0284c7;">TROCO: R$ <span id="cupom-troco-final">0.00</span></p>
 
                     <!-- TOTAL EM VERMELHO DESTAQUE NO SISTEMA -->
                     <div class="total-box-cupom">TOTAL: R$ <span id="valor-total">0.00</span></div>
                     
-                    <!-- ÁREA DO QR CODE FISCAL EXCLUSIVO DA NFC-E -->
+                    <!-- ÁREA DO QR CODE FISCAL (EXCLUSIVO DA NFC-e) -->
                     <div id="area-fiscal-nfce" style="display: none;">
                         <div id="qrcode-container"></div>
                         <p style="text-align:center; font-size:11px; margin-top:5px;">Consulte via Chave de Acesso NFC-e<br>Consumidor Eletrônica</p>
@@ -363,7 +365,6 @@
             atualizarPainelVendasAdm();
             document.getElementById('data-hora-cupom').innerText = new Date().toLocaleString('pt-BR');
             
-            // CARREGA AUTOMATICAMENTE O TOKEN E O REPOSITÓRIO SALVOS LOCALMENTE
             let savedToken = localStorage.getItem('git_token');
             let savedRepo = localStorage.getItem('git_repo') || "rafaelxt1033-gif/pdvmercadodoluiz";
             
@@ -690,6 +691,7 @@
             document.getElementById('valor-total').innerText = totalVenda.toFixed(2);
             document.getElementById('qtd-total-itens').innerText = Number.isInteger(qtdTotalItens) ? qtdTotalItens : qtdTotalItens.toFixed(3);
             lista.scrollTop = lista.scrollHeight;
+            calcularTroco();
         }
 
         function removerItemCupom(idx) {
@@ -708,7 +710,11 @@
         function calcularTroco() {
             let pago = parseFloat(document.getElementById('valor-pago').value) || 0;
             let troco = pago - totalVenda;
-            document.getElementById('box-troco').innerText = `Troco: R$ ${troco > 0 ? troco.toFixed(2) : '0.00'}`;
+            let trocoFormatado = troco > 0 ? troco.toFixed(2) : '0.00';
+            
+            document.getElementById('box-troco').innerText = `Troco: R$ ${trocoFormatado}`;
+            document.getElementById('cupom-valor-pago').innerText = pago.toFixed(2);
+            document.getElementById('cupom-troco-final').innerText = trocoFormatado;
         }
 
         function fecharVendaComEnter(e) {
@@ -742,7 +748,7 @@
                 gerarQRCodeFiscal("https://nfce.sefaz.rn.gov.br/portal/consultar.nut?chNFe=44133465000196");
                 areaFiscal.style.display = "block";
             } else {
-                tituloCupom.innerText = "MERCADINHO DOIS IRMÃOS";
+                tituloCupom.innerText = "MERCADINHO DOIS IRMÃOS - NOTA AVULSA";
                 areaFiscal.style.display = "none";
             }
 
@@ -763,6 +769,8 @@
             renderizarCupom();
             document.getElementById('valor-pago').value = '';
             document.getElementById('box-troco').innerText = 'Troco: R$ 0.00';
+            document.getElementById('cupom-valor-pago').innerText = '0.00';
+            document.getElementById('cupom-troco-final').innerText = '0.00';
             document.getElementById('codigo-barras').focus();
         }
 
