@@ -137,7 +137,7 @@
   },
   "37": {
     "nome": "COXA-SOBRECOXA KG",
-    "preco": 10.99
+    "preco": 11.99
   },
   "38": {
     "nome": "BACON KG",
@@ -149,7 +149,7 @@
   },
   "40": {
     "nome": "LOMBO BOVINO KG",
-    "preco": 28.99
+    "preco": 29.99
   },
   "41": {
     "nome": "SALSICHA AVIVAR KG",
@@ -353,7 +353,7 @@
   },
   "119": {
     "nome": "TOMATE KG",
-    "preco": 8.99
+    "preco": 9.9
   },
   "199": {
     "nome": "PEIXE SARDINHA SEM CABEÇA KG",
@@ -1721,7 +1721,7 @@
   },
   "7898040821234": {
     "nome": "BOLACHA PINGO DE MEL 300G",
-    "preco": 6.25
+    "preco": 6.5
   },
   "7892933445514": {
     "nome": "BOLACHA PINGO DE MEL DOIS IRMAOS 300G",
@@ -2473,7 +2473,7 @@
   },
   "7896523100968": {
     "nome": "CHOCOLATE GRANULADO FA 50G",
-    "preco": 2.5
+    "preco": 3.25
   },
   "7899970404023": {
     "nome": "CHOCOLATE HERSHEYS AO LEITE 82G",
@@ -7525,11 +7525,11 @@
   },
   "7892744123496": {
     "nome": "PRODUTOS DIVERSOS KI-PUREZA",
-    "preco": 1.15
+    "preco": 1.2
   },
   "7892700034644": {
     "nome": "PRODUTOS DIVERSOS KI-PUREZA GD",
-    "preco": 5.99
+    "preco": 6.25
   },
   "7898909987040": {
     "nome": "PROTEINA DE SOJA SUPRESOY 400G",
@@ -8131,10 +8131,6 @@
     "nome": "SABAO EM PO ABSOLUTO COCO 400G",
     "preco": 1.75
   },
-  "7891150097575": {
-    "nome": "SABAO EM PO ALA COCO 400G",
-    "preco": 3.99
-  },
   "7891150097551": {
     "nome": "SABAO EM PO ALA COCO 800G",
     "preco": 7.75
@@ -8150,10 +8146,6 @@
   "7891150097537": {
     "nome": "SABAO EM PO ALA FLOR DE LIS  800G",
     "preco": 7.75
-  },
-  "7891150097544": {
-    "nome": "SABAO EM PO ALA LAVANDA 400G",
-    "preco": 3.99
   },
   "7891150097582": {
     "nome": "SABAO EM PO ALA LAVANDA 800G",
@@ -9722,5 +9714,21 @@
   "7896914012245": {
     "nome": "PAPEL HIGIENICO SUBLIME FOLHA DUPLA 4RL",
     "preco": 6.99
+  },
+  "7891150106574": {
+    "nome": "SABAO EM PO ALA COCO 400G",
+    "preco": 3.99
+  },
+  "7891150106550": {
+    "nome": "SABAO EM PO ALA LAVANDA 400G",
+    "preco": 3.99
+  },
+  "7896030892516": {
+    "nome": "COPO DESCARTAVEIS COPOBRAS 180ML",
+    "preco": 5.99
+  },
+  "7896072697049": {
+    "nome": "GRANULADO CHOC/MIL CORES 120G",
+    "preco": 7.5
   }
 }
