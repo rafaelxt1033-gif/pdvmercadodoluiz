@@ -61,6 +61,12 @@
         .tabela-dados { width: 100%; border-collapse: collapse; background: white; margin-top: 10px;}
         .tabela-dados th, .tabela-dados td { padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: left; }
         
+        /* CARDS DO BALANÇO FINANCEIRO */
+        .cards-balanco { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+        .card-financeiro { background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1; text-align: center; }
+        .card-financeiro h4 { font-size: 13px; color: #64748b; margin-bottom: 5px; }
+        .card-financeiro p { font-size: 22px; font-weight: 800; color: #0f172a; }
+
         .modal-bg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
         .modal-bg.ativo { display: flex; }
         .modal-card { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 440px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
@@ -128,10 +134,10 @@
             </div>
             
             <div class="operacao-area">
-                <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Caixa pronto. Digite o código, nome ou use Qtd (ex: 1.500 * Cód).</div></div>
+                <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Caixa pronto. Ajuste o peso/qtd no campo ao lado antes de bipar.</div></div>
                 
                 <div style="position: relative; display: flex; gap: 8px; margin-bottom: 15px;">
-                    <input type="number" id="input-qtd-manual" value="1" step="any" placeholder="Qtd / Peso" style="width: 100px; text-align: center; font-size: 22px; border: 3px solid var(--primaria); border-radius: 12px; font-weight: bold;" title="Qtd ou Peso (Balança)">
+                    <input type="number" id="input-qtd-manual" value="1" step="any" placeholder="Qtd/Peso" style="width: 110px; text-align: center; font-size: 22px; border: 3px solid var(--primaria); border-radius: 12px; font-weight: bold;" title="Altere aqui a quantidade ou peso antes de lançar o produto">
                     <div style="position: relative; flex: 1;">
                         <div id="dropdown-sugestoes" class="dropdown-busca" style="bottom: 100%; margin-bottom: 5px; width: 100%;"></div>
                         <input type="text" class="input-codigo" id="codigo-barras" placeholder="Digite código ou nome..." oninput="filtrarPorNome(this.value)" onkeydown="navegarSugestoes(event)" autocomplete="off" autofocus>
@@ -168,6 +174,52 @@
             <button class="btn-universal" onclick="mostrarTela('tela-pdv')" style="background: var(--secundaria); width: auto; padding: 8px 15px;">Voltar ao Caixa</button>
         </div>
         <div class="dashboard-area">
+
+            <!-- MÓDULO: BALANÇO DO DIA COM PRIVACIDADE -->
+            <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #10b981; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="color: #10b981;">💰 Balanço Financeiro do Dia (<span id="data-balanco-hoje"></span>)</h3>
+                    <button onclick="alternarVisibilidadeBalanco()" style="background: #e2e8f0; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; display: flex; align-items: center; gap: 6px;">
+                        <span id="icone-olho">👁️</span> <span id="texto-olho">Mostrar Valorações</span>
+                    </button>
+                </div>
+
+                <div class="cards-balanco">
+                    <div class="card-financeiro">
+                        <h4>Total Faturado Hoje</h4>
+                        <p id="balanco-faturado">R$ ***,**</p>
+                    </div>
+                    <div class="card-financeiro">
+                        <h4>Vendas Realizadas</h4>
+                        <p id="balanco-qtd-vendas">***</p>
+                    </div>
+                    <div class="card-financeiro">
+                        <h4>Ticket Médio</h4>
+                        <p id="balanco-ticket-medio">R$ ***,**</p>
+                    </div>
+                </div>
+
+                <div class="cards-balanco" style="margin-top: 10px;">
+                    <div class="card-financeiro" style="background: #f0fdf4;">
+                        <h4 style="color: #15803d;">💵 Dinheiro</h4>
+                        <p id="balanco-dinheiro" style="color: #166534;">R$ ***,**</p>
+                    </div>
+                    <div class="card-financeiro" style="background: #eff6ff;">
+                        <h4 style="color: #1d4ed8;">⚡ PIX</h4>
+                        <p id="balanco-pix" style="color: #1e40af;">R$ ***,**</p>
+                    </div>
+                    <div class="card-financeiro" style="background: #fefce8;">
+                        <h4 style="color: #a16207;">💳 Cartão</h4>
+                        <p id="balanco-cartao" style="color: #854d0e;">R$ ***,**</p>
+                    </div>
+                    <div class="card-financeiro" style="background: #fef2f2;">
+                        <h4 style="color: #b91c1c;">📖 Fiado (Caderneta)</h4>
+                        <p id="balanco-fiado" style="color: #991b1b;">R$ ***,**</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SINCRONIZAÇÃO GITHUB -->
             <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #2563eb; margin-bottom: 20px;">
                 <h3 style="color: #2563eb; margin-bottom: 10px;">☁️ Sincronização em Nuvem (GitHub Token)</h3>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
@@ -181,11 +233,13 @@
                 </div>
             </div>
 
+            <!-- CONTADOR RELATÓRIO -->
             <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #0284c7; margin-bottom: 20px;">
                 <h3 style="color: #0284c7; margin-bottom: 10px;">📑 Documento XML / Relatório para o Contador</h3>
                 <button class="btn-universal" onclick="exportarRelatorioContador()" style="background: #0284c7; width: auto;">📄 Baixar Relatório de Vendas (Excel)</button>
             </div>
 
+            <!-- ADICIONAR PRODUTO -->
             <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #10b981; margin-bottom: 20px;">
                 <h3 style="color: #10b981; margin-bottom: 10px;">➕ Adicionar ou Atualizar Produto</h3>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -196,8 +250,9 @@
                 </div>
             </div>
 
+            <!-- HISTÓRICO DE VENDAS -->
             <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #7c3aed; margin-bottom: 20px;">
-                <h3 style="color: #7c3aed; margin-bottom: 5px;">📊 Histórico de Vendas</h3>
+                <h3 style="color: #7c3aed; margin-bottom: 5px;">📊 Histórico de Vendas Recentes</h3>
                 <div style="max-height: 250px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px; margin-top: 10px;">
                     <table class="tabela-dados" style="margin-top: 0;">
                         <thead>
@@ -277,6 +332,7 @@
         let vendasRealizadas = JSON.parse(localStorage.getItem('vendas')) || [];
         let cupomAtual = [];
         let totalVenda = 0;
+        let balancoVisivel = false;
 
         window.onload = function() {
             atualizarContadorProdutos();
@@ -285,6 +341,54 @@
             if (localStorage.getItem('git_token')) document.getElementById('git-token').value = localStorage.getItem('git_token');
             if (localStorage.getItem('git_repo')) document.getElementById('git-repo').value = localStorage.getItem('git_repo');
         };
+
+        function alternarVisibilidadeBalanco() {
+            balancoVisivel = !balancoVisivel;
+            document.getElementById('icone-olho').innerText = balancoVisivel ? "🙈" : "👁️";
+            document.getElementById('texto-olho').innerText = balancoVisivel ? "Ocultar Valores" : "Mostrar Valorações";
+            calcularEExibirBalanco();
+        }
+
+        function calcularEExibirBalanco() {
+            let hojeDataStr = new Date().toLocaleDateString('pt-BR');
+            document.getElementById('data-balanco-hoje').innerText = hojeDataStr;
+
+            let totalHoje = 0;
+            let qtdVendasHoje = 0;
+            let dinheiro = 0, pix = 0, cartao = 0, fiado = 0;
+
+            vendasRealizadas.forEach(v => {
+                if (v.data && v.data.startsWith(hojeDataStr)) {
+                    totalHoje += v.total;
+                    qtdVendasHoje++;
+                    let pag = v.pagamento ? v.pagamento.toLowerCase() : '';
+                    if (pag.includes('dinheiro')) dinheiro += v.total;
+                    else if (pag.includes('pix')) pix += v.total;
+                    else if (pag.includes('cartão') || pag.includes('cartao')) cartao += v.total;
+                    else if (pag.includes('fiado')) fiado += v.total;
+                }
+            });
+
+            let ticketMedio = qtdVendasHoje > 0 ? (totalHoje / qtdVendasHoje) : 0;
+
+            if (balancoVisivel) {
+                document.getElementById('balanco-faturado').innerText = `R$ ${totalHoje.toFixed(2)}`;
+                document.getElementById('balanco-qtd-vendas').innerText = qtdVendasHoje;
+                document.getElementById('balanco-ticket-medio').innerText = `R$ ${ticketMedio.toFixed(2)}`;
+                document.getElementById('balanco-dinheiro').innerText = `R$ ${dinheiro.toFixed(2)}`;
+                document.getElementById('balanco-pix').innerText = `R$ ${pix.toFixed(2)}`;
+                document.getElementById('balanco-cartao').innerText = `R$ ${cartao.toFixed(2)}`;
+                document.getElementById('balanco-fiado').innerText = `R$ ${fiado.toFixed(2)}`;
+            } else {
+                document.getElementById('balanco-faturado').innerText = "R$ ***,**";
+                document.getElementById('balanco-qtd-vendas').innerText = "***";
+                document.getElementById('balanco-ticket-medio').innerText = "R$ ***,**";
+                document.getElementById('balanco-dinheiro').innerText = "R$ ***,**";
+                document.getElementById('balanco-pix').innerText = "R$ ***,**";
+                document.getElementById('balanco-cartao').innerText = "R$ ***,**";
+                document.getElementById('balanco-fiado').innerText = "R$ ***,**";
+            }
+        }
 
         function salvarConfigGitHub() {
             localStorage.setItem('git_token', document.getElementById('git-token').value.trim());
@@ -382,7 +486,10 @@
                 document.getElementById('data-hora-cupom').innerText = new Date().toLocaleString('pt-BR');
                 setTimeout(() => document.getElementById('codigo-barras').focus(), 100);
             }
-            if (id === 'tela-adm') atualizarPainelVendasAdm();
+            if (id === 'tela-adm') {
+                atualizarPainelVendasAdm();
+                calcularEExibirBalanco();
+            }
         }
 
         function atualizarContadorProdutos() {
@@ -469,6 +576,7 @@
             document.getElementById('codigo-barras').value = '';
             document.getElementById('input-qtd-manual').value = '1';
             document.getElementById('dropdown-sugestoes').style.display = 'none';
+            document.getElementById('input-qtd-manual').focus();
             renderizarCupom();
         }
 
