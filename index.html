@@ -55,8 +55,8 @@
         .painel-balanca-rapida label { font-size: 14px; font-weight: 800; color: #0369a1; text-transform: uppercase; }
 
         .dropdown-busca { display: none; position: absolute; left: 0; width: 100%; background: white; border: 2px solid var(--secundaria); border-radius: 8px; max-height: 250px; overflow-y: auto; z-index: 999; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .opcao-busca { padding: 14px; cursor: pointer; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: bold; font-size: 15px; }
-        .opcao-busca:hover { background: #eff6ff; color: var(--secundaria); }
+        .opcao-busca { padding: 12px 14px; cursor: pointer; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: bold; font-size: 15px; }
+        .opcao-busca:hover, .opcao-busca.selecionada { background: #eff6ff; color: var(--secundaria); }
         
         .fechamento-painel { background: #0f172a; padding: 25px; border-radius: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .fechamento-painel label { font-size: 17px !important; font-weight: 900 !important; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 8px; }
@@ -141,7 +141,7 @@
                     <!-- TOTAL EM VERMELHO DESTAQUE NO SISTEMA -->
                     <div class="total-box-cupom">TOTAL: R$ <span id="valor-total">0.00</span></div>
                     
-                    <!-- ÁREA DO QR CODE FISCAL (EXCLUSIVO DA NFC-e) -->
+                    <!-- ÁREA DO QR CODE FISCAL (APARECE APENAS NA NFC-e) -->
                     <div id="area-fiscal-nfce" style="display: none;">
                         <div id="qrcode-container"></div>
                         <p style="text-align:center; font-size:11px; margin-top:5px;">Consulte via Chave de Acesso NFC-e<br>Consumidor Eletrônica</p>
@@ -153,7 +153,7 @@
             
             <div class="operacao-area">
                 <div class="terminal-log" id="log-sistema">
-                    <div>[SISTEMA PRONTO] Digite <b>PESO * CÓDIGO</b> (Ex: <code>0.450*2</code> para 450g do item 2).</div>
+                    <div>[SISTEMA PRONTO] Digite <b>PESO * CÓDIGO</b> (Ex: <code>0.450*2</code> para 450g do item 2). Use as setas ↑↓ para navegar nas sugestões.</div>
                 </div>
                 
                 <div class="painel-balanca-rapida">
@@ -245,17 +245,22 @@
                 </div>
             </div>
 
-            <!-- SINCRONIZAÇÃO GITHUB -->
+            <!-- SINCRONIZAÇÃO E IMPORTAÇÃO RÁPIDA DE OUTRO SISTEMA / PC -->
             <div style="background: white; padding: 25px; border-radius: 8px; border-left: 5px solid #2563eb; margin-bottom: 20px;">
-                <h3 style="color: #2563eb; margin-bottom: 10px;">☁️ Sincronização em Nuvem (GitHub Token)</h3>
+                <h3 style="color: #2563eb; margin-bottom: 10px;">📦 Sincronização e Migração entre PCs (Estoque JSON)</h3>
+                <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Para atualizar este PC com os produtos de outro sistema sem erro de senha/token, basta exportar ou carregar o arquivo JSON do estoque:</p>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
-                    <input type="password" id="git-token" placeholder="GitHub Personal Access Token (ghp_...)" style="flex:2; padding:12px; border:1px solid #cbd5e1; border-radius:8px;">
+                    <input type="password" id="git-token" placeholder="GitHub Personal Access Token (Opcional)" style="flex:2; padding:12px; border:1px solid #cbd5e1; border-radius:8px;">
                     <input type="text" id="git-repo" placeholder="Repositório (ex: usuario/repositorio)" value="rafaelxt1033-gif/pdvmercadodoluiz" style="flex:2; padding:12px; border:1px solid #cbd5e1; border-radius:8px;">
                 </div>
-                <div style="display: flex; gap: 10px;">
-                    <button onclick="salvarConfigGitHub()" class="btn-universal" style="background:#475569; width:auto; padding: 10px 15px; font-size:14px;">💾 Salvar Credenciais</button>
-                    <button onclick="baixarEstoqueGitHub()" class="btn-universal" style="background:#2563eb; width:auto; padding: 10px 15px; font-size:14px;">📥 Baixar da Nuvem</button>
-                    <button onclick="enviarEstoqueGitHub()" class="btn-universal" style="background:#10b981; width:auto; padding: 10px 15px; font-size:14px;">☁️ Enviar para Nuvem</button>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button onclick="salvarConfigGitHub()" class="btn-universal" style="background:#475569; width:auto; padding: 10px 15px; font-size:14px;">💾 Salvar Token</button>
+                    <button onclick="baixarEstoqueGitHub()" class="btn-universal" style="background:#2563eb; width:auto; padding: 10px 15px; font-size:14px;">📥 Baixar Nuvem</button>
+                    <button onclick="enviarEstoqueGitHub()" class="btn-universal" style="background:#10b981; width:auto; padding: 10px 15px; font-size:14px;">☁️ Enviar Nuvem</button>
+                    <button onclick="exportarEstoqueLocal()" class="btn-universal" style="background:#0284c7; width:auto; padding: 10px 15px; font-size:14px;">📤 Exportar Arquivo .JSON</button>
+                    <label class="btn-universal" style="background:#7c3aed; width:auto; padding: 10px 15px; font-size:14px; cursor:pointer; display:inline-flex; align-items:center;">
+                        📥 Importar de Outro PC <input type="file" id="input-importar-json" accept=".json" onchange="importarEstoqueLocal(event)" style="display:none;">
+                    </label>
                 </div>
             </div>
 
@@ -359,6 +364,8 @@
         let cupomAtual = [];
         let totalVenda = 0;
         let balancoVisivel = false;
+        let indiceSugestaoAtiva = -1;
+        let listaSugestoesAtuais = [];
 
         window.onload = function() {
             atualizarContadorProdutos();
@@ -426,26 +433,55 @@
             }
         }
 
+        function exportarEstoqueLocal() {
+            let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(estoqueCloud, null, 2));
+            let downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "estoque.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importarEstoqueLocal(event) {
+            let file = event.target.files[0];
+            if (!file) return;
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let jsonImportado = JSON.parse(e.target.result);
+                    if (typeof jsonImportado === 'object' && jsonImportado !== null) {
+                        estoqueCloud = jsonImportado;
+                        atualizarContadorProdutos();
+                        alert("Estoque importado com sucesso de outro sistema/PC!");
+                    } else {
+                        alert("Arquivo JSON inválido.");
+                    }
+                } catch(err) {
+                    alert("Erro ao ler o arquivo JSON: " + err.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
         function salvarConfigGitHub() {
             let token = document.getElementById('git-token').value.trim();
             let repo = document.getElementById('git-repo').value.trim();
-            if (!token) return alert("Por favor, digite o Token do GitHub antes de salvar.");
-            
             localStorage.setItem('git_token', token);
             localStorage.setItem('git_repo', repo);
-            alert("Token e Repositório do GitHub salvos permanentemente neste computador!");
+            alert("Credenciais do GitHub salvas com sucesso!");
         }
 
         async function baixarEstoqueGitHub() {
             let token = document.getElementById('git-token').value.trim() || localStorage.getItem('git_token');
             let repo = document.getElementById('git-repo').value.trim() || localStorage.getItem('git_repo');
-            if (!token || !repo) return alert("Preencha e salve o Token e o Repositório do GitHub no Painel ADM!");
+            if (!token || !repo) return alert("Preencha o Token e o Repositório do GitHub!");
 
             try {
                 let res = await fetch(`https://api.github.com/repos/${repo}/contents/estoque.json`, {
                     headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
                 });
-                if (!res.ok) throw new Error("Arquivo estoque.json não encontrado no repositório.");
+                if (!res.ok) throw new Error("Erro de credenciais ou arquivo não encontrado.");
                 let data = await res.json();
                 
                 let jsonTexto = decodeURIComponent(escape(window.atob(data.content.replace(/\s/g, ''))));
@@ -455,14 +491,14 @@
                 atualizarContadorProdutos();
                 alert("Estoque baixado com sucesso da nuvem!");
             } catch (err) {
-                alert("Erro ao baixar do GitHub: " + err.message);
+                alert("Erro ao baixar do GitHub: " + err.message + "\n💡 Dica: Verifique se o Token é válido ou use o botão 'Importar de Outro PC'.");
             }
         }
 
         async function enviarEstoqueGitHub() {
             let token = document.getElementById('git-token').value.trim() || localStorage.getItem('git_token');
             let repo = document.getElementById('git-repo').value.trim() || localStorage.getItem('git_repo');
-            if (!token || !repo) return alert("Preencha e salve o Token e o Repositório do GitHub no Painel ADM!");
+            if (!token || !repo) return alert("Preencha o Token e o Repositório do GitHub!");
             if (Object.keys(estoqueCloud).length === 0) return alert("Nenhum produto para enviar.");
 
             try {
@@ -495,10 +531,10 @@
                     alert("Estoque enviado com sucesso para o GitHub!");
                 } else {
                     let errJson = await putRes.json();
-                    throw new Error(errJson.message || "Erro desconhecido ao enviar.");
+                    throw new Error(errJson.message || "Bad credentials / Erro ao enviar.");
                 }
             } catch (err) {
-                alert("Erro ao enviar para o GitHub: " + err.message);
+                alert("Erro ao enviar para o GitHub: " + err.message + "\n💡 Dica: Verifique seu Token nas configurações do GitHub.");
             }
         }
 
@@ -541,28 +577,36 @@
 
         function filtrarPorNome(termo) {
             let drop = document.getElementById('dropdown-sugestoes');
+            indiceSugestaoAtiva = -1;
+            listaSugestoesAtuais = [];
+
             if (!termo || termo.trim().length < 1 || termo.includes('*')) {
                 drop.style.display = 'none';
                 return;
             }
             let termoLower = termo.toLowerCase();
-            let matches = [];
             for (let c in estoqueCloud) {
                 let p = estoqueCloud[c];
                 if (c.includes(termoLower) || (p.nome && p.nome.toLowerCase().includes(termoLower))) {
-                    matches.push({ codigo: c, ...p });
-                    if (matches.length >= 8) break;
+                    listaSugestoesAtuais.push({ codigo: c, ...p });
+                    if (listaSugestoesAtuais.length >= 8) break;
                 }
             }
 
-            if (matches.length === 0) {
+            if (listaSugestoesAtuais.length === 0) {
                 drop.style.display = 'none';
                 return;
             }
 
+            renderizarSugestoesDropdown();
+        }
+
+        function renderizarSugestoesDropdown() {
+            let drop = document.getElementById('dropdown-sugestoes');
             let html = '';
-            matches.forEach((m) => {
-                html += `<div class="opcao-busca" onclick="selecionarProdutoSugestao('${m.codigo}')">
+            listaSugestoesAtuais.forEach((m, idx) => {
+                let classeSelecao = (idx === indiceSugestaoAtiva) ? 'opcao-busca selecionada' : 'opcao-busca';
+                html += `<div class="${classeSelecao}" onclick="selecionarProdutoSugestao('${m.codigo}')">
                     <span>${m.nome} (${m.codigo})</span>
                     <span style="color:var(--sucesso)">R$ ${Number(m.preco).toFixed(2)}</span>
                 </div>`;
@@ -572,13 +616,31 @@
         }
 
         function navegarSugestoes(e) {
-            if (e.key === 'Escape') {
-                document.getElementById('input-qtd-manual').value = '1';
-                document.getElementById('codigo-barras').value = '';
-                document.getElementById('dropdown-sugestoes').style.display = 'none';
+            let drop = document.getElementById('dropdown-sugestoes');
+            
+            if (e.key === 'ArrowDown') {
+                if (drop.style.display === 'block' && listaSugestoesAtuais.length > 0) {
+                    e.preventDefault();
+                    indiceSugestaoAtiva = (indiceSugestaoAtiva + 1) % listaSugestoesAtuais.length;
+                    renderizarSugestoesDropdown();
+                }
+            } else if (e.key === 'ArrowUp') {
+                if (drop.style.display === 'block' && listaSugestoesAtuais.length > 0) {
+                    e.preventDefault();
+                    indiceSugestaoAtiva = (indiceSugestaoAtiva - 1 + listaSugestoesAtuais.length) % listaSugestoesAtuais.length;
+                    renderizarSugestoesDropdown();
+                }
             } else if (e.key === 'Enter') {
                 e.preventDefault();
-                processarCodigoBarras(e.target.value.trim());
+                if (drop.style.display === 'block' && indiceSugestaoAtiva >= 0 && listaSugestoesAtuais[indiceSugestaoAtiva]) {
+                    selecionarProdutoSugestao(listaSugestoesAtuais[indiceSugestaoAtiva].codigo);
+                } else {
+                    processarCodigoBarras(e.target.value.trim());
+                }
+            } else if (e.key === 'Escape') {
+                document.getElementById('input-qtd-manual').value = '1';
+                document.getElementById('codigo-barras').value = '';
+                drop.style.display = 'none';
             } else if (e.key === 'F8') {
                 e.preventDefault();
                 focarCampoPeso();
