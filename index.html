@@ -42,9 +42,12 @@
         .total-box-cupom { font-size: 16px; font-weight: bold; text-align: center; margin-top: 8px; border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 5px 0; }
         
         .operacao-area { width: 55%; padding: 30px; display: flex; flex-direction: column; background: #f8fafc; justify-content: space-between; }
-        .terminal-log { background: #020617; color: #38bdf8; padding: 15px; border-radius: 8px; height: 110px; overflow-y: auto; font-family: monospace; font-size: 13px; margin-bottom: 15px; }
-        .input-codigo { width: 100%; padding: 22px; font-size: 38px; text-align: center; border: 3px solid var(--primaria); border-radius: 12px; outline: none; font-weight: bold; }
+        .terminal-log { background: #020617; color: #38bdf8; padding: 12px 15px; border-radius: 8px; height: 100px; overflow-y: auto; font-family: monospace; font-size: 13px; margin-bottom: 15px; border-left: 4px solid var(--secundaria); }
+        .input-codigo { width: 100%; padding: 20px; font-size: 34px; text-align: center; border: 3px solid var(--primaria); border-radius: 12px; outline: none; font-weight: bold; }
         
+        .painel-balanca-rapida { display: flex; align-items: center; gap: 8px; background: #e0f2fe; padding: 10px 15px; border-radius: 10px; border: 1px solid #7dd3fc; margin-bottom: 10px; }
+        .painel-balanca-rapida label { font-size: 13px; font-weight: 800; color: #0369a1; text-transform: uppercase; }
+
         .dropdown-busca { display: none; position: absolute; left: 0; width: 100%; background: white; border: 2px solid var(--secundaria); border-radius: 8px; max-height: 250px; overflow-y: auto; z-index: 999; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         .opcao-busca { padding: 14px; cursor: pointer; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; }
         .opcao-busca:hover { background: #eff6ff; color: var(--secundaria); }
@@ -61,7 +64,6 @@
         .tabela-dados { width: 100%; border-collapse: collapse; background: white; margin-top: 10px;}
         .tabela-dados th, .tabela-dados td { padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: left; }
         
-        /* CARDS DO BALANÇO FINANCEIRO */
         .cards-balanco { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
         .card-financeiro { background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1; text-align: center; }
         .card-financeiro h4 { font-size: 13px; color: #64748b; margin-bottom: 5px; }
@@ -71,7 +73,6 @@
         .modal-bg.ativo { display: flex; }
         .modal-card { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 440px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
 
-        /* IMPRESSÃO ISOLADA DO CUPOM TÉRMICO */
         @media print {
             body * { visibility: hidden; }
             .cupom-area, .cupom-area * { visibility: visible; }
@@ -134,10 +135,18 @@
             </div>
             
             <div class="operacao-area">
-                <div class="terminal-log" id="log-sistema"><div>[SISTEMA] Caixa pronto. Ajuste o peso/qtd no campo ao lado antes de bipar.</div></div>
+                <div class="terminal-log" id="log-sistema">
+                    <div>[BALANÇA PRONTA] Digite <b>PESO * CÓDIGO</b> (Ex: <code>0.450*2</code> para 450g do item 2).</div>
+                </div>
                 
+                <div class="painel-balanca-rapida">
+                    <label>⚖️ Modo Balança:</label>
+                    <input type="number" id="input-qtd-manual" value="1" step="any" placeholder="Peso (kg)" style="width: 110px; text-align: center; font-size: 20px; border: 2px solid #0284c7; border-radius: 8px; font-weight: bold; background: white;" title="Digite o peso em KG antes de bipar ou clique para alterar">
+                    <button onclick="focarCampoPeso()" style="background: #0284c7; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px;">Setar Peso (F8)</button>
+                    <span style="font-size: 12px; color: #0369a1; font-weight: 600;">(Pressione ESC para resetar para 1)</span>
+                </div>
+
                 <div style="position: relative; display: flex; gap: 8px; margin-bottom: 15px;">
-                    <input type="number" id="input-qtd-manual" value="1" step="any" placeholder="Qtd/Peso" style="width: 110px; text-align: center; font-size: 22px; border: 3px solid var(--primaria); border-radius: 12px; font-weight: bold;" title="Altere aqui a quantidade ou peso antes de lançar o produto">
                     <div style="position: relative; flex: 1;">
                         <div id="dropdown-sugestoes" class="dropdown-busca" style="bottom: 100%; margin-bottom: 5px; width: 100%;"></div>
                         <input type="text" class="input-codigo" id="codigo-barras" placeholder="Digite código ou nome..." oninput="filtrarPorNome(this.value)" onkeydown="navegarSugestoes(event)" autocomplete="off" autofocus>
@@ -342,6 +351,12 @@
             if (localStorage.getItem('git_repo')) document.getElementById('git-repo').value = localStorage.getItem('git_repo');
         };
 
+        function focarCampoPeso() {
+            let el = document.getElementById('input-qtd-manual');
+            el.focus();
+            el.select();
+        }
+
         function alternarVisibilidadeBalanco() {
             balancoVisivel = !balancoVisivel;
             document.getElementById('icone-olho').innerText = balancoVisivel ? "🙈" : "👁️";
@@ -501,7 +516,7 @@
 
         function filtrarPorNome(termo) {
             let drop = document.getElementById('dropdown-sugestoes');
-            if (!termo || termo.trim().length < 1) {
+            if (!termo || termo.trim().length < 1 || termo.includes('*')) {
                 drop.style.display = 'none';
                 return;
             }
@@ -532,9 +547,16 @@
         }
 
         function navegarSugestoes(e) {
-            if (e.key === 'Enter') {
+            if (e.key === 'Escape') {
+                document.getElementById('input-qtd-manual').value = '1';
+                document.getElementById('codigo-barras').value = '';
+                document.getElementById('dropdown-sugestoes').style.display = 'none';
+            } else if (e.key === 'Enter') {
                 e.preventDefault();
                 processarCodigoBarras(e.target.value.trim());
+            } else if (e.key === 'F8') {
+                e.preventDefault();
+                focarCampoPeso();
             } else if (e.key === 'F2') {
                 e.preventDefault();
                 finalizarVenda(false);
@@ -555,8 +577,34 @@
             processarCodigoBarras(cod);
         }
 
-        function processarCodigoBarras(codigo) {
-            if (!codigo) return;
+        function processarCodigoBarras(entrada) {
+            if (!entrada) return;
+
+            let qtd = parseFloat(document.getElementById('input-qtd-manual').value) || 1;
+            let codigo = entrada;
+
+            // SUPORTE AO FORMATO DISSOCIADO DE MULTIPLICADOR/PESO (Ex: 0.450*2)
+            if (entrada.includes('*')) {
+                let partes = entrada.split('*');
+                let pesoDigitado = parseFloat(partes[0].replace(',', '.'));
+                if (!isNaN(pesoDigitado) && pesoDigitado > 0) {
+                    qtd = pesoDigitado;
+                }
+                codigo = partes[1].trim();
+            }
+
+            // SUPORTE A ETIQUETA IMPRESSA DA BALANÇA (Código 200XXXX...)
+            if (codigo.length === 13 && codigo.startsWith('2')) {
+                let codProdutoCurto = parseInt(codigo.substring(1, 6)).toString();
+                let valorOuPeso = parseFloat(codigo.substring(6, 12)) / 100;
+
+                if (estoqueCloud[codProdutoCurto]) {
+                    codigo = codProdutoCurto;
+                    let precoUnit = estoqueCloud[codigo].preco;
+                    qtd = valorOuPeso / precoUnit; // Extrai o peso real baseado no valor impresso
+                }
+            }
+
             let prod = estoqueCloud[codigo];
             if (!prod) {
                 alert("Produto não encontrado! Cadastre-o no Painel ADM.");
@@ -564,7 +612,6 @@
                 return;
             }
 
-            let qtd = parseFloat(document.getElementById('input-qtd-manual').value) || 1;
             cupomAtual.push({
                 codigo: codigo,
                 nome: prod.nome,
@@ -576,7 +623,7 @@
             document.getElementById('codigo-barras').value = '';
             document.getElementById('input-qtd-manual').value = '1';
             document.getElementById('dropdown-sugestoes').style.display = 'none';
-            document.getElementById('input-qtd-manual').focus();
+            document.getElementById('codigo-barras').focus();
             renderizarCupom();
         }
 
@@ -604,10 +651,12 @@
             cupomAtual.forEach((item, idx) => {
                 totalVenda += item.total;
                 qtdTotalItens += item.qtd;
+                let qtdFormatada = Number.isInteger(item.qtd) ? item.qtd : item.qtd.toFixed(3);
+                
                 html += `
                     <div class="item-cupom">
                         <span>${item.nome}</span>
-                        <span style="text-align:center;"><span class="qtd-link" onclick="alterarQtdItem(${idx})" title="Clique para alterar peso/quantidade">${item.qtd}</span></span>
+                        <span style="text-align:center;"><span class="qtd-link" onclick="alterarQtdItem(${idx})" title="Clique para alterar peso/quantidade">${qtdFormatada}</span></span>
                         <span style="text-align:right;">${item.preco.toFixed(2)}</span>
                         <span style="text-align:right;">${item.total.toFixed(2)}</span>
                         <button class="btn-remover-item" onclick="removerItemCupom(${idx})" title="Remover item">✕</button>
@@ -617,7 +666,7 @@
 
             lista.innerHTML = html;
             document.getElementById('valor-total').innerText = totalVenda.toFixed(2);
-            document.getElementById('qtd-total-itens').innerText = qtdTotalItens;
+            document.getElementById('qtd-total-itens').innerText = Number.isInteger(qtdTotalItens) ? qtdTotalItens : qtdTotalItens.toFixed(3);
             lista.scrollTop = lista.scrollHeight;
         }
 
