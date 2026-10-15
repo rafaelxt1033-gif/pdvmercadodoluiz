@@ -79,7 +79,7 @@
         .modal-bg.ativo { display: flex; }
         .modal-card { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 440px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); }
 
-        /* REGRAS DE IMPRESSÃO (NO CUPOM TÉRMICO IMPRESSO FICA PRETO PARA ECONOMIA DE TINTA/TERMO) */
+        /* REGRAS DE IMPRESSÃO */
         @media print {
             body * { visibility: hidden; }
             .cupom-area, .cupom-area * { visibility: visible; }
@@ -362,8 +362,13 @@
             atualizarContadorProdutos();
             atualizarPainelVendasAdm();
             document.getElementById('data-hora-cupom').innerText = new Date().toLocaleString('pt-BR');
-            if (localStorage.getItem('git_token')) document.getElementById('git-token').value = localStorage.getItem('git_token');
-            if (localStorage.getItem('git_repo')) document.getElementById('git-repo').value = localStorage.getItem('git_repo');
+            
+            // CARREGA AUTOMATICAMENTE O TOKEN E O REPOSITÓRIO SALVOS LOCALMENTE
+            let savedToken = localStorage.getItem('git_token');
+            let savedRepo = localStorage.getItem('git_repo') || "rafaelxt1033-gif/pdvmercadodoluiz";
+            
+            if (savedToken) document.getElementById('git-token').value = savedToken;
+            if (savedRepo) document.getElementById('git-repo').value = savedRepo;
         };
 
         function focarCampoPeso() {
@@ -421,15 +426,19 @@
         }
 
         function salvarConfigGitHub() {
-            localStorage.setItem('git_token', document.getElementById('git-token').value.trim());
-            localStorage.setItem('git_repo', document.getElementById('git-repo').value.trim());
-            alert("Credenciais do GitHub salvas com sucesso!");
+            let token = document.getElementById('git-token').value.trim();
+            let repo = document.getElementById('git-repo').value.trim();
+            if (!token) return alert("Por favor, digite o Token do GitHub antes de salvar.");
+            
+            localStorage.setItem('git_token', token);
+            localStorage.setItem('git_repo', repo);
+            alert("Token e Repositório do GitHub salvos permanentemente neste computador!");
         }
 
         async function baixarEstoqueGitHub() {
-            let token = localStorage.getItem('git_token') || document.getElementById('git-token').value.trim();
-            let repo = localStorage.getItem('git_repo') || document.getElementById('git-repo').value.trim();
-            if (!token || !repo) return alert("Preencha o Token e o Repositório do GitHub no Painel ADM!");
+            let token = document.getElementById('git-token').value.trim() || localStorage.getItem('git_token');
+            let repo = document.getElementById('git-repo').value.trim() || localStorage.getItem('git_repo');
+            if (!token || !repo) return alert("Preencha e salve o Token e o Repositório do GitHub no Painel ADM!");
 
             try {
                 let res = await fetch(`https://api.github.com/repos/${repo}/contents/estoque.json`, {
@@ -450,9 +459,9 @@
         }
 
         async function enviarEstoqueGitHub() {
-            let token = localStorage.getItem('git_token') || document.getElementById('git-token').value.trim();
-            let repo = localStorage.getItem('git_repo') || document.getElementById('git-repo').value.trim();
-            if (!token || !repo) return alert("Preencha o Token e o Repositório do GitHub no Painel ADM!");
+            let token = document.getElementById('git-token').value.trim() || localStorage.getItem('git_token');
+            let repo = document.getElementById('git-repo').value.trim() || localStorage.getItem('git_repo');
+            if (!token || !repo) return alert("Preencha e salve o Token e o Repositório do GitHub no Painel ADM!");
             if (Object.keys(estoqueCloud).length === 0) return alert("Nenhum produto para enviar.");
 
             try {
