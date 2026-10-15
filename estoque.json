@@ -101,7 +101,7 @@
   },
   "28": {
     "nome": "CARNE DE SOL COXAO MOLE KG",
-    "preco": 48.99
+    "preco": 49.99
   },
   "29": {
     "nome": "CARNE DE SOL POSTA GORDA/LOMBO KG",
@@ -2853,7 +2853,7 @@
   },
   "7896030893360": {
     "nome": "COPOS COPOBRAS 150ML",
-    "preco": 6.99
+    "preco": 6.5
   },
   "7898939720044": {
     "nome": "COPOS CRISTALCOPO 150ML",
@@ -6401,11 +6401,11 @@
   },
   "7891079000205": {
     "nome": "MIOJO NISSIN CARNE 85G",
-    "preco": 2.49
+    "preco": 2.75
   },
   "7891079000229": {
     "nome": "MIOJO NISSIN GALINHA CAIPIRA 85G",
-    "preco": 2.49
+    "preco": 2.75
   },
   "7896213005160": {
     "nome": "MIOJO VITARELLA CARNE 70G",
@@ -8469,7 +8469,7 @@
   },
   "7896101711616": {
     "nome": "SAL NEVADO COMUM 1KG",
-    "preco": 1.5
+    "preco": 1.75
   },
   "7898062605867": {
     "nome": "SALADEIRA ELEGANCE 8 L",
@@ -9730,5 +9730,9 @@
   "7896072697049": {
     "nome": "GRANULADO CHOC/MIL CORES 120G",
     "preco": 7.5
+  },
+  "7898387520142": {
+    "nome": "VASSOURA POTIGUAR FLOREADA",
+    "preco": 11
   }
 }
