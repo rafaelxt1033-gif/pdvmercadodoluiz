@@ -1,7 +1,7 @@
 {
   "1": {
     "nome": "ABACATE KG",
-    "preco": 6.99
+    "preco": 5.99
   },
   "2": {
     "nome": "ALFACE",
@@ -117,7 +117,7 @@
   },
   "32": {
     "nome": "COSTELA DO PEITO",
-    "preco": 28.5
+    "preco": 29.99
   },
   "33": {
     "nome": "COSTELA CERRADA KG",
@@ -1077,7 +1077,7 @@
   },
   "7896389600107": {
     "nome": "ARROZ PARBO FAZENDA DE 1 KG",
-    "preco": 4.75
+    "preco": 5.5
   },
   "7896012300213": {
     "nome": "ARROZ PARBOILIZADO EMOCOES 1KG",
@@ -4193,7 +4193,7 @@
   },
   "17898366932970": {
     "nome": "FARDO FLOKAO COM 20X400G",
-    "preco": 23.99
+    "preco": 25.99
   },
   "7813202893842": {
     "nome": "FARINHA AMARELA DE BREJINHO 1KG",
@@ -4613,7 +4613,7 @@
   },
   "7898117961955": {
     "nome": "FLOCAO FORTEMILHO  400G",
-    "preco": 1.25
+    "preco": 1.39
   },
   "7891091010558": {
     "nome": "FLOCAO NORDESTINO 500G",
