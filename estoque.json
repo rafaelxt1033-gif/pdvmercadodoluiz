@@ -1911,10 +1911,6 @@
     "nome": "BOLO LARANJA 540G",
     "preco": 11
   },
-  "619205104941": {
-    "nome": "BOLO SARDINHA 300G",
-    "preco": 5.5
-  },
   "7825485452259": {
     "nome": "BOLOS SABORES DIVERSOS 300G",
     "preco": 5.99
@@ -2578,10 +2574,6 @@
   "7894900027044": {
     "nome": "COCA COLA 1L",
     "preco": 7.5
-  },
-  "7894900015119": {
-    "nome": "COCA COLA 1L RETORNAVEL",
-    "preco": 5.5
   },
   "7894900010015": {
     "nome": "COCA COLA LATA 350ML",
@@ -9734,5 +9726,13 @@
   "7898387520142": {
     "nome": "VASSOURA POTIGUAR FLOREADA",
     "preco": 11
+  },
+  "0074468769793": {
+    "nome": "BOLO SARDINHA 300G",
+    "preco": 5.5
+  },
+  "7894900027099": {
+    "nome": "COCA COLA 1L RETORNAVEL",
+    "preco": 5.5
   }
 }
