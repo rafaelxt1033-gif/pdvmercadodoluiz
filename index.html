@@ -114,7 +114,7 @@
             <div><strong>CAIXA 01</strong> | Operador: <span id="caixa-nome-status">Eduardo</span></div>
             <div style="display: flex; gap: 8px;">
                 <button class="btn-universal" onclick="abrirModalBusca()" style="background: var(--sucesso); padding: 8px; width: auto;">Cons. Preço</button>
-                <button class="btn-universal" onclick="abrirModalPreco()" style="background: var(--secundaria); padding: 8px; width: auto;">Mudar Preço/Nome</button>
+                <button class="btn-universal" onclick="abrirModalPreco()" style="background: var(--secundaria); padding: 8px; width: auto;">Mudar Preço/Nome/Código</button>
                 <button class="btn-universal" onclick="mostrarTela('tela-adm')" style="background: var(--alerta); padding: 8px; width: auto;">Painel ADM</button>
                 <button class="btn-universal" onclick="cancelarCupom()" style="background: var(--erro); padding: 8px; width: auto;">Cancelar Compra</button>
                 <button class="btn-universal" onclick="sair()" style="background: #475569; padding: 8px; width: auto;">Sair</button>
@@ -316,15 +316,19 @@
         </div>
     </div>
 
-    <!-- MODAL MUDAR PREÇO / NOME -->
+    <!-- MODAL MUDAR PREÇO / NOME / CÓDIGO -->
     <div id="modal-editar-preco" class="modal-bg">
         <div class="modal-card">
-            <h3 style="color: var(--secundaria); margin-bottom: 15px;">Mudar Preço ou Nome</h3>
+            <h3 style="color: var(--secundaria); margin-bottom: 15px;">Mudar Preço, Nome ou Código</h3>
             <div class="input-group" style="position: relative;">
                 <label>Buscar Produto no Estoque</label>
                 <input type="text" id="edit-busca-prod" placeholder="Digite para buscar..." oninput="buscarProdEdicao(this.value)" autocomplete="off">
                 <input type="hidden" id="edit-cod-antigo">
                 <div id="dropdown-edicao" class="dropdown-busca" style="top: 100%; bottom: auto;"></div>
+            </div>
+            <div class="input-group">
+                <label>Novo Código de Barras / ID</label>
+                <input type="text" id="edit-cod-novo">
             </div>
             <div class="input-group">
                 <label>Novo Nome</label>
@@ -749,10 +753,7 @@
 
             lista.innerHTML = html;
             document.getElementById('valor-total').innerText = totalVenda.toFixed(2);
-            
-            // CORREÇÃO: CONTAGEM DE ITENS PELA QUANTIDADE DE LINHAS/VOLUMES PASSADOS NO CAIXA
             document.getElementById('qtd-total-itens').innerText = cupomAtual.length;
-            
             lista.scrollTop = lista.scrollHeight;
             calcularTroco();
         }
@@ -925,6 +926,7 @@
         function selecionarProdEdicao(cod, nome, preco) {
             document.getElementById('edit-cod-antigo').value = cod;
             document.getElementById('edit-busca-prod').value = nome;
+            document.getElementById('edit-cod-novo').value = cod;
             document.getElementById('edit-nome-novo').value = nome;
             document.getElementById('edit-preco').value = preco;
             document.getElementById('dropdown-edicao').style.display = 'none';
@@ -937,19 +939,28 @@
                 return;
             }
 
-            let cod = document.getElementById('edit-cod-antigo').value;
+            let codAntigo = document.getElementById('edit-cod-antigo').value;
+            let codNovo = document.getElementById('edit-cod-novo').value.trim();
             let nome = document.getElementById('edit-nome-novo').value.trim();
             let preco = parseFloat(document.getElementById('edit-preco').value);
 
-            if (!cod || !estoqueCloud[cod]) {
+            if (!codAntigo || !estoqueCloud[codAntigo]) {
                 alert("Selecione um produto na busca!");
                 return;
             }
+            if (!codNovo || !nome || isNaN(preco)) {
+                alert("Preencha todos os campos corretamente!");
+                return;
+            }
 
-            estoqueCloud[cod].nome = nome;
-            estoqueCloud[cod].preco = preco;
+            // Se alterou o código de barras, remove o antigo e cria o novo
+            if (codAntigo !== codNovo) {
+                delete estoqueCloud[codAntigo];
+            }
+
+            estoqueCloud[codNovo] = { nome: nome, preco: preco };
             atualizarContadorProdutos();
-            alert("Alterações salvas com sucesso!");
+            alert("Alterações e código atualizados com sucesso!");
             fecharModalPreco();
         }
     </script>
