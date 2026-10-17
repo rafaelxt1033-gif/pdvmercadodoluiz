@@ -1831,10 +1831,6 @@
     "nome": "BOLDO DO CHILE LESN 10G",
     "preco": 1.75
   },
-  "74468769830": {
-    "nome": "BOLINHO 140G",
-    "preco": 3.5
-  },
   "7890055600026": {
     "nome": "BOLINHO BANDEJA C/ 10",
     "preco": 6.5
@@ -9734,5 +9730,9 @@
   "7894900027099": {
     "nome": "COCA COLA 1L RETORNAVEL",
     "preco": 5.5
+  },
+  "0074468769830": {
+    "nome": "BOLINHO 140G",
+    "preco": 3.5
   }
 }
