@@ -731,11 +731,9 @@
             let lista = document.getElementById('lista-cupom');
             let html = '';
             totalVenda = 0;
-            let qtdTotalItens = 0;
 
             cupomAtual.forEach((item, idx) => {
                 totalVenda += item.total;
-                qtdTotalItens += item.qtd;
                 let qtdFormatada = Number.isInteger(item.qtd) ? item.qtd : item.qtd.toFixed(3);
                 
                 html += `
@@ -751,7 +749,10 @@
 
             lista.innerHTML = html;
             document.getElementById('valor-total').innerText = totalVenda.toFixed(2);
-            document.getElementById('qtd-total-itens').innerText = Number.isInteger(qtdTotalItens) ? qtdTotalItens : qtdTotalItens.toFixed(3);
+            
+            // CORREÇÃO: CONTAGEM DE ITENS PELA QUANTIDADE DE LINHAS/VOLUMES PASSADOS NO CAIXA
+            document.getElementById('qtd-total-itens').innerText = cupomAtual.length;
+            
             lista.scrollTop = lista.scrollHeight;
             calcularTroco();
         }
