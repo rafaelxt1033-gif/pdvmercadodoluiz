@@ -919,10 +919,6 @@
     "nome": "AMACIANTE SONHO AZUL 2L",
     "preco": 12.99
   },
-  "7896013106333": {
-    "nome": "AMACIANTE SONHO LAVANDA 2L",
-    "preco": 12.99
-  },
   "7896013106319": {
     "nome": "AMACIANTE SONHO LAVANDA 500ML",
     "preco": 4.49
@@ -9734,5 +9730,9 @@
   "0074468769830": {
     "nome": "BOLINHO 140G",
     "preco": 3.5
+  },
+  "7896013109167": {
+    "nome": "AMACIANTE SONHO LAVANDA 2L",
+    "preco": 12.99
   }
 }
