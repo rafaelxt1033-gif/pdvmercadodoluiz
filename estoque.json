@@ -85,7 +85,7 @@
   },
   "22": {
     "nome": "MARACUJA KG",
-    "preco": 8.99
+    "preco": 10
   },
   "23": {
     "nome": "PIMENTAO KG",
@@ -193,7 +193,7 @@
   },
   "51": {
     "nome": "PEITO DE FRANGO KG",
-    "preco": 13.99
+    "preco": 14.99
   },
   "52": {
     "nome": "GALINHA CONGELADA KG",
@@ -389,7 +389,7 @@
   },
   "75063559": {
     "nome": "DESODORANTE REXONA BAMBOO 30ML",
-    "preco": 6.5
+    "preco": 6.99
   },
   "78907850": {
     "nome": "HIDRATANTE PAIXAO INSPIRADORA 200ML",
@@ -425,7 +425,7 @@
   },
   "78924239": {
     "nome": "REXONA POWDER DRY 30ML",
-    "preco": 6.5
+    "preco": 6.99
   },
   "78926868": {
     "nome": "DES REX R ON COMP ERVA DOCE 30 ML",
@@ -441,11 +441,11 @@
   },
   "78930841": {
     "nome": "REXONA MEN V8 30 ML",
-    "preco": 6.5
+    "preco": 6.99
   },
   "78931633": {
     "nome": "DEO DOVE ROLLON ORIGINAL 30ML",
-    "preco": 7.99
+    "preco": 8.99
   },
   "78936683": {
     "nome": "CERVEJA HEINEKEN LONG NECK 330ML",
@@ -1210,10 +1210,6 @@
   "7898961932637": {
     "nome": "BANDEJA MULTIUSO - ICASA",
     "preco": 9.9
-  },
-  "70330729858": {
-    "nome": "BARBEADOR BIC INTENSITY 3 LAMINAS",
-    "preco": 3.5
   },
   "70330713406": {
     "nome": "BARBEADOR BIC SUAVE UN",
@@ -3097,7 +3093,7 @@
   },
   "7898024395232": {
     "nome": "CREME NUTELLA 140G",
-    "preco": 14.99
+    "preco": 15.99
   },
   "7891037000322": {
     "nome": "CREME PARA PETEAR SEDA CACHOS DEFENIDOS 300ML",
@@ -3337,7 +3333,7 @@
   },
   "7791293032436": {
     "nome": "DES. AERO REXONA POWDER DRY 150ML",
-    "preco": 15.99
+    "preco": 16.99
   },
   "4005900036728": {
     "nome": "DES. AERO. NIVEA INV. WHITE 150ML",
@@ -3493,7 +3489,7 @@
   },
   "7791293022635": {
     "nome": "DESO REXONA*MEN INVISIBLE 150ML",
-    "preco": 15.99
+    "preco": 16.99
   },
   "7506306241169": {
     "nome": "DESOD- AEROSOL DOVE GO FRESH CHA V 150 ML",
@@ -3517,11 +3513,11 @@
   },
   "7791293032498": {
     "nome": "DESOD REXONA AERO 150 ML",
-    "preco": 15.99
+    "preco": 16.99
   },
   "7791293032443": {
     "nome": "DESOD REXONA AERO ULTRA FOCUS 150ML",
-    "preco": 15.99
+    "preco": 16.99
   },
   "7896049528512": {
     "nome": "DESOD. HERBISSIMO TRADICIONAL 55 G",
@@ -3553,11 +3549,11 @@
   },
   "7891150054646": {
     "nome": "DESODORANTE REXONA MEN AEROSOL 90G",
-    "preco": 15.99
+    "preco": 16.99
   },
   "7791293025537": {
     "nome": "DESODORANTE REXONA MEN ANTIBACTERIAL 150ML",
-    "preco": 15.99
+    "preco": 16.99
   },
   "7896281054008": {
     "nome": "DESODORANTTE SANITATRIO PIHO",
@@ -3569,7 +3565,7 @@
   },
   "7506306244184": {
     "nome": "DESO-REXONA INVISIBLE 150ML",
-    "preco": 15.99
+    "preco": 16.99
   },
   "7898031173779": {
     "nome": "DET.INVICTO 400G ACTION LAVANDA",
@@ -7965,7 +7961,7 @@
   },
   "7791293032467": {
     "nome": "REXONA COTTON DRY 150ML",
-    "preco": 15.99
+    "preco": 16.99
   },
   "7791293022567": {
     "nome": "REXONA MEN V8 150ML",
@@ -7973,7 +7969,7 @@
   },
   "7791293022581": {
     "nome": "REXONA MEN XTRACOOL 150ML",
-    "preco": 15.99
+    "preco": 16.99
   },
   "7898916100050": {
     "nome": "ROCAMBOLE 280G MASSA RARA",
@@ -9625,7 +9621,7 @@
   },
   "7896945400813": {
     "nome": "CATCHUP TAMBAU 830G",
-    "preco": 8.5
+    "preco": 8.99
   },
   "0070341969878": {
     "nome": "BISCOITO DE ANJO 190G",
@@ -9734,5 +9730,17 @@
   "7896013109167": {
     "nome": "AMACIANTE SONHO LAVANDA 2L",
     "preco": 12.99
+  },
+  "7896102500844": {
+    "nome": "MILHO VERDE QUERO 170G",
+    "preco": 4.99
+  },
+  "070330729858": {
+    "nome": "BARBEADOR BIC INTENSITY 3 LAMINAS",
+    "preco": 3.5
+  },
+  "7898133019920": {
+    "nome": "FRALDAS CREMER SHORTINHO XG",
+    "preco": 24.99
   }
 }
