@@ -61,11 +61,11 @@
   },
   "16": {
     "nome": "COCO VERDE",
-    "preco": 2.5
+    "preco": 3
   },
   "17": {
     "nome": "GOIABA KG",
-    "preco": 6.99
+    "preco": 7.99
   },
   "18": {
     "nome": "LIMAO KG",
@@ -2541,11 +2541,11 @@
   },
   "7898034920226": {
     "nome": "COALHADA DESNATADA ISIS 150G",
-    "preco": 3.5
+    "preco": 4.25
   },
   "7898034920233": {
     "nome": "COALHADA ISIS INTEGRAL 150G",
-    "preco": 3.5
+    "preco": 4.25
   },
   "7898005514720": {
     "nome": "COBERTURA SORVETE CHOCOLATE STER BOM 300 G",
@@ -9742,5 +9742,17 @@
   "7898133019920": {
     "nome": "FRALDAS CREMER SHORTINHO XG",
     "preco": 24.99
+  },
+  "7896013108948": {
+    "nome": "SABONETE EVEN AGUA DE COCO 85G",
+    "preco": 2.25
+  },
+  "7898034920479": {
+    "nome": "IBEBIDA LACTEA ISIS GRAVIOLA 900G",
+    "preco": 6.5
+  },
+  "7891091060294": {
+    "nome": "PIPPOS REQUEIJAO 30G",
+    "preco": 2.25
   }
 }
