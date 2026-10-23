@@ -85,7 +85,7 @@
   },
   "22": {
     "nome": "MARACUJA KG",
-    "preco": 10
+    "preco": 11
   },
   "23": {
     "nome": "PIMENTAO KG",
@@ -117,7 +117,7 @@
   },
   "32": {
     "nome": "COSTELA DO PEITO",
-    "preco": 29.99
+    "preco": 30.99
   },
   "33": {
     "nome": "COSTELA CERRADA KG",
@@ -149,7 +149,7 @@
   },
   "40": {
     "nome": "LOMBO BOVINO KG",
-    "preco": 29.99
+    "preco": 31.99
   },
   "41": {
     "nome": "SALSICHA AVIVAR KG",
@@ -285,7 +285,7 @@
   },
   "75": {
     "nome": "SABAO YPE BARRA UN",
-    "preco": 3
+    "preco": 3.25
   },
   "76": {
     "nome": "CARNE CHACHADO FEIJOADA 200G",
@@ -353,7 +353,7 @@
   },
   "119": {
     "nome": "TOMATE KG",
-    "preco": 9.9
+    "preco": 11
   },
   "199": {
     "nome": "PEIXE SARDINHA SEM CABEÇA KG",
@@ -1493,11 +1493,11 @@
   },
   "7622300873554": {
     "nome": "BISCOITO ORE CHOCOLATE 90G",
-    "preco": 4.25
+    "preco": 4.5
   },
   "7622300830151": {
     "nome": "BISCOITO OREO 90 GR",
-    "preco": 4.25
+    "preco": 4.5
   },
   "7898922922097": {
     "nome": "BISCOITO PALITO 250G",
@@ -2369,7 +2369,7 @@
   },
   "7899872102898": {
     "nome": "CHACHADO LESA BANDEIJA 200G",
-    "preco": 3.99
+    "preco": 4.99
   },
   "7898286722869": {
     "nome": "CHACHADO POTIGUAR 200G",
@@ -3641,7 +3641,7 @@
   },
   "7896963402356": {
     "nome": "DOCE DANTAS GOIABADA 500G",
-    "preco": 6.49
+    "preco": 6.99
   },
   "7897047004077": {
     "nome": "DOCE DE AMENDOIM 30G",
@@ -7233,7 +7233,7 @@
   },
   "7896278301900": {
     "nome": "PIPOCA SALGADA BOKUS 45G",
-    "preco": 1.99
+    "preco": 2.25
   },
   "7891091061581": {
     "nome": "PIPPOS ANIME CHURRASCO 60G",
@@ -7333,15 +7333,15 @@
   },
   "7894904325702": {
     "nome": "PIZZA DE FRANGO C/CATUPIRY SEARA 460G",
-    "preco": 19.9
+    "preco": 19.99
   },
   "7894904578566": {
     "nome": "PIZZA DE LOMBO COM CATUPIRY SEARA 460G",
-    "preco": 19.9
+    "preco": 19.99
   },
   "7894904326044": {
     "nome": "PIZZA SEARA CALABRESA 460G",
-    "preco": 19.9
+    "preco": 19.99
   },
   "7896221807084": {
     "nome": "PO DESC- MARCIA OLEO/COCO",
@@ -8221,7 +8221,7 @@
   },
   "7896098905906": {
     "nome": "SABAO YPE NEUTRO 800G",
-    "preco": 14.99
+    "preco": 15.99
   },
   "7897664171725": {
     "nome": "SABNETE ALBANY OLEO DE MACADAMIA 85G",
@@ -8983,14 +8983,6 @@
     "nome": "SUCO PO MARATA CAJU 45G",
     "preco": 1
   },
-  "95188870507": {
-    "nome": "SUCO TAMPICO CITRICO 1500ML",
-    "preco": 7.49
-  },
-  "95188878572": {
-    "nome": "SUCO TAMPICO CITRICO 2L",
-    "preco": 9.9
-  },
   "95188872501": {
     "nome": "SUCO TAMPICO CTRICO 250 ML",
     "preco": 2.75
@@ -9070,10 +9062,6 @@
   "7896806700069": {
     "nome": "TALCO BARLA 80GS",
     "preco": 5.75
-  },
-  "95188874505": {
-    "nome": "TAMPICO FRUTAS CITRICAS 450ML",
-    "preco": 3.99
   },
   "95188870347": {
     "nome": "TAMPICO FRUTAS CITRICOS 1L",
@@ -9754,5 +9742,57 @@
   "7891091060294": {
     "nome": "PIPPOS REQUEIJAO 30G",
     "preco": 2.25
+  },
+  "7896278302600": {
+    "nome": "BOKUS CINEMA CHOCOLATE 60G",
+    "preco": 4.25
+  },
+  "7896278302624": {
+    "nome": "BOKUS CINEMA MANTEIGA 60G",
+    "preco": 4.25
+  },
+  "7896278302617": {
+    "nome": "BOKUS CINEMA PAÇOCA 60G",
+    "preco": 4.25
+  },
+  "7896278302556": {
+    "nome": "BOKUS NATURAL 50G",
+    "preco": 3.75
+  },
+  "7896278302549": {
+    "nome": "BOKUS CHOCOLATE 60G",
+    "preco": 3.75
+  },
+  "7896278302457": {
+    "nome": "BOKUS AMENDOIM 60G",
+    "preco": 3.75
+  },
+  "7896278302815": {
+    "nome": "SALGADINHO BOKUS QUEIJO 55G",
+    "preco": 2.99
+  },
+  "7898944785809": {
+    "nome": "ENERGETICO INFINITY 2L",
+    "preco": 13.5
+  },
+  "095188870507": {
+    "nome": "SUCO TAMPICO CITRICO 1500ML",
+    "preco": 8.5
+  },
+  "095188878572": {
+    "nome": "SUCO TAMPICO CITRICO 2L",
+    "preco": 11.5
+  },
+  "095188874505": {
+    "nome": "TAMPICO FRUTAS CITRICAS 450ML",
+    "preco": 3.99
+  },
+  "7894904605019": {
+    "nome": "LASANHA FRANGO SEARA 300G",
+    "preco": 9.99
+  },
+  "7894904003495": {
+    "nome": "STEAK EMPANADO SEARA 100G",
+    "preco": 1.5
   }
 }
