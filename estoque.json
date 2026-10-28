@@ -41,7 +41,7 @@
   },
   "11": {
     "nome": "CENOURA KG",
-    "preco": 7.99
+    "preco": 5.99
   },
   "12": {
     "nome": "CHUCHU KG",
@@ -2053,7 +2053,7 @@
   },
   "7896045116119": {
     "nome": "CAFE SOLUVEL SANTA CLARA EXTRAFORTE 40G",
-    "preco": 5.99
+    "preco": 6.5
   },
   "7891000325131": {
     "nome": "CAIXA DE BOMBOM NESTLE ESPECIALIDADE",
@@ -6499,10 +6499,6 @@
     "nome": "MOLHO TRAD. PENEIRADO 340G",
     "preco": 1.99
   },
-  "70847022015": {
-    "nome": "MONSTER ENERGY 473ML",
-    "preco": 11
-  },
   "7891164018900": {
     "nome": "MORTADELA CARNE DE FRANGO AURORA 400G",
     "preco": 3.99
@@ -6573,11 +6569,11 @@
   },
   "7891000329139": {
     "nome": "MUCILON MULTICEREAIS SACHET  1KG",
-    "preco": 31.99
+    "preco": 33.99
   },
   "7891000329092": {
     "nome": "MUCILON SACHE ARROZ E AVEIA 1 KG",
-    "preco": 36.99
+    "preco": 33.99
   },
   "7891035285172": {
     "nome": "MULTI USO VEJA LAVANDA E ALCOOL 500ML",
@@ -9794,5 +9790,25 @@
   "7894904003495": {
     "nome": "STEAK EMPANADO SEARA 100G",
     "preco": 1.5
+  },
+  "7898387120373": {
+    "nome": "CHOCOLATE NATVILLE 200ML",
+    "preco": 1.75
+  },
+  "7898387120465": {
+    "nome": "CHOCOLATE NATVILLE 1L",
+    "preco": 7.75
+  },
+  "0070847022015": {
+    "nome": "MONSTER ENERGY 473ML",
+    "preco": 12.99
+  },
+  "070847022305": {
+    "nome": "MONSTER ZERO 473ML",
+    "preco": 12.99
+  },
+  "7891991014762": {
+    "nome": "CERVEJA BUDUEISER 330ML",
+    "preco": 6.99
   }
 }
