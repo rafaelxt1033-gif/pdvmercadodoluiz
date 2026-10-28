@@ -313,7 +313,7 @@
   },
   "83": {
     "nome": "OSSO DO PATINHO KG",
-    "preco": 11.99
+    "preco": 12.99
   },
   "84": {
     "nome": "CARNE PARA GUIZADO",
@@ -9810,5 +9810,13 @@
   "7891991014762": {
     "nome": "CERVEJA BUDUEISER 330ML",
     "preco": 6.99
+  },
+  "7897849300445": {
+    "nome": "COALHADA DESNATADA CLAN 140G",
+    "preco": 4.25
+  },
+  "7897849300049": {
+    "nome": "COALHADA DESNATADA COM ADOÇANTE 140G",
+    "preco": 4.25
   }
 }
