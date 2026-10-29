@@ -7009,7 +7009,7 @@
   },
   "7896006413851": {
     "nome": "PAPEL TOALHA SKALA COM 2RL",
-    "preco": 5.99
+    "preco": 6.75
   },
   "7896061926006": {
     "nome": "PAPEL TOALHA SNACK",
@@ -9818,5 +9818,25 @@
   "7897849300049": {
     "nome": "COALHADA DESNATADA COM ADOÇANTE 140G",
     "preco": 4.25
+  },
+  "7897626300248": {
+    "nome": "ARROZ PARBOILIZADO TIO MANOEL 1KG",
+    "preco": 4.99
+  },
+  "7896061900174": {
+    "nome": "PAPEL SUBLIME FOLHA DUPLA 12RL",
+    "preco": 14.99
+  },
+  "7899270100557": {
+    "nome": "VELA VULCAO FONTANA",
+    "preco": 5.99
+  },
+  "7924500508176": {
+    "nome": "CORTADOR DE UNHA HOME EXTRA UN",
+    "preco": 4.99
+  },
+  "7899254971272": {
+    "nome": "BORRACHA P/PANELA UNIVERSAL 4,5/7,0 LTS",
+    "preco": 3.99
   }
 }
