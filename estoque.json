@@ -25,7 +25,7 @@
   },
   "7": {
     "nome": "BATATA INGRESA KG",
-    "preco": 7.99
+    "preco": 6.99
   },
   "8": {
     "nome": "BATATA DOCE",
@@ -41,7 +41,7 @@
   },
   "11": {
     "nome": "CENOURA KG",
-    "preco": 5.99
+    "preco": 6.99
   },
   "12": {
     "nome": "CHUCHU KG",
@@ -49,7 +49,7 @@
   },
   "13": {
     "nome": "CEBOLA ROXA",
-    "preco": 8.99
+    "preco": 9.9
   },
   "14": {
     "nome": "CEBOLA BRANCA KG",
@@ -81,7 +81,7 @@
   },
   "21": {
     "nome": "MAÇA",
-    "preco": 12.99
+    "preco": 11.99
   },
   "22": {
     "nome": "MARACUJA KG",
@@ -89,7 +89,7 @@
   },
   "23": {
     "nome": "PIMENTAO KG",
-    "preco": 9.9
+    "preco": 11
   },
   "25": {
     "nome": "RAÇAO PARA CAES",
@@ -117,7 +117,7 @@
   },
   "32": {
     "nome": "COSTELA DO PEITO",
-    "preco": 31.99
+    "preco": 30.99
   },
   "33": {
     "nome": "COSTELA CERRADA KG",
@@ -373,11 +373,15 @@
   },
   "535": {
     "nome": "CABO DE VASSOURA UN",
-    "preco": 5.5
+    "preco": 5.99
   },
   "7646": {
     "nome": "ESCOVA SIMPLES BIJOUX",
     "preco": 7.99
+  },
+  "8916": {
+    "nome": "BALDE 9 LITROS",
+    "preco": 11.99
   },
   "686976": {
     "nome": "SODA PRETA RR MASSAS 300G",
@@ -1053,7 +1057,7 @@
   },
   "7897586400026": {
     "nome": "ARROZ KIKA 1KG",
-    "preco": 4.75
+    "preco": 5.25
   },
   "7896384100053": {
     "nome": "ARROZ MARIANO 1KG",
@@ -2677,7 +2681,7 @@
   },
   "6985613510266": {
     "nome": "COLA RATO PEGA RATO N;1",
-    "preco": 4
+    "preco": 4.5
   },
   "6925162500028": {
     "nome": "COLA RATO/PEGA RATO",
@@ -2749,7 +2753,7 @@
   },
   "7896490288454": {
     "nome": "COLORIFICO DONA CLARA 500G",
-    "preco": 4.99
+    "preco": 5.5
   },
   "7896490288874": {
     "nome": "COLORIFICO KIMIMO 100G",
@@ -4333,7 +4337,7 @@
   },
   "7898258740662": {
     "nome": "FEIJAO DN MARIQ- CARIOCA1KG",
-    "preco": 9.5
+    "preco": 9.9
   },
   "7898258740884": {
     "nome": "FEIJAO DN MARIQ- FAVETA 1KG",
@@ -4365,7 +4369,7 @@
   },
   "7898258740594": {
     "nome": "FEIJAO PRETO DN MARIQ 1KG",
-    "preco": 8.5
+    "preco": 8.99
   },
   "7896401100097": {
     "nome": "FEIJAO PRETO MAXIMO 1KG",
@@ -4882,10 +4886,6 @@
   "7898034920240": {
     "nome": "FRUTISIS 150G",
     "preco": 4.99
-  },
-  "7898286191498": {
-    "nome": "FUMO MARATA 36G",
-    "preco": 4.5
   },
   "7898626560021": {
     "nome": "FUNIL MEDIO SORTIDO",
@@ -5477,7 +5477,7 @@
   },
   "7890981345671": {
     "nome": "KIT FEIJOADA ESPECIAL 300G",
-    "preco": 7.25
+    "preco": 7.5
   },
   "7898286721763": {
     "nome": "KIT FEIJOADA JB 250G",
@@ -5957,7 +5957,7 @@
   },
   "7891000325896": {
     "nome": "LEITE NINHO NESTLE 750G",
-    "preco": 38.99
+    "preco": 36.99
   },
   "7898965360177": {
     "nome": "LEITE PO DUMONTE 200G",
@@ -6745,7 +6745,7 @@
   },
   "7898912405029": {
     "nome": "OVOS BRANCO EXTRA AVIPEC COM 30UN",
-    "preco": 16.99
+    "preco": 15.99
   },
   "7898286565336": {
     "nome": "OVOS BRANCO GRANDE BOM TODO COM 30UN",
@@ -8131,10 +8131,6 @@
     "nome": "SABAO EM PO ALA LIMAO 400G",
     "preco": 3.99
   },
-  "7891150097568": {
-    "nome": "SABAO EM PO ALA ROSAS E FLOR 400G",
-    "preco": 3.99
-  },
   "7898031174653": {
     "nome": "SABAO EM PO BEM TE VI COCO 400G",
     "preco": 3.5
@@ -9053,7 +9049,7 @@
   },
   "7896806700076": {
     "nome": "TALCO BARLA 140GR",
-    "preco": 6.75
+    "preco": 7.25
   },
   "7896806700069": {
     "nome": "TALCO BARLA 80GS",
@@ -9683,10 +9679,6 @@
     "nome": "SABAO EM PO ALA COCO 400G",
     "preco": 3.99
   },
-  "7891150106550": {
-    "nome": "SABAO EM PO ALA LAVANDA 400G",
-    "preco": 3.99
-  },
   "7896030892516": {
     "nome": "COPO DESCARTAVEIS COPOBRAS 180ML",
     "preco": 5.99
@@ -9862,5 +9854,53 @@
   "070330428584": {
     "nome": "LAPIS DE COR BIC EVOLUTION 12 CORES",
     "preco": 9.9
+  },
+  "7897288203260": {
+    "nome": "PRENDEDOR DE ROUPA GIGANTE DZ",
+    "preco": 3.75
+  },
+  "7908673902122": {
+    "nome": "LAPIS DE COR SUPER ECO 12UN",
+    "preco": 5.99
+  },
+  "7897256246909": {
+    "nome": "LAPIS DE COR MINI LEO/LEO 12UN",
+    "preco": 3.99
+  },
+  "7898403622799": {
+    "nome": "CORDA PARA VARAL 7M",
+    "preco": 2.5
+  },
+  "7892840819323": {
+    "nome": "PEPSI BLACK 200ML",
+    "preco": 2
+  },
+  "7891991016124": {
+    "nome": "GUARANA ANTARCTICA ZERO 200ML",
+    "preco": 2
+  },
+  "7898934827373": {
+    "nome": "VASSOURA DO LAR NOVIÇA",
+    "preco": 11.99
+  },
+  "7898626561233": {
+    "nome": "JARRA PLASBERG 2L",
+    "preco": 16.99
+  },
+  "7898626562131": {
+    "nome": "JARRA PLASBERG 1,4L",
+    "preco": 12.99
+  },
+  "7898286191887": {
+    "nome": "FUMO MARATA 36G",
+    "preco": 4.5
+  },
+  "7891150097544": {
+    "nome": "SABAO EM PO ALA LAVANDA 400G",
+    "preco": 3.99
+  },
+  "7891150106536": {
+    "nome": "SABAO EM PO ALA ROSAS E FLOR 400G",
+    "preco": 3.99
   }
 }
