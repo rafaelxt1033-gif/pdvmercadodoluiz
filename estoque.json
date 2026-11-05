@@ -25,7 +25,7 @@
   },
   "7": {
     "nome": "BATATA INGRESA KG",
-    "preco": 6.99
+    "preco": 7.99
   },
   "8": {
     "nome": "BATATA DOCE",
@@ -89,7 +89,7 @@
   },
   "23": {
     "nome": "PIMENTAO KG",
-    "preco": 11
+    "preco": 12.99
   },
   "25": {
     "nome": "RAÇAO PARA CAES",
@@ -534,10 +534,6 @@
   "7896110002248": {
     "nome": "ABSORVENE  SYM C/ ABAS SUAVE",
     "preco": 4.9
-  },
-  "7891010973483": {
-    "nome": "ABSORVENT SEMPRE LIVRE ESP ADAPT COM ABAS =",
-    "preco": 4.75
   },
   "7898907499262": {
     "nome": "AÇAFRAO 8G",
@@ -1077,7 +1073,7 @@
   },
   "7896389600107": {
     "nome": "ARROZ PARBO FAZENDA DE 1 KG",
-    "preco": 5.5
+    "preco": 5.99
   },
   "7896012300213": {
     "nome": "ARROZ PARBOILIZADO EMOCOES 1KG",
@@ -1405,7 +1401,7 @@
   },
   "7891152801798": {
     "nome": "BISC RECH AMORI MORANGO 125G",
-    "preco": 2.75
+    "preco": 2.99
   },
   "7896213005924": {
     "nome": "BISC RECH CHOCOLATE VITARELA 120G",
@@ -1529,7 +1525,7 @@
   },
   "7891152801781": {
     "nome": "BISCOITO RICHERTER AMORI CHOCOLATE 125G",
-    "preco": 2.75
+    "preco": 2.99
   },
   "7896213005818": {
     "nome": "BISCOITO TRELOSO BEM-CASADO 37G",
@@ -2593,7 +2589,7 @@
   },
   "7894900014211": {
     "nome": "COCA COLA SO LIQUIDO 2L RETORNAVEL",
-    "preco": 8.99
+    "preco": 10
   },
   "7894900701753": {
     "nome": "COCA COLA ZERO 1500ML",
@@ -2929,7 +2925,7 @@
   },
   "7893000488878": {
     "nome": "COXINHA DA ASA SADIA 1KG",
-    "preco": 15.99
+    "preco": 17.99
   },
   "7891528038001": {
     "nome": "CR DENTAL SORRISO DENTES BRANCOS 180GR",
@@ -3737,23 +3733,23 @@
   },
   "7897801700313": {
     "nome": "DORE COLA 2 LT",
-    "preco": 6.99
+    "preco": 7.75
   },
   "7897801700146": {
     "nome": "DORE GUARANA 2000ML",
-    "preco": 6.99
+    "preco": 7.25
   },
   "7897801700160": {
     "nome": "DORE LARANJA 2000ML",
-    "preco": 6.99
+    "preco": 7.25
   },
   "7897801700153": {
     "nome": "DORE LIMAO 2000ML",
-    "preco": 6.99
+    "preco": 7.25
   },
   "7897801700566": {
     "nome": "DORE UVA 2000ML",
-    "preco": 6.99
+    "preco": 7.25
   },
   "7896010006360": {
     "nome": "DREHER CONHAQUE",
@@ -4417,7 +4413,7 @@
   },
   "7891515614072": {
     "nome": "FILE DE PEITO FRANGO PERDIGAO 1KG",
-    "preco": 24.99
+    "preco": 21.99
   },
   "7891515563516": {
     "nome": "FILE DE PEITO SADIA1K",
@@ -5761,7 +5757,7 @@
   },
   "7897274416377": {
     "nome": "LAVA ROUPA LIQ. ABSOLUTO 3L",
-    "preco": 16.99
+    "preco": 15.99
   },
   "7897274417084": {
     "nome": "LAVA ROUPA LIQUIDO ABSOLUTO LIMPEZA PROFUNDA 3L",
@@ -5773,7 +5769,7 @@
   },
   "7897274416612": {
     "nome": "LAVA ROUPAS LIQ ABSOLUTO COCO 3L",
-    "preco": 18.75
+    "preco": 15.99
   },
   "7897274416292": {
     "nome": "LAVA ROUPAS LIQUIDO GUARANI 3L",
@@ -7051,10 +7047,6 @@
     "nome": "PE DE BOTIJAO COD 137",
     "preco": 49.9
   },
-  "7898956846048": {
-    "nome": "PE DE MOLEQUE MENDOQUITA 16,G",
-    "preco": 0.6
-  },
   "7896029022269": {
     "nome": "PED SACHE FRANGO 100 GR",
     "preco": 3
@@ -7603,10 +7595,6 @@
     "nome": "RAÇAO NHAC GATO MIX KG",
     "preco": 17.99
   },
-  "7898224824785": {
-    "nome": "RAÇAO NHAC P/CAES FILHOTES 1KG",
-    "preco": 15.99
-  },
   "798190256498": {
     "nome": "RAÇAO P/CAES ADULTO TIM/TIM CARNE",
     "preco": 6.99
@@ -7632,7 +7620,7 @@
     "preco": 14.99
   },
   "7898203020160": {
-    "nome": "RAÇAO SABOROSSO CERNE/CHIPS ADULTOS KG",
+    "nome": "RAÇAO SABOROSSO PREMIUM CHIPS ADULTOS KG",
     "preco": 12.99
   },
   "7898203020023": {
@@ -7645,7 +7633,7 @@
   },
   "5901234123457": {
     "nome": "RAÇAO TUTTI CATIS GATO CASTRADO KG",
-    "preco": 17.99
+    "preco": 18.99
   },
   "7893232565255": {
     "nome": "RAIVINHA CASEIRA DE COCO 70G",
@@ -9697,7 +9685,7 @@
   },
   "7894900027099": {
     "nome": "COCA COLA 1L RETORNAVEL",
-    "preco": 5.5
+    "preco": 6
   },
   "0074468769830": {
     "nome": "BOLINHO 140G",
@@ -9902,5 +9890,37 @@
   "7891150106536": {
     "nome": "SABAO EM PO ALA ROSAS E FLOR 400G",
     "preco": 3.99
+  },
+  "7896031230379": {
+    "nome": "TARGET FIAMBRE 320G",
+    "preco": 9.75
+  },
+  "7891010503024": {
+    "nome": "ABSORVENT SEMPRE LIVRE ESP ADAPT COM ABAS =",
+    "preco": 4.75
+  },
+  "7898958607111": {
+    "nome": "FORRA FOGAO 27/27 CM 12UN",
+    "preco": 8.99
+  },
+  "7897047002288": {
+    "nome": "PE DE MOLEQUE MENDOQUITA 16,G",
+    "preco": 0.6
+  },
+  "7896733303500": {
+    "nome": "SALSICHA DE FRANGO FRIATO KG",
+    "preco": 11
+  },
+  "7896787912093": {
+    "nome": "TORRADA DE ALHO 150G",
+    "preco": 5.5
+  },
+  "789820302009": {
+    "nome": "RAÇAO TUTTI CAT MIX PREMIUM KG",
+    "preco": 15.99
+  },
+  "7898224828202": {
+    "nome": "RAÇAO SMACK P/CAES FILHOTES 1KG",
+    "preco": 17.99
   }
 }
