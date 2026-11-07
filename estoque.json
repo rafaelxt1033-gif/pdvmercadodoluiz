@@ -89,7 +89,7 @@
   },
   "23": {
     "nome": "PIMENTAO KG",
-    "preco": 12.99
+    "preco": 13.99
   },
   "25": {
     "nome": "RAÇAO PARA CAES",
@@ -467,6 +467,10 @@
     "nome": "HALLS MENTOL 28G",
     "preco": 1.75
   },
+  "78938830": {
+    "nome": "HALLS MENTA VERDE 28G",
+    "preco": 1.75
+  },
   "78938847": {
     "nome": "HALLS MORANGO 28G",
     "preco": 1.75
@@ -494,6 +498,10 @@
   "78948693": {
     "nome": "PIRULITO CHUPA CHUPS XXG",
     "preco": 3.99
+  },
+  "78949416": {
+    "nome": "HALLS BLUEBERRY 28G",
+    "preco": 1.75
   },
   "80935513": {
     "nome": "MENTOS PURE FRESH WINTERGREEN 8UN",
@@ -6653,7 +6661,7 @@
   },
   "7896036090244": {
     "nome": "OLEO DE SOJA LIZA 900ML",
-    "preco": 8.99
+    "preco": 9.99
   },
   "7892300001428": {
     "nome": "OLEO DE SOJA SINHA PET 500ML",
