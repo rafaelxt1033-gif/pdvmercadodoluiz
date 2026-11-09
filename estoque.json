@@ -9,7 +9,7 @@
   },
   "3": {
     "nome": "ALHO",
-    "preco": 31.99
+    "preco": 32.99
   },
   "4": {
     "nome": "ABACAXI PQ",
@@ -137,7 +137,7 @@
   },
   "37": {
     "nome": "COXA-SOBRECOXA KG",
-    "preco": 11.99
+    "preco": 10.99
   },
   "38": {
     "nome": "BACON KG",
@@ -313,7 +313,7 @@
   },
   "83": {
     "nome": "OSSO DO PATINHO KG",
-    "preco": 12.99
+    "preco": 13.99
   },
   "84": {
     "nome": "CARNE PARA GUIZADO",
@@ -1117,7 +1117,7 @@
   },
   "7898208480242": {
     "nome": "ASA DE FRANGO CONGELADA KG",
-    "preco": 14.99
+    "preco": 15.99
   },
   "7893000436992": {
     "nome": "ASA DE FRANGO SADIA 1KG",
@@ -9930,5 +9930,9 @@
   "7898224828202": {
     "nome": "RAÇAO SMACK P/CAES FILHOTES 1KG",
     "preco": 17.99
+  },
+  "7896104996492": {
+    "nome": "PROTETOR DIARIO SEM ABAS MILI",
+    "preco": 4.75
   }
 }
