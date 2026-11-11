@@ -65,11 +65,11 @@
   },
   "17": {
     "nome": "GOIABA KG",
-    "preco": 7.99
+    "preco": 8.99
   },
   "18": {
     "nome": "LIMAO KG",
-    "preco": 13
+    "preco": 11
   },
   "19": {
     "nome": "LARANJA KG",
@@ -293,7 +293,7 @@
   },
   "77": {
     "nome": "TANGERINA KG",
-    "preco": 8.99
+    "preco": 9.99
   },
   "78": {
     "nome": "MAMAO FORMOSA KG",
@@ -1157,7 +1157,7 @@
   },
   "5601216120053": {
     "nome": "AZEITE DE OLIVA ANDORINHA EXTRA VIRGEM 250ML",
-    "preco": 22.99
+    "preco": 19.99
   },
   "7790070225580": {
     "nome": "AZEITE DE OLIVA COCINERO 250ML",
@@ -1645,7 +1645,7 @@
   },
   "7898948243039": {
     "nome": "BOLACHA COMUN SAO FRANCISCO 200G",
-    "preco": 4.49
+    "preco": 3.99
   },
   "7898040821517": {
     "nome": "BOLACHA COPA 230G",
@@ -4373,7 +4373,7 @@
   },
   "7898258740594": {
     "nome": "FEIJAO PRETO DN MARIQ 1KG",
-    "preco": 8.99
+    "preco": 9.5
   },
   "7896401100097": {
     "nome": "FEIJAO PRETO MAXIMO 1KG",
@@ -5877,7 +5877,7 @@
   },
   "7896079500151": {
     "nome": "LEITE ELEGE INTEGRAL 1L",
-    "preco": 7.99
+    "preco": 6.99
   },
   "7898403782929": {
     "nome": "LEITE EM PO BETANIA INTEGRAL 750G",
@@ -7033,7 +7033,7 @@
   },
   "7898994748915": {
     "nome": "PASTEIS CROCANTES 150G",
-    "preco": 6.25
+    "preco": 6.99
   },
   "7898375910474": {
     "nome": "PASTILHA SANITARIA EUCALIPTO",
