@@ -81,7 +81,7 @@
   },
   "21": {
     "nome": "MAÇA",
-    "preco": 11.99
+    "preco": 12.99
   },
   "22": {
     "nome": "MARACUJA KG",
@@ -353,7 +353,7 @@
   },
   "119": {
     "nome": "TOMATE KG",
-    "preco": 11
+    "preco": 14.99
   },
   "199": {
     "nome": "PEIXE SARDINHA SEM CABEÇA KG",
@@ -2293,7 +2293,7 @@
   },
   "7898915949209": {
     "nome": "CERV. IMPERIO PURO MALTE 350ML",
-    "preco": 4.5
+    "preco": 5
   },
   "7898904771606": {
     "nome": "CERVEJA DEVASSA 350ML",
@@ -2329,7 +2329,7 @@
   },
   "7898915949797": {
     "nome": "CERV-IMPERIO PURO MALTE PILSEN 350ML",
-    "preco": 4
+    "preco": 4.5
   },
   "7891098000163": {
     "nome": "CHA CAMOMILA C/10 SACHE",
@@ -3677,7 +3677,7 @@
   },
   "7898199710335": {
     "nome": "DOCE DE LEITE 250G",
-    "preco": 7.5
+    "preco": 7.7
   },
   "7898003281167": {
     "nome": "DOCE DE LEITE AMOR DE MINAS 50GR",
@@ -9934,5 +9934,9 @@
   "7896104996492": {
     "nome": "PROTETOR DIARIO SEM ABAS MILI",
     "preco": 4.75
+  },
+  "7895558744789": {
+    "nome": "DOCE DE LEITE EM BARRA 250G",
+    "preco": 7.75
   }
 }
