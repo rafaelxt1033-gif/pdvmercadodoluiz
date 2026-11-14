@@ -1825,7 +1825,7 @@
   },
   "7898258310209": {
     "nome": "BOLACHAS DELICIA DE MANA 250G",
-    "preco": 5.25
+    "preco": 5.99
   },
   "7895099184761": {
     "nome": "BOLDO DO CHILE LESN 10G",
@@ -2933,7 +2933,7 @@
   },
   "7893000488878": {
     "nome": "COXINHA DA ASA SADIA 1KG",
-    "preco": 17.99
+    "preco": 16.99
   },
   "7891528038001": {
     "nome": "CR DENTAL SORRISO DENTES BRANCOS 180GR",
@@ -3125,7 +3125,7 @@
   },
   "7897042020683": {
     "nome": "CREME PENTEAR SKALA CEREJA 1K",
-    "preco": 12.99
+    "preco": 13.99
   },
   "7897042016907": {
     "nome": "CREME PENTEAR SKALA GLICOLICO 1KG",
@@ -3145,7 +3145,7 @@
   },
   "7897042005062": {
     "nome": "CREME SKALA BABOSA 1KG",
-    "preco": 12.99
+    "preco": 13.99
   },
   "7897042012800": {
     "nome": "CREME SKALA BANANA C/BACURI 1KG",
@@ -3197,7 +3197,7 @@
   },
   "7897042013227": {
     "nome": "CREME SKALA MARACUJA E OLEO DE PATAUA 1000G",
-    "preco": 12.99
+    "preco": 13.99
   },
   "7897042019304": {
     "nome": "CREME SKALA MELANCIA 1000G",
@@ -3233,7 +3233,7 @@
   },
   "7891079013052": {
     "nome": "CUP NOODLES CARNE DEFUMADA 69G",
-    "preco": 5.99
+    "preco": 6.25
   },
   "7891079013113": {
     "nome": "CUP NOODLES CHEDDAR 69G",
@@ -3249,7 +3249,7 @@
   },
   "7891079013038": {
     "nome": "CUP NOODLES GALINHA CAIPIRA 69G",
-    "preco": 5.99
+    "preco": 6.25
   },
   "7891079013106": {
     "nome": "CUP NOODLES YAKISSOBA 70G",
@@ -4421,11 +4421,11 @@
   },
   "7891515614072": {
     "nome": "FILE DE PEITO FRANGO PERDIGAO 1KG",
-    "preco": 21.99
+    "preco": 22.99
   },
   "7891515563516": {
     "nome": "FILE DE PEITO SADIA1K",
-    "preco": 21.99
+    "preco": 22.99
   },
   "7896419728870": {
     "nome": "FILE PEITO FRANGO LAR 1KG",
@@ -4853,11 +4853,11 @@
   },
   "7896012880739": {
     "nome": "FRALDAS T/ MONICA SHOTINHO M",
-    "preco": 24.99
+    "preco": 25.99
   },
   "7896012880746": {
     "nome": "FRALDAS T/MONICA SHORTINHO G",
-    "preco": 24.99
+    "preco": 25.99
   },
   "7891164163709": {
     "nome": "FRANGO A PASSARINHO AURORA KG",
@@ -5265,7 +5265,7 @@
   },
   "7897042010974": {
     "nome": "HIDRATACAO SKALA OLEO DE COCO 1KG",
-    "preco": 12.99
+    "preco": 13.99
   },
   "7896235354062": {
     "nome": "HIDRATANTE PAIXAO AVELA 200ML",
@@ -9938,5 +9938,13 @@
   "7895558744789": {
     "nome": "DOCE DE LEITE EM BARRA 250G",
     "preco": 7.75
+  },
+  "7896012880753": {
+    "nome": "FRALDAS TURMA DA MONICA TAM XG",
+    "preco": 25.99
+  },
+  "7891991010481": {
+    "nome": "CERVEJA BUDWEISER 350ML",
+    "preco": 5.5
   }
 }
