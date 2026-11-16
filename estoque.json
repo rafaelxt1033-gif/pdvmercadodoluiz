@@ -8637,7 +8637,7 @@
   },
   "7891024174210": {
     "nome": "SH.PALMOLIVE CERAMIDAS FORCE 350ML",
-    "preco": 11
+    "preco": 11.99
   },
   "7891024172230": {
     "nome": "SH.PALMOLIVE NEUTRO 350ML",
@@ -9946,5 +9946,17 @@
   "7891991010481": {
     "nome": "CERVEJA BUDWEISER 350ML",
     "preco": 5.5
+  },
+  "7898972821104": {
+    "nome": "BODY SPLASH CLASSIC 200ML",
+    "preco": 22.99
+  },
+  "7898972821098": {
+    "nome": "BODY SPLASH MARINE 200ML",
+    "preco": 22.69
+  },
+  "7898972821197": {
+    "nome": "BODY SPLASH FRAMB/CHOCOLATE 200ML",
+    "preco": 22.99
   }
 }
