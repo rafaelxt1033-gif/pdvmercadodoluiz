@@ -25,7 +25,7 @@
   },
   "7": {
     "nome": "BATATA INGRESA KG",
-    "preco": 7.99
+    "preco": 8.99
   },
   "8": {
     "nome": "BATATA DOCE",
@@ -89,7 +89,7 @@
   },
   "23": {
     "nome": "PIMENTAO KG",
-    "preco": 13.99
+    "preco": 12.99
   },
   "25": {
     "nome": "RAÇAO PARA CAES",
@@ -353,7 +353,7 @@
   },
   "119": {
     "nome": "TOMATE KG",
-    "preco": 14.99
+    "preco": 11
   },
   "199": {
     "nome": "PEIXE SARDINHA SEM CABEÇA KG",
@@ -2697,7 +2697,7 @@
   },
   "7898904869044": {
     "nome": "COLA TEK BOND 25GRS",
-    "preco": 2.5
+    "preco": 2.75
   },
   "7898944454996": {
     "nome": "COLA ULTRA POP 3G",
