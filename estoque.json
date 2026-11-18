@@ -9725,7 +9725,7 @@
   },
   "7896278302600": {
     "nome": "BOKUS CINEMA CHOCOLATE 60G",
-    "preco": 4.25
+    "preco": 4.99
   },
   "7896278302624": {
     "nome": "BOKUS CINEMA MANTEIGA 60G",
@@ -9741,7 +9741,7 @@
   },
   "7896278302549": {
     "nome": "BOKUS CHOCOLATE 60G",
-    "preco": 3.75
+    "preco": 4.25
   },
   "7896278302457": {
     "nome": "BOKUS AMENDOIM 60G",
@@ -9958,5 +9958,17 @@
   "78986488115667": {
     "nome": "SACO PARA DINDIN 4,5/30CM",
     "preco": 3.5
+  },
+  "7896278302686": {
+    "nome": "PIPOCA BOKUS COM LEITE EM PO INTEGRAL 60G",
+    "preco": 4.75
+  },
+  "7896278302716": {
+    "nome": "MILHO PARA PIPOCA BOKUS 500G",
+    "preco": 4.99
+  },
+  "7896278302723": {
+    "nome": "MILHO PARA MUNGUZA BOKUS 500G",
+    "preco": 3.25
   }
 }
