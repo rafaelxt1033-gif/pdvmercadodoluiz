@@ -201,7 +201,7 @@
   },
   "53": {
     "nome": "OSSO PARA SOPA KG",
-    "preco": 11
+    "preco": 12.99
   },
   "54": {
     "nome": "OSSO MOEDA PACOTE KG",
@@ -8301,19 +8301,19 @@
   },
   "7891150060234": {
     "nome": "SABONETE LIQ/ LUX REFIL ROSAS FRANCESAS 200ML",
-    "preco": 8.99
+    "preco": 9.99
   },
   "7891150060241": {
     "nome": "SABONETE LIQ/LUX REFIL BUQUE/JASSMIM 200ML",
-    "preco": 8.99
+    "preco": 9.99
   },
   "7891150060227": {
     "nome": "SABONETE LIQ/LUX REFIL LAVANDA 200ML",
-    "preco": 8.99
+    "preco": 9.99
   },
   "7891150060210": {
     "nome": "SABONETE LIQ/LUX REFIL ORQUIDEA NEGRA 200ML",
-    "preco": 8.99
+    "preco": 9.99
   },
   "42882497301": {
     "nome": "SABONETE LIQ-MIX AROEIRA/BARB-500ML",
@@ -9639,10 +9639,6 @@
     "nome": "CAMINHAO TRUCK",
     "preco": 11.99
   },
-  "2002011779591": {
-    "nome": "SACO PARA DINDIN 4,5/30CM",
-    "preco": 3.5
-  },
   "7891091063424": {
     "nome": "BATATA SCRUSCH CEBOLA/SALSA 40G",
     "preco": 4.5
@@ -9958,5 +9954,9 @@
   "7898972821197": {
     "nome": "BODY SPLASH FRAMB/CHOCOLATE 200ML",
     "preco": 22.99
+  },
+  "78986488115667": {
+    "nome": "SACO PARA DINDIN 4,5/30CM",
+    "preco": 3.5
   }
 }
