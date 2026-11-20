@@ -49,11 +49,11 @@
   },
   "13": {
     "nome": "CEBOLA ROXA",
-    "preco": 9.9
+    "preco": 10.99
   },
   "14": {
     "nome": "CEBOLA BRANCA KG",
-    "preco": 9.9
+    "preco": 10.99
   },
   "15": {
     "nome": "COCO SECO",
@@ -85,11 +85,11 @@
   },
   "22": {
     "nome": "MARACUJA KG",
-    "preco": 11
+    "preco": 11.99
   },
   "23": {
     "nome": "PIMENTAO KG",
-    "preco": 12.99
+    "preco": 13.99
   },
   "25": {
     "nome": "RAÇAO PARA CAES",
@@ -5933,7 +5933,7 @@
   },
   "7898387120380": {
     "nome": "LEITE LONGA NATIVILLE 1LT",
-    "preco": 7.5
+    "preco": 6.99
   },
   "7896085307010": {
     "nome": "LEITE LONGA VIDA VALE DOURADO INTEGRAL 1 L",
