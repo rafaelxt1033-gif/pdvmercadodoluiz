@@ -8155,10 +8155,6 @@
     "nome": "SABAO EM PO GUARANI 400 G",
     "preco": 1.75
   },
-  "7891150064522": {
-    "nome": "SABAO EM PO OMO 400G",
-    "preco": 8.99
-  },
   "7898031172116": {
     "nome": "SABAO EUCALIPTO 5 X 200GR (BEM-TE-VI)",
     "preco": 8.99
@@ -9970,5 +9966,9 @@
   "7896278302723": {
     "nome": "MILHO PARA MUNGUZA BOKUS 500G",
     "preco": 3.25
+  },
+  "7891150199354": {
+    "nome": "SABAO EM PO OMO 400G",
+    "preco": 8.99
   }
 }
