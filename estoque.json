@@ -69,7 +69,7 @@
   },
   "18": {
     "nome": "LIMAO KG",
-    "preco": 11
+    "preco": 8.99
   },
   "19": {
     "nome": "LARANJA KG",
@@ -2193,7 +2193,7 @@
   },
   "7896087200074": {
     "nome": "CARANGUEJO LITRO 980 ML",
-    "preco": 11
+    "preco": 11.99
   },
   "7899869202730": {
     "nome": "CARGO BETONEIRA",
@@ -2357,7 +2357,7 @@
   },
   "7891098000170": {
     "nome": "CHA DE HORTELA LEAO - C/10",
-    "preco": 4.75
+    "preco": 4.99
   },
   "7891098001504": {
     "nome": "CHA ERVA DOCE C/10 SACHE",
@@ -2449,7 +2449,7 @@
   },
   "7899970404047": {
     "nome": "CHOCOLATE  BRANCO HERSHEYS 77G",
-    "preco": 8.99
+    "preco": 9.99
   },
   "7891008123975": {
     "nome": "CHOCOLATE AO LEITE GAROTO 80G",
@@ -2466,10 +2466,6 @@
   "7896523100968": {
     "nome": "CHOCOLATE GRANULADO FA 50G",
     "preco": 3.25
-  },
-  "7899970404023": {
-    "nome": "CHOCOLATE HERSHEYS AO LEITE 82G",
-    "preco": 8.99
   },
   "7899970402876": {
     "nome": "CHOCOLATE HERSHEYS OVOMALTINE 77G",
@@ -4597,7 +4593,7 @@
   },
   "7896490288775": {
     "nome": "FLOCAO DONA CLARA 500G",
-    "preco": 1.75
+    "preco": 1.99
   },
   "7898117961955": {
     "nome": "FLOCAO FORTEMILHO  400G",
@@ -5249,7 +5245,7 @@
   },
   "7898292888788": {
     "nome": "HERSEYS OVO 20G",
-    "preco": 2.75
+    "preco": 3
   },
   "7899970401183": {
     "nome": "HERSHEY'S CHOCOTUBES AO LEITE 25G",
@@ -5257,7 +5253,7 @@
   },
   "7898292888764": {
     "nome": "HERSHEYS COOKIES 20G",
-    "preco": 2.75
+    "preco": 3
   },
   "7899970404160": {
     "nome": "HERSHEYS MEIO AMARGO 75G",
@@ -6461,7 +6457,7 @@
   },
   "7898286190316": {
     "nome": "MOLHO DE PIMENTA GOTA 150ML",
-    "preco": 3.49
+    "preco": 3.75
   },
   "7898286191405": {
     "nome": "MOLHO DE PIZZA MARATA 300G",
@@ -9974,5 +9970,17 @@
   "7891991296342": {
     "nome": "CERVEVA BUDUEISER COM 12UN 350ML",
     "preco": 49.9
+  },
+  "7899970402814": {
+    "nome": "CHOCOLATE HERSHEYS AO LEITE 82G",
+    "preco": 9.99
+  },
+  "7899970404306": {
+    "nome": "CHOCOLATE HERSHEYS MERENGUE MORANGO 77G",
+    "preco": 9.99
+  },
+  "7898292888740": {
+    "nome": "HERSHEYS AO LEITE 20G",
+    "preco": 3
   }
 }
