@@ -45,7 +45,7 @@
   },
   "12": {
     "nome": "CHUCHU KG",
-    "preco": 4.99
+    "preco": 6.99
   },
   "13": {
     "nome": "CEBOLA ROXA",
@@ -193,7 +193,7 @@
   },
   "51": {
     "nome": "PEITO DE FRANGO KG",
-    "preco": 13.99
+    "preco": 14.99
   },
   "52": {
     "nome": "GALINHA CONGELADA KG",
@@ -1761,7 +1761,7 @@
   },
   "7898376590262": {
     "nome": "BOLACHA REAL SABOR MINI CRACKER 200G",
-    "preco": 2.75
+    "preco": 2.99
   },
   "7898376590422": {
     "nome": "BOLACHA REAL SABOR MINI MAIZENA 200G",
@@ -3013,7 +3013,7 @@
   },
   "7898080640222": {
     "nome": "CREME DE LEITE ITALAC 200GR",
-    "preco": 3.49
+    "preco": 3.75
   },
   "7896051114024": {
     "nome": "CREME DE LEITE ITAMBE 200G",
@@ -3049,7 +3049,7 @@
   },
   "7891150049871": {
     "nome": "CREME DENTAL CLOSEUP MENTA AMERICANA 70G",
-    "preco": 3.25
+    "preco": 3.99
   },
   "7891150049888": {
     "nome": "CREME DENTAL CLOSEUP TRIPLE HORTELA 70G",
@@ -4176,7 +4176,7 @@
     "preco": 3.99
   },
   "17898366932970": {
-    "nome": "FARDO FLOKAO COM 20X400G",
+    "nome": "FARDO FLOKAO/FORTEMILHO 20PC 400G",
     "preco": 25.99
   },
   "7813202893842": {
@@ -4333,7 +4333,7 @@
   },
   "7898231920142": {
     "nome": "FEIJAO CURIMATAU PRETO 1KG",
-    "preco": 9.99
+    "preco": 8.75
   },
   "7898258740662": {
     "nome": "FEIJAO DN MARIQ- CARIOCA1KG",
@@ -4865,7 +4865,7 @@
   },
   "7893000488526": {
     "nome": "FRANGO A PASSARINHO SADIA 1KG",
-    "preco": 14.99
+    "preco": 15.5
   },
   "7898286561338": {
     "nome": "FRANGO A PASSARINHO TEMP/ BOM TODO 1KG",
@@ -5308,8 +5308,8 @@
     "preco": 3.5
   },
   "7898034920509": {
-    "nome": "IOGURTE ISIS BANANA MACA 120G",
-    "preco": 1.75
+    "nome": "IOGURTE ISIS BANANA MACA 90G",
+    "preco": 1.25
   },
   "7898034920042": {
     "nome": "IOGURTE ISIS BANANA/MACA 480G",
@@ -5324,7 +5324,7 @@
     "preco": 3.5
   },
   "7898034920110": {
-    "nome": "IOGURTE ISIS MORANGO 120G",
+    "nome": "IOGURTE ISIS MORANGO 90G",
     "preco": 1.25
   },
   "7898034920028": {
@@ -5340,8 +5340,8 @@
     "preco": 6.99
   },
   "7898034920424": {
-    "nome": "IOGURTE ISIS SALADA DE FRUTAS 120G",
-    "preco": 1.75
+    "nome": "IOGURTE ISIS SALADA DE FRUTAS 90G",
+    "preco": 1.25
   },
   "7898034920097": {
     "nome": "IOGURTE ISIS SALADA DE FRUTAS 170G",
@@ -6745,7 +6745,7 @@
   },
   "7898912405029": {
     "nome": "OVOS BRANCO EXTRA AVIPEC COM 30UN",
-    "preco": 15.99
+    "preco": 16.99
   },
   "7898286565336": {
     "nome": "OVOS BRANCO GRANDE BOM TODO COM 30UN",
@@ -9549,11 +9549,11 @@
   },
   "7896029046609": {
     "nome": "WHISKAS CARNE 85G",
-    "preco": 3
+    "preco": 3.99
   },
   "7896029046173": {
     "nome": "WHISKAS FRANGO 85G",
-    "preco": 3
+    "preco": 3.99
   },
   "7899872102911": {
     "nome": "XAXADO BOM 200G",
@@ -9677,7 +9677,7 @@
   },
   "0074468769793": {
     "nome": "BOLO SARDINHA 300G",
-    "preco": 5.5
+    "preco": 5.99
   },
   "7894900027099": {
     "nome": "COCA COLA 1L RETORNAVEL",
@@ -9685,7 +9685,7 @@
   },
   "0074468769830": {
     "nome": "BOLINHO 140G",
-    "preco": 3.5
+    "preco": 3.75
   },
   "7896013109167": {
     "nome": "AMACIANTE SONHO LAVANDA 2L",
@@ -9879,10 +9879,6 @@
     "nome": "FUMO MARATA 36G",
     "preco": 4.5
   },
-  "7891150097544": {
-    "nome": "SABAO EM PO ALA LAVANDA 400G",
-    "preco": 3.99
-  },
   "7891150106536": {
     "nome": "SABAO EM PO ALA ROSAS E FLOR 400G",
     "preco": 3.99
@@ -9994,5 +9990,25 @@
   "7898622353719": {
     "nome": "FRASCO MULTIUSO SPLAY 60ML",
     "preco": 4.99
+  },
+  "7891024035139": {
+    "nome": "SABONETE PROTEX NUTRI/PROTECT 85G",
+    "preco": 4.25
+  },
+  "7896029046623": {
+    "nome": "SACHE WHISKAS CARNE GATOS CASTRASDOS 85G",
+    "preco": 3.99
+  },
+  "7891150106550": {
+    "nome": "SABAO EM PO ALA LAVANDA 400G",
+    "preco": 3.99
+  },
+  "17891091010715": {
+    "nome": "FLOCAO GOSTOSIN FARDO 30PC 400G",
+    "preco": 34.99
+  },
+  "7891091010718": {
+    "nome": "FLOCAO GOSTOSIN 400G",
+    "preco": 1.25
   }
 }
