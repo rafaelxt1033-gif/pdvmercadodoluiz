@@ -9877,7 +9877,7 @@
   },
   "7898286191887": {
     "nome": "FUMO MARATA 36G",
-    "preco": 4.5
+    "preco": 4.99
   },
   "7891150106536": {
     "nome": "SABAO EM PO ALA ROSAS E FLOR 400G",
@@ -10010,5 +10010,33 @@
   "7891091010718": {
     "nome": "FLOCAO GOSTOSIN 400G",
     "preco": 1.25
+  },
+  "7898617581370": {
+    "nome": "REFRESCO MARATA GUARANA COM AÇAI 25G",
+    "preco": 1
+  },
+  "7898617581363": {
+    "nome": "REFRESCO MARATA GUARANA 25G",
+    "preco": 1
+  },
+  "7892840812850": {
+    "nome": "H2OH LIMONETO PET 500ML",
+    "preco": 4.99
+  },
+  "7892840813444": {
+    "nome": "PEPSI BLACK ZERO 2L",
+    "preco": 8.99
+  },
+  "7891991002608": {
+    "nome": "GUARANA ANTARCTICA ZERO 1L",
+    "preco": 6.25
+  },
+  "7891991014908": {
+    "nome": "GUARANA ANTARCTICA 200ML",
+    "preco": 2
+  },
+  "7898095297916": {
+    "nome": "ABS-COTTON COM ABAS SUAVE",
+    "preco": 3.75
   }
 }
